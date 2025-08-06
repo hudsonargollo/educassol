@@ -71,17 +71,6 @@ const HeroSection = () => {
               </Button>
             </div>
 
-            {/* Trust Indicators */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 lg:gap-6 pt-4 sm:pt-6 text-xs sm:text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-primary rounded-full"></div>
-                <span>100% Alinhado à BNCC</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-accent rounded-full"></div>
-                <span>IA Especializada</span>
-              </div>
-            </div>
           </div>
 
           {/* Visual Side */}
