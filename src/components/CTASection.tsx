@@ -21,7 +21,7 @@ const CTASection = () => {
             
             <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
               Junte-se aos educadores de Jequié que já estão transformando suas práticas 
-              pedagógicas com a inteligência artificial. Seja parte desta revolução educacional.
+              pedagógicas com a inteligência artificial. Seja parte desta revolução.
             </p>
           </div>
 
@@ -102,7 +102,7 @@ const CTASection = () => {
               onClick={() => window.open('https://educa-sol-dashboard.lovable.app', '_blank')}
             >
               <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 group-hover:animate-spin" />
-              <span className="truncate">Cadastre-se e Comece a Criar!</span>
+              <span className="truncate">Comece agora!</span>
               <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
             
