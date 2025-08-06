@@ -29,7 +29,7 @@ const BNCCSection = () => {
             <div className="space-y-6">
               <p className="text-foreground/80 leading-relaxed">
                 Você não precisa mais se preocupar em verificar se suas atividades atendem 
-                aos requisitos curriculares. A Manus AI conhece cada código, cada objetivo 
+                aos requisitos curriculares. A AI conhece cada código, cada objetivo 
                 de aprendizagem e cada competência específica, construindo automaticamente 
                 conexões pedagógicas sólidas e fundamentadas.
               </p>
