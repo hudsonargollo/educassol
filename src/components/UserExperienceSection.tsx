@@ -80,9 +80,9 @@ const UserExperienceSection = () => {
 
             <div className="space-y-6">
               <p className="text-foreground/80 leading-relaxed">
-                Construído com tecnologias modernas como Lovable, Next.js e React, 
+                Construído com tecnologias modernas, 
                 nossa plataforma oferece uma experiência fluida e responsiva. 
-                A infraestrutura Cloudflare garante velocidade e confiabilidade, 
+                A infraestrutura garante velocidade e confiabilidade, 
                 para que você tenha acesso instantâneo aos recursos quando precisar.
               </p>
 
@@ -120,10 +120,10 @@ const UserExperienceSection = () => {
                       Tecnologia de Ponta a Seu Favor:
                     </h4>
                     <ul className="space-y-1 text-sm text-foreground/80">
-                      <li>• <strong>Interface Lovable:</strong> Design moderno e intuitivo</li>
-                      <li>• <strong>Performance Cloudflare:</strong> Velocidade e confiabilidade</li>
-                      <li>• <strong>Arquitetura React:</strong> Experiência fluida e responsiva</li>
-                      <li>• <strong>Atualizações automáticas:</strong> Sempre a versão mais recente</li>
+                      <li>• Design moderno e intuitivo</li>
+                      <li>• Velocidade e confiabilidade</li>
+                      <li>• Experiência fluida e responsiva</li>
+                      <li>• Sempre a versão mais recente</li>
                     </ul>
                   </div>
                 </div>

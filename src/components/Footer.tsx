@@ -39,7 +39,7 @@ const Footer = () => {
           {/* Copyright */}
           <div className="pt-6 border-t border-background/20">
             <p className="text-sm text-background/60 flex items-center justify-center gap-2">
-              © 2024 EDUCA SOL. Feito com <Heart className="h-4 w-4 text-red-400" /> para os educadores de Jequié, Cidade Sol.
+              © 2025 EDUCA SOL. Feito com <Heart className="h-4 w-4 text-red-400" /> para os educadores de Jequié, Cidade Sol.
             </p>
           </div>
         </div>
