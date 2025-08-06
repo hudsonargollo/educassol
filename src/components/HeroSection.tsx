@@ -58,7 +58,7 @@ const HeroSection = () => {
                 onClick={() => window.open('https://educa-sol-dashboard.lovable.app', '_blank')}
               >
                 <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 group-hover:animate-spin" />
-                <span className="truncate">Comece a Brilhar com EDUCA SOL – Cadastre-se Grátis!</span>
+                <span className="truncate">Comece a Brilhar – Cadastre-se Grátis!</span>
               </Button>
               
               <Button 
@@ -67,26 +67,9 @@ const HeroSection = () => {
                 className="w-full sm:w-auto"
                 onClick={() => window.open('https://educa-sol-dashboard.lovable.app', '_blank')}
               >
-                Já é Usuário? Faça Login
+                Já tem conta? Faça Login
               </Button>
             </div>
-
-            {/* Trust Indicators */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 lg:gap-6 pt-4 sm:pt-6 text-xs sm:text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-primary rounded-full"></div>
-                <span>100% Alinhado à BNCC</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-accent rounded-full"></div>
-                <span>IA Especializada</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-secondary rounded-full"></div>
-                <span>Feito para Jequié</span>
-              </div>
-            </div>
-          </div>
 
           {/* Visual Side */}
           <div className="relative">
