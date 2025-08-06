@@ -38,7 +38,7 @@ const FeaturesSection = () => {
           </div>
           
           <p className="text-base sm:text-lg text-muted-foreground leading-relaxed px-4">
-            Conheça Manus AI, nossa inteligência artificial especializada em educação primária. 
+            Conheça EDUCA SOL, nossa inteligência artificial especializada em educação primária. 
             Ela trabalha 24/7 para transformar suas ideias em conteúdo educacional de qualidade, 
             economizando seu tempo e energia para o que realmente importa.
           </p>
