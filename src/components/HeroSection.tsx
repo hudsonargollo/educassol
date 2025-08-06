@@ -27,7 +27,7 @@ const HeroSection = () => {
 
             {/* Main Headlines */}
             <div className="space-y-3 sm:space-y-4">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight break-words">
+              <h1 className="font-bold text-foreground leading-tight break-words" style={{ fontSize: 'clamp(1.875rem, 5vw, 3.75rem)' }}>
                 Ilumine o Futuro da{" "}
                 <span className="bg-gradient-sun bg-clip-text text-transparent">
                   Educação Primária
@@ -35,7 +35,7 @@ const HeroSection = () => {
                 em Jequié.
               </h1>
               
-              <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground font-medium">
+              <h2 className="text-muted-foreground font-medium leading-relaxed" style={{ fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}>
                 Transforme sua Rotina de Planejamento com a Inteligência Artificial, 
                 Alinhada à BNCC.
               </h2>
@@ -54,7 +54,7 @@ const HeroSection = () => {
               <Button 
                 variant="hero" 
                 size="xl" 
-                className="group w-full sm:w-auto text-sm sm:text-base"
+                className="group w-full sm:w-auto min-h-[48px] text-sm sm:text-base px-6 py-3"
                 onClick={() => window.open('https://educa-sol-dashboard.lovable.app', '_blank')}
               >
                 <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 group-hover:animate-spin" />
@@ -64,7 +64,7 @@ const HeroSection = () => {
               <Button 
                 variant="outline" 
                 size="xl"
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto min-h-[48px] px-6 py-3"
                 onClick={() => window.open('https://educa-sol-dashboard.lovable.app', '_blank')}
               >
                 Já tem conta? Faça Login

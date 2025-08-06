@@ -30,14 +30,14 @@ const FeaturesSection = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mb-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mb-4 sm:mb-6">
             <Brain className="h-8 w-8 text-primary" />
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
+            <h2 className="font-bold text-foreground" style={{ fontSize: 'clamp(1.5rem, 4vw, 2.5rem)' }}>
               O Poder da IA ao Seu Alcance
             </h2>
           </div>
           
-          <p className="text-base sm:text-lg text-muted-foreground leading-relaxed px-4">
+          <p className="text-muted-foreground leading-relaxed px-4" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.125rem)' }}>
             Conheça EDUCA SOL, nossa inteligência artificial especializada em educação primária. 
             Ela trabalha 24/7 para transformar suas ideias em conteúdo educacional de qualidade, 
             economizando seu tempo e energia para o que realmente importa.
@@ -45,19 +45,19 @@ const FeaturesSection = () => {
         </div>
 
         {/* Features Grid */}
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-12 sm:mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-12 sm:mb-16">
           {features.map((feature, index) => (
             <Card key={index} className="group hover:shadow-warm transition-all duration-300 border-border/50 hover:border-primary/30">
-              <CardContent className="p-6 sm:p-8">
-                <div className="flex items-start gap-4">
-                  <div className="p-3 bg-gradient-warm rounded-xl shrink-0 group-hover:shadow-glow transition-all duration-300">
-                    <feature.icon className="h-6 w-6 text-primary-foreground" />
+              <CardContent className="p-4 sm:p-6 lg:p-8">
+                <div className="flex items-start gap-3 sm:gap-4">
+                  <div className="p-2 sm:p-3 bg-gradient-warm rounded-xl shrink-0 group-hover:shadow-glow transition-all duration-300 min-w-[44px] min-h-[44px] flex items-center justify-center">
+                    <feature.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary-foreground" />
                   </div>
-                  <div className="space-y-2">
-                    <h3 className="text-lg sm:text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
+                  <div className="space-y-2 min-w-0 flex-1">
+                    <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.25rem)' }}>
                       {feature.title}
                     </h3>
-                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                    <p className="text-muted-foreground leading-relaxed" style={{ fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>
                       {feature.description}
                     </p>
                   </div>

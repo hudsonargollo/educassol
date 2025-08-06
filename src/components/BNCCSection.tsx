@@ -8,10 +8,10 @@ const BNCCSection = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Content Side */}
           <div className="space-y-8">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <Shield className="h-8 w-8 text-primary" />
-                <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+            <div className="space-y-4 sm:space-y-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+                <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-primary shrink-0" />
+                <h2 className="font-bold text-foreground" style={{ fontSize: 'clamp(1.5rem, 4vw, 2.5rem)' }}>
                   Conteúdo de Qualidade, Sempre em{" "}
                   <span className="bg-gradient-sun bg-clip-text text-transparent">
                     Conformidade
@@ -19,7 +19,7 @@ const BNCCSection = () => {
                 </h2>
               </div>
               
-              <p className="text-lg text-muted-foreground leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.125rem)' }}>
                 Nossa integração profunda com a Base Nacional Comum Curricular (BNCC) 
                 garante que todo conteúdo gerado esteja perfeitamente alinhado às competências 
                 e habilidades exigidas para cada ano do ensino fundamental.
@@ -34,26 +34,26 @@ const BNCCSection = () => {
                 conexões pedagógicas sólidas e fundamentadas.
               </p>
 
-              <div className="grid sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <Card className="border-primary/20 bg-card/50">
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-3 mb-2">
-                      <CheckCircle className="h-5 w-5 text-primary" />
-                      <span className="font-semibold text-foreground">100% Alinhado</span>
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex items-center gap-2 sm:gap-3 mb-2">
+                      <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                      <span className="font-semibold text-foreground text-sm sm:text-base">100% Alinhado</span>
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-xs sm:text-sm text-muted-foreground">
                       Todo conteúdo segue rigorosamente as diretrizes da BNCC
                     </p>
                   </CardContent>
                 </Card>
 
                 <Card className="border-accent/20 bg-card/50">
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-3 mb-2">
-                      <Target className="h-5 w-5 text-accent-foreground" />
-                      <span className="font-semibold text-foreground">Objetivos Claros</span>
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex items-center gap-2 sm:gap-3 mb-2">
+                      <Target className="h-4 w-4 sm:h-5 sm:w-5 text-accent-foreground" />
+                      <span className="font-semibold text-foreground text-sm sm:text-base">Objetivos Claros</span>
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-xs sm:text-sm text-muted-foreground">
                       Competências e habilidades específicas são sempre identificadas
                     </p>
                   </CardContent>

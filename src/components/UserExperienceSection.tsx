@@ -60,10 +60,10 @@ const UserExperienceSection = () => {
 
           {/* Content Side */}
           <div className="space-y-8 order-1 lg:order-2">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <Zap className="h-8 w-8 text-primary" />
-                <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+            <div className="space-y-4 sm:space-y-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+                <Zap className="h-6 w-6 sm:h-8 sm:w-8 text-primary shrink-0" />
+                <h2 className="font-bold text-foreground" style={{ fontSize: 'clamp(1.5rem, 4vw, 2.5rem)' }}>
                   Uma Experiência de Uso que{" "}
                   <span className="bg-gradient-sun bg-clip-text text-transparent">
                     Ilumina
@@ -71,7 +71,7 @@ const UserExperienceSection = () => {
                 </h2>
               </div>
               
-              <p className="text-lg text-muted-foreground leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.125rem)' }}>
                 Desenvolvemos EDUCA SOL pensando em você, professor. Nossa interface 
                 foi cuidadosamente projetada para ser intuitiva, rápida e acessível, 
                 funcionando perfeitamente em qualquer dispositivo.
@@ -86,26 +86,26 @@ const UserExperienceSection = () => {
                 para que você tenha acesso instantâneo aos recursos quando precisar.
               </p>
 
-              <div className="grid sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <Card className="border-primary/20 bg-card/50">
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-3 mb-2">
-                      <Smartphone className="h-5 w-5 text-primary" />
-                      <span className="font-semibold text-foreground">Responsivo</span>
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex items-center gap-2 sm:gap-3 mb-2">
+                      <Smartphone className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                      <span className="font-semibold text-foreground text-sm sm:text-base">Responsivo</span>
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-xs sm:text-sm text-muted-foreground">
                       Funciona perfeitamente em celular, tablet e computador
                     </p>
                   </CardContent>
                 </Card>
 
                 <Card className="border-accent/20 bg-card/50">
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-3 mb-2">
-                      <Globe className="h-5 w-5 text-accent-foreground" />
-                      <span className="font-semibold text-foreground">Sempre Online</span>
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex items-center gap-2 sm:gap-3 mb-2">
+                      <Globe className="h-4 w-4 sm:h-5 sm:w-5 text-accent-foreground" />
+                      <span className="font-semibold text-foreground text-sm sm:text-base">Sempre Online</span>
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-xs sm:text-sm text-muted-foreground">
                       Acesse de qualquer lugar, a qualquer hora do dia
                     </p>
                   </CardContent>

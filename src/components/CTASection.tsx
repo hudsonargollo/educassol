@@ -8,10 +8,10 @@ const CTASection = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center space-y-12">
           {/* Header */}
-          <div className="space-y-6">
-            <div className="flex items-center justify-center gap-3">
-              <Users className="h-8 w-8 text-primary" />
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+          <div className="space-y-4 sm:space-y-6">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
+              <Users className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+              <h2 className="font-bold text-foreground text-center" style={{ fontSize: 'clamp(1.5rem, 4vw, 2.5rem)' }}>
                 O Futuro da Educação{" "}
                 <span className="bg-gradient-sun bg-clip-text text-transparent">
                   Começa Agora
@@ -19,7 +19,7 @@ const CTASection = () => {
               </h2>
             </div>
             
-            <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+            <p className="text-muted-foreground leading-relaxed max-w-2xl mx-auto text-center px-4" style={{ fontSize: 'clamp(1rem, 3vw, 1.25rem)' }}>
               Junte-se aos educadores de Jequié que já estão transformando suas práticas 
               pedagógicas com a inteligência artificial. Seja parte desta revolução.
             </p>
@@ -94,19 +94,19 @@ const CTASection = () => {
           </div>
 
           {/* Final CTA */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <Button 
               variant="hero" 
               size="xl" 
-              className="group text-base sm:text-lg px-8 sm:px-12 py-4 w-full sm:w-auto"
+              className="group px-6 sm:px-8 lg:px-12 py-3 sm:py-4 w-full sm:w-auto min-h-[52px] text-sm sm:text-base lg:text-lg"
               onClick={() => window.open('https://educa-sol-dashboard.lovable.app', '_blank')}
             >
-              <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 group-hover:animate-spin" />
+              <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 group-hover:animate-spin" />
               <span className="truncate">Comece agora!</span>
               <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
             
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-center px-4" style={{ fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>
               Comece sua jornada rumo a uma educação mais eficiente e impactante.
               <br />
               <span className="text-primary font-medium">Jequié merece o melhor da educação. Você também.</span>
