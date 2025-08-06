@@ -28,7 +28,7 @@ const HeroSection = () => {
             {/* Main Headlines */}
             <div className="space-y-3 sm:space-y-4">
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight break-words">
-                EDUCA SOL: Ilumine o Futuro da{" "}
+                Ilumine o Futuro da{" "}
                 <span className="bg-gradient-sun bg-clip-text text-transparent">
                   Educação Primária
                 </span>{" "}
