@@ -36,7 +36,7 @@ const HeroSection = () => {
               </h1>
               
               <h2 className="text-muted-foreground font-medium leading-relaxed" style={{ fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}>
-                Transforme sua Rotina de Planejamento com a Inteligência Artificial, 
+                Transforme sua Rotina de Planejamento com IA, 
                 Alinhada à BNCC.
               </h2>
             </div>
@@ -44,7 +44,7 @@ const HeroSection = () => {
             {/* Intro Paragraph */}
             <p className="text-base sm:text-lg text-foreground/80 leading-relaxed max-w-xl">
               Economize horas preciosas na preparação de aulas e atividades. 
-              Nossa IA cria conteúdo educacional personalizado, sempre seguindo 
+              EducaSol cria conteúdo educacional personalizado, sempre seguindo 
               as diretrizes da BNCC, para que você possa focar no que realmente 
               importa: ensinar e inspirar seus alunos.
             </p>
@@ -58,7 +58,7 @@ const HeroSection = () => {
                 onClick={() => window.open('https://educa-sol-dashboard.lovable.app', '_blank')}
               >
                 <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 group-hover:animate-spin" />
-                <span className="truncate">Comece a Brilhar – Cadastre-se Grátis!</span>
+                <span className="truncate">Comece a Brilhar Agora@</span>
               </Button>
               
               <Button 
