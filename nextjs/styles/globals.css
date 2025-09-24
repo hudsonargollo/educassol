@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.hero-gradient {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+}
+
+.section-title {
+  @apply text-3xl font-bold text-gray-800 md:text-4xl text-center;
+}
+
+.section-subtitle {
+  @apply mt-4 text-lg text-gray-500 max-w-3xl mx-auto text-center;
+}
