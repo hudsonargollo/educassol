@@ -5,14 +5,33 @@ import { useState, useEffect } from "react";
 const HeroSection = () => {
   const cities = ["Jequié", "Itagi", "Ipiaú", "Jitaúna", "Ilhéus", "Ibirataia"];
   const [currentCityIndex, setCurrentCityIndex] = useState(0);
+  const [displayedText, setDisplayedText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentCityIndex((prevIndex) => (prevIndex + 1) % cities.length);
-    }, 1500);
+    const currentCity = cities[currentCityIndex];
+    const typingSpeed = isDeleting ? 50 : 100;
+    const pauseTime = 1500;
 
-    return () => clearInterval(interval);
-  }, []);
+    const timeout = setTimeout(() => {
+      if (!isDeleting && displayedText === currentCity) {
+        // Pause before deleting
+        setTimeout(() => setIsDeleting(true), pauseTime);
+      } else if (isDeleting && displayedText === "") {
+        // Move to next city
+        setIsDeleting(false);
+        setCurrentCityIndex((prevIndex) => (prevIndex + 1) % cities.length);
+      } else if (isDeleting) {
+        // Delete character
+        setDisplayedText(currentCity.substring(0, displayedText.length - 1));
+      } else {
+        // Type character
+        setDisplayedText(currentCity.substring(0, displayedText.length + 1));
+      }
+    }, typingSpeed);
+
+    return () => clearTimeout(timeout);
+  }, [displayedText, isDeleting, currentCityIndex, cities]);
   return (
     <section className="relative min-h-[100dvh] bg-gradient-hero flex items-center overflow-hidden py-8 sm:py-12">
       {/* Background decorative elements */}
@@ -43,7 +62,7 @@ const HeroSection = () => {
                 <span className="bg-gradient-sun bg-clip-text text-transparent">
                   Educação Primária
                 </span>{" "}
-                em <span className="transition-opacity duration-300">{cities[currentCityIndex]}</span>.
+                em <span className="inline-block min-w-[120px]">{displayedText}<span className="animate-pulse">|</span></span>.
               </h1>
               
               <h2 className="text-muted-foreground font-medium leading-relaxed" style={{ fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}>
