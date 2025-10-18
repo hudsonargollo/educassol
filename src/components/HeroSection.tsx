@@ -1,7 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Sun, Sparkles } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const HeroSection = () => {
+  const cities = ["Jequié", "Itagi", "Ipiaú", "Jitaúna", "Ilhéus", "Ibirataia"];
+  const [currentCityIndex, setCurrentCityIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentCityIndex((prevIndex) => (prevIndex + 1) % cities.length);
+    }, 1500);
+
+    return () => clearInterval(interval);
+  }, []);
   return (
     <section className="relative min-h-[100dvh] bg-gradient-hero flex items-center overflow-hidden py-8 sm:py-12">
       {/* Background decorative elements */}
@@ -32,7 +43,7 @@ const HeroSection = () => {
                 <span className="bg-gradient-sun bg-clip-text text-transparent">
                   Educação Primária
                 </span>{" "}
-                em Jequié.
+                em <span className="transition-opacity duration-300">{cities[currentCityIndex]}</span>.
               </h1>
               
               <h2 className="text-muted-foreground font-medium leading-relaxed" style={{ fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}>
