@@ -33,7 +33,7 @@ const FeaturesSection = () => {
           
           <p className="text-muted-foreground leading-relaxed px-4" style={{
           fontSize: 'clamp(1rem, 2.5vw, 1.125rem)'
-        }}>EDUCASOL é uma plataforma inteligência artificial especializada em educação primária. Ela trabalha 24/7 para transformar suas ideias em conteúdo educacional de qualidade, economizando seu tempo e energia para o que realmente importa.</p>
+        }}>EDUCA SOL é uma plataforma de inteligência artificial especializada em educação primária. Nossa IA trabalha incansavelmente para transformar suas ideias em conteúdo educacional de alta qualidade, liberando seu tempo e energia para que você possa se dedicar ao que verdadeiramente importa: seus alunos.</p>
         </div>
 
         {/* Features Grid */}
