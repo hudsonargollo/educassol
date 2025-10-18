@@ -88,7 +88,7 @@ const HeroSection = () => {
                 onClick={() => window.open('https://educa-sol-dashboard.lovable.app', '_blank')}
               >
                 <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 group-hover:animate-spin" />
-                <span className="truncate">Comece a Brilhar Agora@</span>
+                <span className="truncate">Comece a Brilhar!</span>
               </Button>
               
               <Button 
