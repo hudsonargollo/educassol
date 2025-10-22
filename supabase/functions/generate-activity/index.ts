@@ -104,7 +104,7 @@ serve(async (req) => {
     } else {
       userPrompt = `Crie uma atividade do tipo "${activityType}" para ${grade} sobre o tema "${topic}" na disciplina de ${subject}.
       
-Código BNCC: ${bnccCode}
+${bnccCode ? `Código BNCC: ${bnccCode}` : ''}
 Metodologia: ${methodologyText}
 ${durationMinutes ? `Duração: ${durationMinutes} minutos` : ''}
 Nível de Dificuldade: ${difficultyLevel}${accessibilityText}
@@ -163,7 +163,7 @@ Formate a resposta em Markdown com títulos e listas organizadas. Torne a ativid
         author_id: user.id,
         school_id: profile.school_id,
         title: `Atividade: ${topic}`,
-        bncc_codes: [bnccCode],
+        bncc_codes: bnccCode ? [bnccCode] : [],
         prompt: userPrompt,
         content: generatedContent,
         methodology,

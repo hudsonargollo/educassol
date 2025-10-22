@@ -36,7 +36,7 @@ const GenerateContentDialog = ({ open, onOpenChange, contentType }: GenerateCont
   };
 
   const handleGenerate = async () => {
-    if (!formData.topic || !formData.grade || !formData.subject || !formData.bnccCode) {
+    if (!formData.topic || !formData.grade || !formData.subject) {
       toast({
         title: "Campos obrigatórios",
         description: "Preencha todos os campos obrigatórios",
@@ -57,10 +57,13 @@ const GenerateContentDialog = ({ open, onOpenChange, contentType }: GenerateCont
         topic: formData.topic,
         grade: formData.grade,
         subject: formData.subject,
-        bnccCode: formData.bnccCode,
         methodology: formData.methodology,
         difficultyLevel: formData.difficultyLevel,
       };
+
+      if (formData.bnccCode) {
+        payload.bnccCode = formData.bnccCode;
+      }
 
       if (formData.durationMinutes) {
         payload.durationMinutes = parseInt(formData.durationMinutes);
@@ -172,7 +175,7 @@ const GenerateContentDialog = ({ open, onOpenChange, contentType }: GenerateCont
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="bnccCode">Código BNCC *</Label>
+            <Label htmlFor="bnccCode">Código BNCC (opcional)</Label>
             <Input
               id="bnccCode"
               placeholder="Ex: EF05CI02"
