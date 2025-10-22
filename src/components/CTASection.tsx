@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Sun, Users, Heart, Sparkles, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const CTASection = () => {
+  const navigate = useNavigate();
+  
   return (
     <section className="py-12 sm:py-16 lg:py-20 bg-gradient-hero">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -99,7 +102,7 @@ const CTASection = () => {
               variant="hero" 
               size="xl" 
               className="group px-6 sm:px-8 lg:px-12 py-3 sm:py-4 w-full sm:w-auto min-h-[52px] text-sm sm:text-base lg:text-lg"
-              onClick={() => window.open('https://educa-sol-dashboard.lovable.app', '_blank')}
+              onClick={() => navigate('/auth')}
             >
               <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 group-hover:animate-spin" />
               <span className="truncate">Comece agora!</span>

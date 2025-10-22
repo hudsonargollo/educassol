@@ -58,8 +58,12 @@ export type Database = {
           description: string | null
           grade_levels: string[]
           id: string
+          methodology:
+            | Database["public"]["Enums"]["content_methodology"][]
+            | null
           prompt_template: string
           subjects: string[]
+          supports_accessibility: boolean | null
           title: string
           type: string
           updated_at: string
@@ -69,8 +73,12 @@ export type Database = {
           description?: string | null
           grade_levels?: string[]
           id?: string
+          methodology?:
+            | Database["public"]["Enums"]["content_methodology"][]
+            | null
           prompt_template: string
           subjects?: string[]
+          supports_accessibility?: boolean | null
           title: string
           type: string
           updated_at?: string
@@ -80,8 +88,12 @@ export type Database = {
           description?: string | null
           grade_levels?: string[]
           id?: string
+          methodology?:
+            | Database["public"]["Enums"]["content_methodology"][]
+            | null
           prompt_template?: string
           subjects?: string[]
+          supports_accessibility?: boolean | null
           title?: string
           type?: string
           updated_at?: string
@@ -111,40 +123,74 @@ export type Database = {
       }
       generated_content: {
         Row: {
+          accessibility_options: string[] | null
           author_id: string
           bncc_codes: string[] | null
           class_id: string | null
           content: string
           created_at: string
+          difficulty_level:
+            | Database["public"]["Enums"]["difficulty_level"]
+            | null
+          duration_minutes: number | null
           id: string
+          materials_needed: string[] | null
+          metadata: Json | null
+          methodology: Database["public"]["Enums"]["content_methodology"] | null
+          objectives: string[] | null
           prompt: string
           school_id: string
+          student_age_range: string | null
           title: string
           type: string
           updated_at: string
         }
         Insert: {
+          accessibility_options?: string[] | null
           author_id: string
           bncc_codes?: string[] | null
           class_id?: string | null
           content: string
           created_at?: string
+          difficulty_level?:
+            | Database["public"]["Enums"]["difficulty_level"]
+            | null
+          duration_minutes?: number | null
           id?: string
+          materials_needed?: string[] | null
+          metadata?: Json | null
+          methodology?:
+            | Database["public"]["Enums"]["content_methodology"]
+            | null
+          objectives?: string[] | null
           prompt: string
           school_id: string
+          student_age_range?: string | null
           title: string
           type: string
           updated_at?: string
         }
         Update: {
+          accessibility_options?: string[] | null
           author_id?: string
           bncc_codes?: string[] | null
           class_id?: string | null
           content?: string
           created_at?: string
+          difficulty_level?:
+            | Database["public"]["Enums"]["difficulty_level"]
+            | null
+          duration_minutes?: number | null
           id?: string
+          materials_needed?: string[] | null
+          metadata?: Json | null
+          methodology?:
+            | Database["public"]["Enums"]["content_methodology"]
+            | null
+          objectives?: string[] | null
           prompt?: string
           school_id?: string
+          student_age_range?: string | null
           title?: string
           type?: string
           updated_at?: string
@@ -281,6 +327,15 @@ export type Database = {
     }
     Enums: {
       app_role: "district_admin" | "school_admin" | "teacher"
+      content_methodology:
+        | "active_learning"
+        | "traditional"
+        | "project_based"
+        | "gamification"
+        | "flipped_classroom"
+        | "collaborative"
+        | "inquiry_based"
+      difficulty_level: "basic" | "intermediate" | "advanced"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -409,6 +464,16 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["district_admin", "school_admin", "teacher"],
+      content_methodology: [
+        "active_learning",
+        "traditional",
+        "project_based",
+        "gamification",
+        "flipped_classroom",
+        "collaborative",
+        "inquiry_based",
+      ],
+      difficulty_level: ["basic", "intermediate", "advanced"],
     },
   },
 } as const

@@ -29,7 +29,18 @@ serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
-    const { grade, subject, bnccCode, topic, activityType, templateId } = await req.json();
+    const { 
+      grade, 
+      subject, 
+      bnccCode, 
+      topic, 
+      activityType, 
+      templateId,
+      methodology = 'traditional',
+      durationMinutes,
+      accessibilityOptions = [],
+      difficultyLevel = 'intermediate'
+    } = await req.json();
 
     console.log('Generating activity for user:', user.id);
 
@@ -56,8 +67,22 @@ serve(async (req) => {
       throw new Error('Only teachers can generate activities');
     }
 
-    // Build prompt
+    // Build prompt with specifications
     let userPrompt = '';
+    
+    const methodologyText = {
+      'active_learning': 'Metodologias Ativas',
+      'traditional': 'Metodologia Tradicional',
+      'project_based': 'Aprendizagem Baseada em Projetos',
+      'gamification': 'Gamificação',
+      'flipped_classroom': 'Sala de Aula Invertida',
+      'collaborative': 'Aprendizagem Colaborativa',
+      'inquiry_based': 'Aprendizagem por Investigação'
+    }[methodology] || 'Metodologia Tradicional';
+
+    const accessibilityText = accessibilityOptions.length > 0 
+      ? `\n\nAdaptar para: ${accessibilityOptions.join(', ')}`
+      : '';
     
     if (templateId) {
       const { data: template } = await supabaseClient
@@ -72,12 +97,17 @@ serve(async (req) => {
           .replace('[bnccCode]', bnccCode)
           .replace('[grade]', grade)
           .replace('[subject]', subject)
-          .replace('[activityType]', activityType);
+          .replace('[activityType]', activityType)
+          .replace('[methodology]', methodologyText)
+          .replace('[duration]', durationMinutes ? `${durationMinutes} minutos` : 'a definir');
       }
     } else {
       userPrompt = `Crie uma atividade do tipo "${activityType}" para ${grade} sobre o tema "${topic}" na disciplina de ${subject}.
       
 Código BNCC: ${bnccCode}
+Metodologia: ${methodologyText}
+${durationMinutes ? `Duração: ${durationMinutes} minutos` : ''}
+Nível de Dificuldade: ${difficultyLevel}${accessibilityText}
 
 A atividade deve incluir:
 1. Título criativo
@@ -136,6 +166,10 @@ Formate a resposta em Markdown com títulos e listas organizadas. Torne a ativid
         bncc_codes: [bnccCode],
         prompt: userPrompt,
         content: generatedContent,
+        methodology,
+        duration_minutes: durationMinutes,
+        accessibility_options: accessibilityOptions,
+        difficulty_level: difficultyLevel,
       })
       .select()
       .single();

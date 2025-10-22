@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Sun, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
   const cities = ["Jequié", "Itagi", "Ipiaú", "Jitaúna", "Ilhéus", "Ibirataia"];
   const [currentCityIndex, setCurrentCityIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState("");
@@ -85,7 +87,7 @@ const HeroSection = () => {
                 variant="hero" 
                 size="xl" 
                 className="group w-full sm:w-auto min-h-[48px] text-sm sm:text-base px-6 py-3"
-                onClick={() => window.open('https://educa-sol-dashboard.lovable.app', '_blank')}
+                onClick={() => navigate('/auth')}
               >
                 <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 group-hover:animate-spin" />
                 <span className="truncate">Comece a Brilhar!</span>
@@ -95,7 +97,7 @@ const HeroSection = () => {
                 variant="outline" 
                 size="xl"
                 className="w-full sm:w-auto min-h-[48px] px-6 py-3"
-                onClick={() => window.open('https://educa-sol-dashboard.lovable.app', '_blank')}
+                onClick={() => navigate('/auth')}
               >
                 Já tem conta? Faça Login
               </Button>
