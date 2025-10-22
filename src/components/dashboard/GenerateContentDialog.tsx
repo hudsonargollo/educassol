@@ -47,6 +47,11 @@ const GenerateContentDialog = ({ open, onOpenChange, contentType }: GenerateCont
 
     setLoading(true);
     try {
+      // Ensure we have a valid session
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !session) {
+        throw new Error("Sessão inválida. Por favor, faça login novamente.");
+      }
       const functionName = contentType === "lesson_plan" 
         ? "generate-lesson-plan" 
         : contentType === "activity"
@@ -81,7 +86,14 @@ const GenerateContentDialog = ({ open, onOpenChange, contentType }: GenerateCont
         body: payload,
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Edge function error:', error);
+        throw new Error(error.message || "Erro ao chamar função");
+      }
+
+      if (!data) {
+        throw new Error("Nenhum dado retornado");
+      }
 
       toast({
         title: "Conteúdo gerado!",

@@ -25,8 +25,12 @@ serve(async (req) => {
     );
 
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
-    if (userError || !user) {
-      throw new Error('Unauthorized');
+    if (userError) {
+      console.error('Auth error:', userError);
+      throw new Error('Authentication failed: ' + userError.message);
+    }
+    if (!user) {
+      throw new Error('No user found in session');
     }
 
     const { 
@@ -49,22 +53,36 @@ serve(async (req) => {
       .from('profiles')
       .select('school_id')
       .eq('id', user.id)
-      .single();
+      .maybeSingle();
 
-    if (profileError || !profile?.school_id) {
-      throw new Error('User profile not found or no school assigned');
+    if (profileError) {
+      console.error('Profile error:', profileError);
+      throw new Error('Failed to fetch profile: ' + profileError.message);
+    }
+    
+    if (!profile) {
+      throw new Error('Profile not found for user');
+    }
+    
+    if (!profile.school_id) {
+      throw new Error('No school assigned to your profile');
     }
 
     // Check if user has teacher role
-    const { data: roles } = await supabaseClient
+    const { data: roles, error: rolesError } = await supabaseClient
       .from('user_roles')
       .select('role')
       .eq('user_id', user.id)
       .eq('role', 'teacher')
       .maybeSingle();
 
+    if (rolesError) {
+      console.error('Roles error:', rolesError);
+      throw new Error('Failed to check user role: ' + rolesError.message);
+    }
+
     if (!roles) {
-      throw new Error('Only teachers can generate activities');
+      throw new Error('Only teachers can generate activities. Please contact your administrator to assign the teacher role.');
     }
 
     // Build prompt with specifications
