@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sun, LogOut, FileText, ClipboardList, FileQuestion, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import GenerateContentDialog from "@/components/dashboard/GenerateContentDialog";
+import ContentWizard from "@/components/dashboard/ContentWizard";
 import ContentList from "@/components/dashboard/ContentList";
 
 const Dashboard = () => {
@@ -153,7 +153,7 @@ const Dashboard = () => {
       </main>
 
       {/* Generate Content Dialog */}
-      <GenerateContentDialog
+      <ContentWizard
         open={generateDialogOpen}
         onOpenChange={setGenerateDialogOpen}
         contentType={selectedContentType}
