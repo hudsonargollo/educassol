@@ -1,6 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -29,7 +30,41 @@ serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
-    const { grade, subject, bnccCode, topic, duration, templateId } = await req.json();
+    // Validation schema
+    const lessonPlanSchema = z.object({
+      grade: z.string().min(1).max(100),
+      subject: z.string().min(1).max(200),
+      bnccCode: z.string().max(50).optional(),
+      topic: z.string().min(1).max(500),
+      duration: z.number().int().min(1).max(300).optional(),
+      templateId: z.string().uuid().optional(),
+      methodology: z.string().max(200).optional(),
+      durationMinutes: z.number().int().min(1).max(300).optional(),
+      accessibilityOptions: z.array(z.string().max(100)).max(10).optional(),
+      difficultyLevel: z.enum(['easy', 'intermediate', 'advanced']).optional(),
+      specificIdea: z.string().max(1000).optional(),
+      studentsPerClass: z.number().int().min(1).max(200).optional(),
+      numberOfLessons: z.number().int().min(1).max(50).optional(),
+    });
+
+    const requestBody = await req.json();
+    const validationResult = lessonPlanSchema.safeParse(requestBody);
+    
+    if (!validationResult.success) {
+      console.error('Validation error:', validationResult.error);
+      return new Response(
+        JSON.stringify({ 
+          error: 'Invalid input data',
+          details: validationResult.error.errors.map(e => `${e.path.join('.')}: ${e.message}`)
+        }), 
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    const { grade, subject, bnccCode, topic, duration, templateId } = validationResult.data;
 
     console.log('Generating lesson plan for user:', user.id);
 

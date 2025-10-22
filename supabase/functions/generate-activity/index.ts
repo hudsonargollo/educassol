@@ -1,6 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -33,6 +34,41 @@ serve(async (req) => {
       throw new Error('No user found in session');
     }
 
+    // Validation schema
+    const activitySchema = z.object({
+      grade: z.string().min(1).max(100),
+      subject: z.string().min(1).max(200),
+      bnccCode: z.string().max(50).optional(),
+      topic: z.string().min(1).max(500),
+      activityType: z.string().min(1).max(200).optional(),
+      templateId: z.string().uuid().optional(),
+      methodology: z.enum(['traditional', 'active_learning', 'project_based', 'gamification', 'flipped_classroom', 'collaborative', 'inquiry_based']).optional(),
+      durationMinutes: z.number().int().min(1).max(300).optional(),
+      accessibilityOptions: z.array(z.string().max(100)).max(10).optional(),
+      difficultyLevel: z.enum(['easy', 'intermediate', 'advanced']).optional(),
+      specificIdea: z.string().max(1000).optional(),
+      studentsPerClass: z.number().int().min(1).max(200).optional(),
+      numberOfLessons: z.number().int().min(1).max(50).optional(),
+      durationPerLesson: z.number().int().min(1).max(300).optional(),
+    });
+
+    const requestBody = await req.json();
+    const validationResult = activitySchema.safeParse(requestBody);
+    
+    if (!validationResult.success) {
+      console.error('Validation error:', validationResult.error);
+      return new Response(
+        JSON.stringify({ 
+          error: 'Invalid input data',
+          details: validationResult.error.errors.map(e => `${e.path.join('.')}: ${e.message}`)
+        }), 
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
     const { 
       grade, 
       subject, 
@@ -44,7 +80,7 @@ serve(async (req) => {
       durationMinutes,
       accessibilityOptions = [],
       difficultyLevel = 'intermediate'
-    } = await req.json();
+    } = validationResult.data;
 
     console.log('Generating activity for user:', user.id);
 
