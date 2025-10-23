@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      calendario: {
+        Row: {
+          created_at: string
+          data: string
+          descricao: string | null
+          id: string
+          relevancia_pedagogica: string | null
+          tipo: string
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          data: string
+          descricao?: string | null
+          id?: string
+          relevancia_pedagogica?: string | null
+          tipo: string
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          data?: string
+          descricao?: string | null
+          id?: string
+          relevancia_pedagogica?: string | null
+          tipo?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       classes: {
         Row: {
           created_at: string

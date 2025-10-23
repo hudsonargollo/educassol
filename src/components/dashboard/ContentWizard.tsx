@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { StepOne } from "./wizard/StepOne";
@@ -11,6 +11,7 @@ interface ContentWizardProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   contentType: string;
+  prefilledTopic?: string;
 }
 
 export interface WizardData {
@@ -33,12 +34,12 @@ export interface WizardData {
   };
 }
 
-const ContentWizard = ({ open, onOpenChange, contentType }: ContentWizardProps) => {
+const ContentWizard = ({ open, onOpenChange, contentType, prefilledTopic = "" }: ContentWizardProps) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [wizardData, setWizardData] = useState<WizardData>({
     grade: "",
     subject: "",
-    topics: [],
+    topics: prefilledTopic ? [prefilledTopic] : [],
     specificIdea: "",
     noDigitalResources: false,
     studentsPerClass: 40,
@@ -49,6 +50,13 @@ const ContentWizard = ({ open, onOpenChange, contentType }: ContentWizardProps) 
     classId: undefined,
     classContext: undefined,
   });
+
+  // Update topics when prefilledTopic changes
+  useEffect(() => {
+    if (prefilledTopic) {
+      setWizardData(prev => ({ ...prev, topics: [prefilledTopic] }));
+    }
+  }, [prefilledTopic]);
 
   const steps = [
     { number: 1, label: "Temática" },

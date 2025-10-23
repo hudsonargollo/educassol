@@ -8,6 +8,8 @@ import { Sun, LogOut, FileText, ClipboardList, FileQuestion, Plus, Users } from 
 import { useToast } from "@/hooks/use-toast";
 import ContentWizard from "@/components/dashboard/ContentWizard";
 import ContentList from "@/components/dashboard/ContentList";
+import CalendarWidget from "@/components/calendar/CalendarWidget";
+import UpcomingEventsNotification from "@/components/calendar/UpcomingEventsNotification";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -16,6 +18,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [generateDialogOpen, setGenerateDialogOpen] = useState(false);
   const [selectedContentType, setSelectedContentType] = useState<string>("");
+  const [prefilledTopic, setPrefilledTopic] = useState<string>("");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -45,9 +48,14 @@ const Dashboard = () => {
     navigate("/");
   };
 
-  const handleGenerateContent = (type: string) => {
+  const handleGenerateContent = (type: string, topic?: string) => {
     setSelectedContentType(type);
+    setPrefilledTopic(topic || "");
     setGenerateDialogOpen(true);
+  };
+
+  const handleGenerateFromEvent = (event: any) => {
+    handleGenerateContent("lesson_plan", event.titulo);
   };
 
   if (loading) {
@@ -90,46 +98,61 @@ const Dashboard = () => {
           </p>
         </div>
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <Card 
-            className="cursor-pointer hover:shadow-lg transition-shadow"
-            onClick={() => handleGenerateContent("lesson_plan")}
-          >
-            <CardHeader>
-              <FileText className="h-8 w-8 text-primary mb-2" />
-              <CardTitle>Plano de Aula</CardTitle>
-              <CardDescription>
-                Crie um plano de aula completo alinhado à BNCC
-              </CardDescription>
-            </CardHeader>
-          </Card>
+        {/* Upcoming Events Notifications */}
+        <div className="mb-8">
+          <UpcomingEventsNotification onGenerateContent={handleGenerateFromEvent} />
+        </div>
 
-          <Card 
-            className="cursor-pointer hover:shadow-lg transition-shadow"
-            onClick={() => handleGenerateContent("activity")}
-          >
-            <CardHeader>
-              <ClipboardList className="h-8 w-8 text-primary mb-2" />
-              <CardTitle>Atividade</CardTitle>
-              <CardDescription>
-                Gere atividades práticas e engajadoras
-              </CardDescription>
-            </CardHeader>
-          </Card>
+        {/* Grid Layout: Calendar + Quick Actions */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          {/* Calendar Widget - Takes 2 columns on large screens */}
+          <div className="lg:col-span-2">
+            <CalendarWidget onGenerateContent={handleGenerateFromEvent} />
+          </div>
 
-          <Card 
-            className="cursor-pointer hover:shadow-lg transition-shadow"
-            onClick={() => handleGenerateContent("assessment")}
-          >
-            <CardHeader>
-              <FileQuestion className="h-8 w-8 text-primary mb-2" />
-              <CardTitle>Avaliação</CardTitle>
-              <CardDescription>
-                Crie provas e avaliações personalizadas
-              </CardDescription>
-            </CardHeader>
-          </Card>
+          {/* Quick Actions - Takes 1 column */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold mb-4">Criar Conteúdo</h3>
+            
+            <Card 
+              className="cursor-pointer hover:shadow-lg transition-shadow"
+              onClick={() => handleGenerateContent("lesson_plan")}
+            >
+              <CardHeader className="pb-3">
+                <FileText className="h-8 w-8 text-primary mb-2" />
+                <CardTitle className="text-lg">Plano de Aula</CardTitle>
+                <CardDescription className="text-sm">
+                  Crie um plano de aula completo alinhado à BNCC
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card 
+              className="cursor-pointer hover:shadow-lg transition-shadow"
+              onClick={() => handleGenerateContent("activity")}
+            >
+              <CardHeader className="pb-3">
+                <ClipboardList className="h-8 w-8 text-primary mb-2" />
+                <CardTitle className="text-lg">Atividade</CardTitle>
+                <CardDescription className="text-sm">
+                  Gere atividades práticas e engajadoras
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card 
+              className="cursor-pointer hover:shadow-lg transition-shadow"
+              onClick={() => handleGenerateContent("assessment")}
+            >
+              <CardHeader className="pb-3">
+                <FileQuestion className="h-8 w-8 text-primary mb-2" />
+                <CardTitle className="text-lg">Avaliação</CardTitle>
+                <CardDescription className="text-sm">
+                  Crie provas e avaliações personalizadas
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </div>
         </div>
 
         {/* Content Tabs */}
@@ -160,6 +183,7 @@ const Dashboard = () => {
         open={generateDialogOpen}
         onOpenChange={setGenerateDialogOpen}
         contentType={selectedContentType}
+        prefilledTopic={prefilledTopic}
       />
     </div>
   );
