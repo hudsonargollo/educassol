@@ -35,6 +35,17 @@ const GRADE_OPTIONS = [
   "5º ano",
 ];
 
+const ANE_OPTIONS = [
+  { value: "visual", label: "Deficiência Visual" },
+  { value: "auditiva", label: "Deficiência Auditiva" },
+  { value: "fisica", label: "Deficiência Física" },
+  { value: "intelectual", label: "Deficiência Intelectual" },
+  { value: "tea", label: "Transtorno do Espectro Autista (TEA)" },
+  { value: "tdah", label: "TDAH" },
+  { value: "dislexia", label: "Dislexia" },
+  { value: "outras", label: "Outras Necessidades" },
+];
+
 const ClassDialog = ({ open, onOpenChange, editingClass }: ClassDialogProps) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -45,6 +56,7 @@ const ClassDialog = ({ open, onOpenChange, editingClass }: ClassDialogProps) => 
     possui_ane: false,
     detalhes_ane: "",
   });
+  const [selectedAneTypes, setSelectedAneTypes] = useState<string[]>([]);
 
   useEffect(() => {
     if (editingClass) {
@@ -55,6 +67,13 @@ const ClassDialog = ({ open, onOpenChange, editingClass }: ClassDialogProps) => 
         possui_ane: editingClass.possui_ane || false,
         detalhes_ane: editingClass.detalhes_ane || "",
       });
+      // Parse existing ANE types from detalhes_ane if present
+      if (editingClass.detalhes_ane) {
+        const types = ANE_OPTIONS.map(opt => opt.label).filter(label => 
+          editingClass.detalhes_ane?.includes(label)
+        );
+        setSelectedAneTypes(types.length > 0 ? types : []);
+      }
     } else {
       setFormData({
         subject: "",
@@ -63,6 +82,7 @@ const ClassDialog = ({ open, onOpenChange, editingClass }: ClassDialogProps) => 
         possui_ane: false,
         detalhes_ane: "",
       });
+      setSelectedAneTypes([]);
     }
   }, [editingClass, open]);
 
@@ -82,15 +102,23 @@ const ClassDialog = ({ open, onOpenChange, editingClass }: ClassDialogProps) => 
         .single();
 
       if (!profile?.school_id) {
-        throw new Error("Escola não encontrada no perfil");
+        throw new Error("Seu perfil não está associado a uma escola. Entre em contato com o administrador.");
       }
+
+      // Build ANE details from selected types and additional notes
+      const aneDetails = formData.possui_ane 
+        ? [
+            selectedAneTypes.length > 0 ? `Tipos de necessidades: ${selectedAneTypes.join(", ")}` : "",
+            formData.detalhes_ane.trim() ? `Detalhes adicionais: ${formData.detalhes_ane}` : ""
+          ].filter(Boolean).join("\n")
+        : null;
 
       const classData = {
         subject: formData.subject,
         grade: formData.grade,
         total_alunos: formData.total_alunos ? parseInt(formData.total_alunos) : null,
         possui_ane: formData.possui_ane,
-        detalhes_ane: formData.possui_ane ? formData.detalhes_ane : null,
+        detalhes_ane: aneDetails,
         school_id: profile.school_id,
         teacher_id: session.user.id,
       };
@@ -206,18 +234,44 @@ const ClassDialog = ({ open, onOpenChange, editingClass }: ClassDialogProps) => 
             </div>
 
             {formData.possui_ane && (
-              <div className="space-y-2 pl-6">
-                <Label htmlFor="detalhes_ane">Detalhes sobre as ANEs</Label>
-                <Textarea
-                  id="detalhes_ane"
-                  placeholder="Descreva as necessidades especiais dos alunos para que a IA possa adaptar o conteúdo..."
-                  value={formData.detalhes_ane}
-                  onChange={(e) => setFormData({ ...formData, detalhes_ane: e.target.value })}
-                  rows={4}
-                />
-                <p className="text-xs text-muted-foreground">
-                  Quanto mais detalhes você fornecer, mais personalizado será o conteúdo gerado
-                </p>
+              <div className="space-y-4 pl-6">
+                <div className="space-y-3">
+                  <Label>Tipos de Necessidades Especiais</Label>
+                  <div className="grid grid-cols-2 gap-3">
+                    {ANE_OPTIONS.map((option) => (
+                      <div key={option.value} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={option.value}
+                          checked={selectedAneTypes.includes(option.label)}
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              setSelectedAneTypes([...selectedAneTypes, option.label]);
+                            } else {
+                              setSelectedAneTypes(selectedAneTypes.filter(t => t !== option.label));
+                            }
+                          }}
+                        />
+                        <Label htmlFor={option.value} className="cursor-pointer text-sm font-normal">
+                          {option.label}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="detalhes_ane">Detalhes Adicionais (opcional)</Label>
+                  <Textarea
+                    id="detalhes_ane"
+                    placeholder="Adicione informações específicas sobre as necessidades dos alunos..."
+                    value={formData.detalhes_ane}
+                    onChange={(e) => setFormData({ ...formData, detalhes_ane: e.target.value })}
+                    rows={3}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Quanto mais detalhes você fornecer, mais personalizado será o conteúdo gerado
+                  </p>
+                </div>
               </div>
             )}
           </div>

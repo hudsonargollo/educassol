@@ -82,7 +82,7 @@ serve(async (req) => {
       .single();
 
     if (profileError || !profile?.school_id) {
-      throw new Error('User profile not found or no school assigned');
+      throw new Error('Seu perfil não está associado a uma escola. Entre em contato com o administrador do sistema.');
     }
 
     // Check if user has teacher role

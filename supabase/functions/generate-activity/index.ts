@@ -101,15 +101,15 @@ serve(async (req) => {
 
     if (profileError) {
       console.error('Profile error:', profileError);
-      throw new Error('Failed to fetch profile: ' + profileError.message);
+      throw new Error('Erro ao buscar perfil: ' + profileError.message);
     }
     
     if (!profile) {
-      throw new Error('Profile not found for user');
+      throw new Error('Perfil não encontrado para o usuário');
     }
     
     if (!profile.school_id) {
-      throw new Error('No school assigned to your profile');
+      throw new Error('Seu perfil não está associado a uma escola. Entre em contato com o administrador do sistema.');
     }
 
     // Check if user has teacher role

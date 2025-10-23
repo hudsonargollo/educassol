@@ -86,14 +86,23 @@ export const StepOne = ({ data, onUpdate, onNext, onBack }: StepOneProps) => {
     }
   };
 
-  const canProceed = data.grade !== "";
+  const canProceed = data.classId !== undefined || data.grade !== "";
 
   return (
     <div className="space-y-8">
       <div>
         <p className="text-sm text-muted-foreground mb-2">Criando seu plano de aula: Etapa 1 de 5</p>
-        <h2 className="text-3xl font-bold">Ano, Disciplina e Temática</h2>
+        <h2 className="text-3xl font-bold">Selecione uma Turma</h2>
       </div>
+
+      {classes.length === 0 && !loadingClasses && (
+        <Alert className="bg-amber-50 dark:bg-amber-950 border-amber-200">
+          <AlertCircle className="h-4 w-4 text-amber-600" />
+          <AlertDescription className="text-amber-800 dark:text-amber-200">
+            Você ainda não tem turmas cadastradas. Crie uma turma primeiro na página "Turmas" para poder gerar conteúdo personalizado.
+          </AlertDescription>
+        </Alert>
+      )}
 
       <div className="space-y-6">
         {/* Seleção de Turma Existente */}
