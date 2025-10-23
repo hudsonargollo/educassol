@@ -44,6 +44,14 @@ export const StepFive = ({ data, onClose, contentType }: StepFiveProps) => {
         numberOfLessons: data.numberOfLessons,
       };
 
+      // Add class context if available
+      if (data.classId) {
+        payload.classId = data.classId;
+      }
+      if (data.classContext) {
+        payload.classContext = data.classContext;
+      }
+
       if (contentType === "activity") {
         payload.activityType = data.selectedActivity?.title || "Atividade Prática";
       }

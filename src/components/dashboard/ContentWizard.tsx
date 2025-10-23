@@ -25,6 +25,12 @@ export interface WizardData {
   methodologies: string[];
   accessibilityOptions: string[];
   selectedActivity?: any;
+  classId?: string;
+  classContext?: {
+    total_alunos: number | null;
+    possui_ane: boolean;
+    detalhes_ane: string | null;
+  };
 }
 
 const ContentWizard = ({ open, onOpenChange, contentType }: ContentWizardProps) => {
@@ -40,6 +46,8 @@ const ContentWizard = ({ open, onOpenChange, contentType }: ContentWizardProps) 
     durationPerLesson: 60,
     methodologies: [],
     accessibilityOptions: [],
+    classId: undefined,
+    classContext: undefined,
   });
 
   const steps = [
@@ -79,6 +87,8 @@ const ContentWizard = ({ open, onOpenChange, contentType }: ContentWizardProps) 
       durationPerLesson: 60,
       methodologies: [],
       accessibilityOptions: [],
+      classId: undefined,
+      classContext: undefined,
     });
     onOpenChange(false);
   };

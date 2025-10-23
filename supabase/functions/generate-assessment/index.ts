@@ -44,6 +44,12 @@ serve(async (req) => {
       difficultyLevel: z.enum(['easy', 'intermediate', 'advanced']).optional(),
       specificIdea: z.string().max(1000).optional(),
       studentsPerClass: z.number().int().min(1).max(200).optional(),
+      classId: z.string().uuid().optional(),
+      classContext: z.object({
+        total_alunos: z.number().int().nullable().optional(),
+        possui_ane: z.boolean().optional(),
+        detalhes_ane: z.string().nullable().optional(),
+      }).optional(),
     });
 
     const requestBody = await req.json();
@@ -63,7 +69,7 @@ serve(async (req) => {
       );
     }
 
-    const { grade, subject, bnccCode, topic, numQuestions, templateId } = validationResult.data;
+    const { grade, subject, bnccCode, topic, numQuestions, templateId, classId, classContext } = validationResult.data;
 
     console.log('Generating assessment for user:', user.id);
 
@@ -93,6 +99,17 @@ serve(async (req) => {
     // Build prompt
     let userPrompt = '';
     
+    // Add class context to prompt if available
+    let classContextText = '';
+    if (classContext) {
+      if (classContext.total_alunos) {
+        classContextText += `\nNúmero de alunos na turma: ${classContext.total_alunos}`;
+      }
+      if (classContext.possui_ane && classContext.detalhes_ane) {
+        classContextText += `\n\nIMPORTANTE - Adaptação para Alunos com Necessidades Especiais:\n${classContext.detalhes_ane}\n\nPor favor, adapte as questões e os critérios de avaliação considerando estas necessidades especiais.`;
+      }
+    }
+    
     if (templateId) {
       const { data: template } = await supabaseClient
         .from('content_templates')
@@ -111,7 +128,7 @@ serve(async (req) => {
     } else {
       userPrompt = `Crie uma avaliação com ${numQuestions} questões para ${grade} sobre o tema "${topic}" na disciplina de ${subject}.
       
-Código BNCC: ${bnccCode}
+Código BNCC: ${bnccCode}${classContextText}
 
 A avaliação deve incluir:
 1. Título
@@ -160,17 +177,23 @@ Formate a resposta em Markdown com títulos e listas organizadas. As questões d
     console.log('Content generated successfully');
 
     // Save to database
+    const contentData: any = {
+      type: 'assessment',
+      author_id: user.id,
+      school_id: profile.school_id,
+      title: `Avaliação: ${topic}`,
+      bncc_codes: [bnccCode],
+      prompt: userPrompt,
+      content: generatedContent,
+    };
+
+    if (classId) {
+      contentData.class_id = classId;
+    }
+
     const { data: savedContent, error: saveError } = await supabaseClient
       .from('generated_content')
-      .insert({
-        type: 'assessment',
-        author_id: user.id,
-        school_id: profile.school_id,
-        title: `Avaliação: ${topic}`,
-        bncc_codes: [bnccCode],
-        prompt: userPrompt,
-        content: generatedContent,
-      })
+      .insert(contentData)
       .select()
       .single();
 

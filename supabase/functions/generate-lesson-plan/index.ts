@@ -45,6 +45,12 @@ serve(async (req) => {
       specificIdea: z.string().max(1000).optional(),
       studentsPerClass: z.number().int().min(1).max(200).optional(),
       numberOfLessons: z.number().int().min(1).max(50).optional(),
+      classId: z.string().uuid().optional(),
+      classContext: z.object({
+        total_alunos: z.number().int().nullable().optional(),
+        possui_ane: z.boolean().optional(),
+        detalhes_ane: z.string().nullable().optional(),
+      }).optional(),
     });
 
     const requestBody = await req.json();
@@ -64,7 +70,7 @@ serve(async (req) => {
       );
     }
 
-    const { grade, subject, bnccCode, topic, duration, templateId } = validationResult.data;
+    const { grade, subject, bnccCode, topic, duration, templateId, classId, classContext } = validationResult.data;
 
     console.log('Generating lesson plan for user:', user.id);
 
@@ -94,6 +100,17 @@ serve(async (req) => {
     // Build prompt
     let userPrompt = '';
     
+    // Add class context to prompt if available
+    let classContextText = '';
+    if (classContext) {
+      if (classContext.total_alunos) {
+        classContextText += `\nNúmero de alunos na turma: ${classContext.total_alunos}`;
+      }
+      if (classContext.possui_ane && classContext.detalhes_ane) {
+        classContextText += `\n\nIMPORTANTE - Adaptação para Alunos com Necessidades Especiais:\n${classContext.detalhes_ane}\n\nPor favor, adapte as atividades e estratégias pedagógicas considerando estas necessidades especiais.`;
+      }
+    }
+    
     if (templateId) {
       const { data: template } = await supabaseClient
         .from('content_templates')
@@ -113,7 +130,7 @@ serve(async (req) => {
       userPrompt = `Crie um plano de aula detalhado para ${grade} sobre o tema "${topic}" na disciplina de ${subject}.
       
 Código BNCC: ${bnccCode}
-Duração: ${duration} minutos
+Duração: ${duration} minutos${classContextText}
 
 O plano de aula deve incluir:
 1. Objetivos de Aprendizagem (alinhados à BNCC)
@@ -162,17 +179,23 @@ Formate a resposta em Markdown com títulos e listas organizadas.`;
     console.log('Content generated successfully');
 
     // Save to database
+    const contentData: any = {
+      type: 'lesson_plan',
+      author_id: user.id,
+      school_id: profile.school_id,
+      title: `Plano de Aula: ${topic}`,
+      bncc_codes: [bnccCode],
+      prompt: userPrompt,
+      content: generatedContent,
+    };
+
+    if (classId) {
+      contentData.class_id = classId;
+    }
+
     const { data: savedContent, error: saveError } = await supabaseClient
       .from('generated_content')
-      .insert({
-        type: 'lesson_plan',
-        author_id: user.id,
-        school_id: profile.school_id,
-        title: `Plano de Aula: ${topic}`,
-        bncc_codes: [bnccCode],
-        prompt: userPrompt,
-        content: generatedContent,
-      })
+      .insert(contentData)
       .select()
       .single();
 

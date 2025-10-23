@@ -50,6 +50,12 @@ serve(async (req) => {
       studentsPerClass: z.number().int().min(1).max(200).optional(),
       numberOfLessons: z.number().int().min(1).max(50).optional(),
       durationPerLesson: z.number().int().min(1).max(300).optional(),
+      classId: z.string().uuid().optional(),
+      classContext: z.object({
+        total_alunos: z.number().int().nullable().optional(),
+        possui_ane: z.boolean().optional(),
+        detalhes_ane: z.string().nullable().optional(),
+      }).optional(),
     });
 
     const requestBody = await req.json();
@@ -79,7 +85,9 @@ serve(async (req) => {
       methodology = 'traditional',
       durationMinutes,
       accessibilityOptions = [],
-      difficultyLevel = 'intermediate'
+      difficultyLevel = 'intermediate',
+      classId,
+      classContext
     } = validationResult.data;
 
     console.log('Generating activity for user:', user.id);
@@ -124,6 +132,17 @@ serve(async (req) => {
     // Build prompt with specifications
     let userPrompt = '';
     
+    // Add class context to prompt if available
+    let classContextText = '';
+    if (classContext) {
+      if (classContext.total_alunos) {
+        classContextText += `\nNúmero de alunos na turma: ${classContext.total_alunos}`;
+      }
+      if (classContext.possui_ane && classContext.detalhes_ane) {
+        classContextText += `\n\nIMPORTANTE - Adaptação para Alunos com Necessidades Especiais:\n${classContext.detalhes_ane}\n\nPor favor, adapte as atividades e estratégias pedagógicas considerando estas necessidades especiais.`;
+      }
+    }
+    
     const methodologyText = {
       'active_learning': 'Metodologias Ativas',
       'traditional': 'Metodologia Tradicional',
@@ -161,7 +180,7 @@ serve(async (req) => {
 ${bnccCode ? `Código BNCC: ${bnccCode}` : ''}
 Metodologia: ${methodologyText}
 ${durationMinutes ? `Duração: ${durationMinutes} minutos` : ''}
-Nível de Dificuldade: ${difficultyLevel}${accessibilityText}
+Nível de Dificuldade: ${difficultyLevel}${accessibilityText}${classContextText}
 
 A atividade deve incluir:
 1. Título criativo
@@ -210,21 +229,27 @@ Formate a resposta em Markdown com títulos e listas organizadas. Torne a ativid
     console.log('Content generated successfully');
 
     // Save to database
+    const contentData: any = {
+      type: 'activity',
+      author_id: user.id,
+      school_id: profile.school_id,
+      title: `Atividade: ${topic}`,
+      bncc_codes: bnccCode ? [bnccCode] : [],
+      prompt: userPrompt,
+      content: generatedContent,
+      methodology,
+      duration_minutes: durationMinutes,
+      accessibility_options: accessibilityOptions,
+      difficulty_level: difficultyLevel,
+    };
+
+    if (classId) {
+      contentData.class_id = classId;
+    }
+
     const { data: savedContent, error: saveError } = await supabaseClient
       .from('generated_content')
-      .insert({
-        type: 'activity',
-        author_id: user.id,
-        school_id: profile.school_id,
-        title: `Atividade: ${topic}`,
-        bncc_codes: bnccCode ? [bnccCode] : [],
-        prompt: userPrompt,
-        content: generatedContent,
-        methodology,
-        duration_minutes: durationMinutes,
-        accessibility_options: accessibilityOptions,
-        difficulty_level: difficultyLevel,
-      })
+      .insert(contentData)
       .select()
       .single();
 
