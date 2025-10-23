@@ -50,6 +50,9 @@ export const StepFive = ({ data, onClose, contentType }: StepFiveProps) => {
 
       const { data: result, error } = await supabase.functions.invoke(functionName, {
         body: payload,
+        headers: {
+          Authorization: `Bearer ${session.access_token}`
+        }
       });
 
       if (error) {
