@@ -52,6 +52,11 @@ export const StepFive = ({ data, onClose, contentType }: StepFiveProps) => {
         payload.classContext = data.classContext;
       }
 
+      // Add template if selected
+      if (data.templateId) {
+        payload.templateId = data.templateId;
+      }
+
       if (contentType === "activity") {
         payload.activityType = data.selectedActivity?.title || "Atividade Prática";
       }

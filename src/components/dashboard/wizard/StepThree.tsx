@@ -10,12 +10,14 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import TemplateSelector from "./TemplateSelector";
 
 interface StepThreeProps {
   data: WizardData;
   onUpdate: (data: Partial<WizardData>) => void;
   onNext: () => void;
   onBack: () => void;
+  contentType: string;
 }
 
 interface BNCCSkill {
@@ -24,7 +26,7 @@ interface BNCCSkill {
   relevance: string;
 }
 
-export const StepThree = ({ data, onUpdate, onNext, onBack }: StepThreeProps) => {
+export const StepThree = ({ data, onUpdate, onNext, onBack, contentType }: StepThreeProps) => {
   const { toast } = useToast();
   const [topicInput, setTopicInput] = useState("");
   const [bnccSuggestions, setBnccSuggestions] = useState<BNCCSkill[]>([]);
@@ -263,6 +265,15 @@ export const StepThree = ({ data, onUpdate, onNext, onBack }: StepThreeProps) =>
               </div>
               <p className="text-xs text-muted-foreground mt-1">Tempo de duração de cada aula, em minutos</p>
           </div>
+
+          {/* Template Selector */}
+          <TemplateSelector
+            contentType={contentType}
+            currentGrade={data.grade}
+            currentSubject={data.subject}
+            onSelectTemplate={(templateId) => onUpdate({ templateId })}
+            selectedTemplateId={data.templateId}
+          />
 
           {/* BNCC Suggestions Section */}
           <div>

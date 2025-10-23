@@ -32,6 +32,7 @@ export interface WizardData {
     possui_ane: boolean;
     detalhes_ane: string | null;
   };
+  templateId?: string;
 }
 
 const ContentWizard = ({ open, onOpenChange, contentType, prefilledTopic = "" }: ContentWizardProps) => {
@@ -49,6 +50,7 @@ const ContentWizard = ({ open, onOpenChange, contentType, prefilledTopic = "" }:
     accessibilityOptions: [],
     classId: undefined,
     classContext: undefined,
+    templateId: undefined,
   });
 
   // Update topics when prefilledTopic changes
@@ -97,6 +99,7 @@ const ContentWizard = ({ open, onOpenChange, contentType, prefilledTopic = "" }:
       accessibilityOptions: [],
       classId: undefined,
       classContext: undefined,
+      templateId: undefined,
     });
     onOpenChange(false);
   };
@@ -156,6 +159,7 @@ const ContentWizard = ({ open, onOpenChange, contentType, prefilledTopic = "" }:
               onUpdate={updateWizardData}
               onNext={handleNext}
               onBack={handleBack}
+              contentType={contentType}
             />
           )}
           {currentStep === 4 && (
