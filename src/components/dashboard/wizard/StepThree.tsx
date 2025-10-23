@@ -4,9 +4,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { ArrowRight, ArrowLeft } from "lucide-react";
+import { ArrowRight, ArrowLeft, Sparkles, Loader2 } from "lucide-react";
 import { WizardData } from "../ContentWizard";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface StepThreeProps {
   data: WizardData;
@@ -15,8 +18,18 @@ interface StepThreeProps {
   onBack: () => void;
 }
 
+interface BNCCSkill {
+  code: string;
+  description: string;
+  relevance: string;
+}
+
 export const StepThree = ({ data, onUpdate, onNext, onBack }: StepThreeProps) => {
+  const { toast } = useToast();
   const [topicInput, setTopicInput] = useState("");
+  const [bnccSuggestions, setBnccSuggestions] = useState<BNCCSkill[]>([]);
+  const [loadingBncc, setLoadingBncc] = useState(false);
+  const [selectedBnccCode, setSelectedBnccCode] = useState<string>("");
 
   const accessibilityOptions = [
     { id: "visual", label: "👁️ Alunos com deficiência visual" },
@@ -71,6 +84,60 @@ export const StepThree = ({ data, onUpdate, onNext, onBack }: StepThreeProps) =>
       onUpdate({ methodologies: current.filter(m => m !== method) });
     } else {
       onUpdate({ methodologies: [...current, method] });
+    }
+  };
+
+  const handleSuggestBncc = async () => {
+    if (!data.grade || !data.subject) {
+      toast({
+        title: "Informações insuficientes",
+        description: "Selecione o ano e a disciplina primeiro",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoadingBncc(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Não autenticado");
+
+      const { data: result, error } = await supabase.functions.invoke("suggest-bncc-skills", {
+        body: {
+          grade: data.grade,
+          subject: data.subject,
+          topic: data.topics.length > 0 ? data.topics.join(", ") : undefined,
+        },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`
+        }
+      });
+
+      if (error) throw error;
+      
+      setBnccSuggestions(result.skills || []);
+      
+      toast({
+        title: "Sugestões BNCC geradas!",
+        description: `${result.skills.length} habilidades sugeridas`,
+      });
+    } catch (error: any) {
+      console.error("Error suggesting BNCC:", error);
+      toast({
+        title: "Erro ao buscar sugestões",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingBncc(false);
+    }
+  };
+
+  const handleSelectBnccSkill = (skill: BNCCSkill) => {
+    setSelectedBnccCode(skill.code);
+    // Add the BNCC code to topics if not already there
+    if (!data.topics.includes(skill.code)) {
+      onUpdate({ topics: [...data.topics, `${skill.code}: ${skill.description.substring(0, 50)}...`] });
     }
   };
 
@@ -195,8 +262,76 @@ export const StepThree = ({ data, onUpdate, onNext, onBack }: StepThreeProps) =>
                 <span className="text-2xl font-bold w-16 text-right">{data.durationPerLesson}</span>
               </div>
               <p className="text-xs text-muted-foreground mt-1">Tempo de duração de cada aula, em minutos</p>
-            </div>
           </div>
+
+          {/* BNCC Suggestions Section */}
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <Label className="text-base font-semibold">
+                Sugestões de Habilidades BNCC
+              </Label>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleSuggestBncc}
+                disabled={loadingBncc || !data.grade || !data.subject}
+              >
+                {loadingBncc ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Buscando...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    Sugerir com IA
+                  </>
+                )}
+              </Button>
+            </div>
+            
+            {bnccSuggestions.length > 0 && (
+              <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                {bnccSuggestions.map((skill, idx) => (
+                  <Card
+                    key={idx}
+                    className={`cursor-pointer transition-all ${
+                      selectedBnccCode === skill.code
+                        ? "border-primary bg-primary/5"
+                        : "hover:border-primary/50"
+                    }`}
+                    onClick={() => handleSelectBnccSkill(skill)}
+                  >
+                    <CardHeader className="p-3">
+                      <div className="flex items-start justify-between">
+                        <Badge variant="secondary" className="font-mono text-xs">
+                          {skill.code}
+                        </Badge>
+                        {selectedBnccCode === skill.code && (
+                          <Badge className="bg-primary">Selecionada</Badge>
+                        )}
+                      </div>
+                      <CardDescription className="text-xs mt-2">
+                        {skill.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-3 pt-0">
+                      <p className="text-xs text-muted-foreground italic">
+                        💡 {skill.relevance}
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+            
+            {bnccSuggestions.length === 0 && (
+              <p className="text-xs text-muted-foreground italic">
+                Clique em "Sugerir com IA" para receber recomendações de habilidades BNCC baseadas no ano, disciplina e tema
+              </p>
+            )}
+          </div>
+        </div>
 
           <div>
             <div className="flex items-center gap-2 mb-3">
