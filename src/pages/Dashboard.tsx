@@ -12,36 +12,34 @@ import ContentList from "@/components/dashboard/ContentList";
 const Dashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<any>({ email: "test@example.com" }); // TEMP: Mock user
+  const [loading, setLoading] = useState(false); // TEMP: Skip loading
   const [generateDialogOpen, setGenerateDialogOpen] = useState(false);
   const [selectedContentType, setSelectedContentType] = useState<string>("");
 
-  useEffect(() => {
-    // TEMPORARILY DISABLED AUTHENTICATION
-    // Check authentication
-    // supabase.auth.getSession().then(({ data: { session } }) => {
-    //   if (session) {
-    //     setUser(session.user);
-    //   } else {
-    //     navigate("/auth");
-    //   }
-    //   setLoading(false);
-    // });
+  // TEMPORARILY DISABLED AUTHENTICATION
+  // useEffect(() => {
+  //   supabase.auth.getSession().then(({ data: { session } }) => {
+  //     if (session) {
+  //       setUser(session.user);
+  //     } else {
+  //       navigate("/auth");
+  //     }
+  //     setLoading(false);
+  //   });
 
-    // const {
-    //   data: { subscription },
-    // } = supabase.auth.onAuthStateChange((_event, session) => {
-    //   if (session) {
-    //     setUser(session.user);
-    //   } else {
-    //     navigate("/auth");
-    //   }
-    // });
+  //   const {
+  //     data: { subscription },
+  //   } = supabase.auth.onAuthStateChange((_event, session) => {
+  //     if (session) {
+  //       setUser(session.user);
+  //     } else {
+  //       navigate("/auth");
+  //     }
+  //   });
 
-    // return () => subscription.unsubscribe();
-    setLoading(false);
-  }, [navigate]);
+  //   return () => subscription.unsubscribe();
+  // }, [navigate]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
