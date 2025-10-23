@@ -17,29 +17,38 @@ export type Database = {
       classes: {
         Row: {
           created_at: string
+          detalhes_ane: string | null
           grade: string
           id: string
+          possui_ane: boolean | null
           school_id: string
           subject: string
           teacher_id: string | null
+          total_alunos: number | null
           updated_at: string
         }
         Insert: {
           created_at?: string
+          detalhes_ane?: string | null
           grade: string
           id?: string
+          possui_ane?: boolean | null
           school_id: string
           subject: string
           teacher_id?: string | null
+          total_alunos?: number | null
           updated_at?: string
         }
         Update: {
           created_at?: string
+          detalhes_ane?: string | null
           grade?: string
           id?: string
+          possui_ane?: boolean | null
           school_id?: string
           subject?: string
           teacher_id?: string | null
+          total_alunos?: number | null
           updated_at?: string
         }
         Relationships: [

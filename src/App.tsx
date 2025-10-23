@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import LandingV2 from "./pages/LandingV2";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import Classes from "./pages/Classes";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/v2" element={<LandingV2 />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/classes" element={<Classes />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
