@@ -18,27 +18,29 @@ const Dashboard = () => {
   const [selectedContentType, setSelectedContentType] = useState<string>("");
 
   useEffect(() => {
+    // TEMPORARILY DISABLED AUTHENTICATION
     // Check authentication
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        setUser(session.user);
-      } else {
-        navigate("/auth");
-      }
-      setLoading(false);
-    });
+    // supabase.auth.getSession().then(({ data: { session } }) => {
+    //   if (session) {
+    //     setUser(session.user);
+    //   } else {
+    //     navigate("/auth");
+    //   }
+    //   setLoading(false);
+    // });
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        setUser(session.user);
-      } else {
-        navigate("/auth");
-      }
-    });
+    // const {
+    //   data: { subscription },
+    // } = supabase.auth.onAuthStateChange((_event, session) => {
+    //   if (session) {
+    //     setUser(session.user);
+    //   } else {
+    //     navigate("/auth");
+    //   }
+    // });
 
-    return () => subscription.unsubscribe();
+    // return () => subscription.unsubscribe();
+    setLoading(false);
   }, [navigate]);
 
   const handleSignOut = async () => {
