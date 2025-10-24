@@ -102,36 +102,6 @@ Formato de resposta (JSON):
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
-        tools: [
-          {
-            type: "function",
-            function: {
-              name: "suggest_bncc_skills",
-              description: "Return BNCC skills suggestions",
-              parameters: {
-                type: "object",
-                properties: {
-                  skills: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      properties: {
-                        code: { type: "string" },
-                        description: { type: "string" },
-                        relevance: { type: "string" }
-                      },
-                      required: ["code", "description", "relevance"],
-                      additionalProperties: false
-                    }
-                  }
-                },
-                required: ["skills"],
-                additionalProperties: false
-              }
-            }
-          }
-        ],
-        tool_choice: { type: "function", function: { name: "suggest_bncc_skills" } }
       }),
     });
 
@@ -144,14 +114,19 @@ Formato de resposta (JSON):
     const aiData = await aiResponse.json();
     console.log('AI response:', JSON.stringify(aiData));
 
-    // Extract tool call result
+    // Parse JSON response from AI
+    const aiContent = aiData.choices[0].message.content;
+    
+    // Extract JSON from markdown code blocks if present
+    const jsonMatch = aiContent.match(/```(?:json)?\s*([\s\S]*?)\s*```/) || [null, aiContent];
+    const jsonText = jsonMatch[1] || aiContent;
+    
     let suggestions;
-    if (aiData.choices[0].message.tool_calls && aiData.choices[0].message.tool_calls.length > 0) {
-      const toolCall = aiData.choices[0].message.tool_calls[0];
-      suggestions = JSON.parse(toolCall.function.arguments);
-    } else {
-      // Fallback if tool calling doesn't work
-      throw new Error('No tool call response from AI');
+    try {
+      suggestions = JSON.parse(jsonText.trim());
+    } catch (parseError) {
+      console.error('Failed to parse AI response:', aiContent);
+      throw new Error('Failed to parse AI response as JSON');
     }
 
     console.log('BNCC suggestions generated successfully');
