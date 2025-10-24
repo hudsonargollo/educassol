@@ -40,6 +40,7 @@ const ANE_OPTIONS = [
   { value: "auditiva", label: "Deficiência Auditiva" },
   { value: "fisica", label: "Deficiência Física" },
   { value: "intelectual", label: "Deficiência Intelectual" },
+  { value: "autismo", label: "Autismo" },
   { value: "tea", label: "Transtorno do Espectro Autista (TEA)" },
   { value: "tdah", label: "TDAH" },
   { value: "dislexia", label: "Dislexia" },
