@@ -55,34 +55,70 @@ const ClassDialog = ({ open, onOpenChange, editingClass }: ClassDialogProps) => 
     total_alunos: "",
     possui_ane: false,
     detalhes_ane: "",
+    school_name: "",
   });
   const [selectedAneTypes, setSelectedAneTypes] = useState<string[]>([]);
 
   useEffect(() => {
-    if (editingClass) {
-      setFormData({
-        subject: editingClass.subject,
-        grade: editingClass.grade,
-        total_alunos: editingClass.total_alunos?.toString() || "",
-        possui_ane: editingClass.possui_ane || false,
-        detalhes_ane: editingClass.detalhes_ane || "",
-      });
-      // Parse existing ANE types from detalhes_ane if present
-      if (editingClass.detalhes_ane) {
-        const types = ANE_OPTIONS.map(opt => opt.label).filter(label => 
-          editingClass.detalhes_ane?.includes(label)
-        );
-        setSelectedAneTypes(types.length > 0 ? types : []);
+    const loadSchoolName = async () => {
+      if (editingClass) {
+        // Load school name for editing
+        const { data: schoolData } = await supabase
+          .from("schools")
+          .select("name")
+          .eq("id", editingClass.school_id)
+          .single();
+
+        setFormData({
+          subject: editingClass.subject,
+          grade: editingClass.grade,
+          total_alunos: editingClass.total_alunos?.toString() || "",
+          possui_ane: editingClass.possui_ane || false,
+          detalhes_ane: editingClass.detalhes_ane || "",
+          school_name: schoolData?.name || "",
+        });
+        // Parse existing ANE types from detalhes_ane if present
+        if (editingClass.detalhes_ane) {
+          const types = ANE_OPTIONS.map(opt => opt.label).filter(label => 
+            editingClass.detalhes_ane?.includes(label)
+          );
+          setSelectedAneTypes(types.length > 0 ? types : []);
+        }
+      } else {
+        // Load school name from profile if available
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("school_id")
+            .eq("id", session.user.id)
+            .single();
+
+          let schoolName = "";
+          if (profile?.school_id) {
+            const { data: schoolData } = await supabase
+              .from("schools")
+              .select("name")
+              .eq("id", profile.school_id)
+              .single();
+            schoolName = schoolData?.name || "";
+          }
+
+          setFormData({
+            subject: "",
+            grade: "",
+            total_alunos: "",
+            possui_ane: false,
+            detalhes_ane: "",
+            school_name: schoolName,
+          });
+          setSelectedAneTypes([]);
+        }
       }
-    } else {
-      setFormData({
-        subject: "",
-        grade: "",
-        total_alunos: "",
-        possui_ane: false,
-        detalhes_ane: "",
-      });
-      setSelectedAneTypes([]);
+    };
+
+    if (open) {
+      loadSchoolName();
     }
   }, [editingClass, open]);
 
@@ -94,15 +130,82 @@ const ClassDialog = ({ open, onOpenChange, editingClass }: ClassDialogProps) => 
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) throw new Error("Não autenticado");
 
-      // Get user's school_id from profile
+      if (!formData.school_name.trim()) {
+        throw new Error("Por favor, informe o nome da escola.");
+      }
+
+      // Get user's profile
       const { data: profile } = await supabase
         .from("profiles")
-        .select("school_id")
+        .select("school_id, district_id")
         .eq("id", session.user.id)
         .single();
 
-      if (!profile?.school_id) {
-        throw new Error("Seu perfil não está associado a uma escola. Entre em contato com o administrador.");
+      let schoolId = profile?.school_id;
+      let districtId = profile?.district_id;
+
+      // If teacher doesn't have a district, create a default one
+      if (!districtId) {
+        const { data: defaultDistrict, error: districtError } = await supabase
+          .from("districts")
+          .select("id")
+          .eq("name", "Rede Independente")
+          .single();
+
+        if (districtError && districtError.code === 'PGRST116') {
+          // District doesn't exist, create it
+          const { data: newDistrict, error: createDistrictError } = await supabase
+            .from("districts")
+            .insert({ name: "Rede Independente" })
+            .select("id")
+            .single();
+
+          if (createDistrictError) throw createDistrictError;
+          districtId = newDistrict.id;
+        } else if (districtError) {
+          throw districtError;
+        } else {
+          districtId = defaultDistrict.id;
+        }
+      }
+
+      // Find or create school
+      if (!schoolId || editingClass) {
+        // Check if school exists with this name
+        const { data: existingSchool } = await supabase
+          .from("schools")
+          .select("id")
+          .eq("name", formData.school_name.trim())
+          .eq("district_id", districtId)
+          .single();
+
+        if (existingSchool) {
+          schoolId = existingSchool.id;
+        } else {
+          // Create new school
+          const { data: newSchool, error: schoolError } = await supabase
+            .from("schools")
+            .insert({
+              name: formData.school_name.trim(),
+              district_id: districtId,
+            })
+            .select("id")
+            .single();
+
+          if (schoolError) throw schoolError;
+          schoolId = newSchool.id;
+        }
+
+        // Update teacher's profile with school and district
+        const { error: profileError } = await supabase
+          .from("profiles")
+          .update({
+            school_id: schoolId,
+            district_id: districtId,
+          })
+          .eq("id", session.user.id);
+
+        if (profileError) throw profileError;
       }
 
       // Build ANE details from selected types and additional notes
@@ -119,7 +222,7 @@ const ClassDialog = ({ open, onOpenChange, editingClass }: ClassDialogProps) => 
         total_alunos: formData.total_alunos ? parseInt(formData.total_alunos) : null,
         possui_ane: formData.possui_ane,
         detalhes_ane: aneDetails,
-        school_id: profile.school_id,
+        school_id: schoolId,
         teacher_id: session.user.id,
       };
 
@@ -173,6 +276,20 @@ const ClassDialog = ({ open, onOpenChange, editingClass }: ClassDialogProps) => 
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="school_name">Nome da Escola *</Label>
+            <Input
+              id="school_name"
+              placeholder="Ex: Escola Municipal João Silva"
+              value={formData.school_name}
+              onChange={(e) => setFormData({ ...formData, school_name: e.target.value })}
+              required
+            />
+            <p className="text-xs text-muted-foreground">
+              Se a escola já existir no sistema, ela será vinculada automaticamente
+            </p>
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="subject">Nome da Turma / Disciplina *</Label>
             <Input
