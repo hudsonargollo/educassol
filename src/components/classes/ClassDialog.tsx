@@ -46,6 +46,15 @@ const ANE_OPTIONS = [
   { value: "outras", label: "Outras Necessidades" },
 ];
 
+const CITIES = [
+  "Jequié",
+  "Itagi",
+  "Jitaúna",
+  "Ipiaú",
+  "Jaguaquara",
+  "Aiquara",
+];
+
 const ClassDialog = ({ open, onOpenChange, editingClass }: ClassDialogProps) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -55,28 +64,43 @@ const ClassDialog = ({ open, onOpenChange, editingClass }: ClassDialogProps) => 
     total_alunos: "",
     possui_ane: false,
     detalhes_ane: "",
-    school_name: "",
+    city: "",
+    school_id: "",
   });
   const [selectedAneTypes, setSelectedAneTypes] = useState<string[]>([]);
+  const [availableSchools, setAvailableSchools] = useState<Array<{ id: string; name: string }>>([]);
 
   useEffect(() => {
-    const loadSchoolName = async () => {
+    const loadSchoolData = async () => {
       if (editingClass) {
-        // Load school name for editing
+        // Load school data for editing
         const { data: schoolData } = await supabase
           .from("schools")
-          .select("name")
+          .select("id, name, city")
           .eq("id", editingClass.school_id)
           .single();
 
-        setFormData({
-          subject: editingClass.subject,
-          grade: editingClass.grade,
-          total_alunos: editingClass.total_alunos?.toString() || "",
-          possui_ane: editingClass.possui_ane || false,
-          detalhes_ane: editingClass.detalhes_ane || "",
-          school_name: schoolData?.name || "",
-        });
+        if (schoolData) {
+          setFormData({
+            subject: editingClass.subject,
+            grade: editingClass.grade,
+            total_alunos: editingClass.total_alunos?.toString() || "",
+            possui_ane: editingClass.possui_ane || false,
+            detalhes_ane: editingClass.detalhes_ane || "",
+            city: schoolData.city || "",
+            school_id: schoolData.id,
+          });
+          
+          // Load schools for the city
+          const { data: schools } = await supabase
+            .from("schools")
+            .select("id, name")
+            .eq("city", schoolData.city)
+            .order("name");
+          
+          setAvailableSchools(schools || []);
+        }
+
         // Parse existing ANE types from detalhes_ane if present
         if (editingClass.detalhes_ane) {
           const types = ANE_OPTIONS.map(opt => opt.label).filter(label => 
@@ -85,7 +109,7 @@ const ClassDialog = ({ open, onOpenChange, editingClass }: ClassDialogProps) => 
           setSelectedAneTypes(types.length > 0 ? types : []);
         }
       } else {
-        // Load school name from profile if available
+        // Load profile school if available
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
           const { data: profile } = await supabase
@@ -94,33 +118,72 @@ const ClassDialog = ({ open, onOpenChange, editingClass }: ClassDialogProps) => 
             .eq("id", session.user.id)
             .single();
 
-          let schoolName = "";
           if (profile?.school_id) {
             const { data: schoolData } = await supabase
               .from("schools")
-              .select("name")
+              .select("id, name, city")
               .eq("id", profile.school_id)
               .single();
-            schoolName = schoolData?.name || "";
-          }
 
-          setFormData({
-            subject: "",
-            grade: "",
-            total_alunos: "",
-            possui_ane: false,
-            detalhes_ane: "",
-            school_name: schoolName,
-          });
+            if (schoolData) {
+              setFormData({
+                subject: "",
+                grade: "",
+                total_alunos: "",
+                possui_ane: false,
+                detalhes_ane: "",
+                city: schoolData.city,
+                school_id: schoolData.id,
+              });
+
+              // Load schools for the city
+              const { data: schools } = await supabase
+                .from("schools")
+                .select("id, name")
+                .eq("city", schoolData.city)
+                .order("name");
+              
+              setAvailableSchools(schools || []);
+            }
+          } else {
+            setFormData({
+              subject: "",
+              grade: "",
+              total_alunos: "",
+              possui_ane: false,
+              detalhes_ane: "",
+              city: "",
+              school_id: "",
+            });
+          }
           setSelectedAneTypes([]);
         }
       }
     };
 
     if (open) {
-      loadSchoolName();
+      loadSchoolData();
     }
   }, [editingClass, open]);
+
+  // Load schools when city changes
+  useEffect(() => {
+    const loadSchools = async () => {
+      if (formData.city) {
+        const { data: schools } = await supabase
+          .from("schools")
+          .select("id, name")
+          .eq("city", formData.city)
+          .order("name");
+        
+        setAvailableSchools(schools || []);
+      } else {
+        setAvailableSchools([]);
+      }
+    };
+
+    loadSchools();
+  }, [formData.city]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -130,78 +193,36 @@ const ClassDialog = ({ open, onOpenChange, editingClass }: ClassDialogProps) => 
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) throw new Error("Não autenticado");
 
-      if (!formData.school_name.trim()) {
-        throw new Error("Por favor, informe o nome da escola.");
+      if (!formData.city) {
+        throw new Error("Por favor, selecione a cidade.");
       }
 
-      // Get user's profile
+      if (!formData.school_id) {
+        throw new Error("Por favor, selecione a escola.");
+      }
+
+      // Get the school's district
+      const { data: school } = await supabase
+        .from("schools")
+        .select("district_id")
+        .eq("id", formData.school_id)
+        .single();
+
+      if (!school) throw new Error("Escola não encontrada.");
+
+      // Update teacher's profile with school and district if not already set
       const { data: profile } = await supabase
         .from("profiles")
         .select("school_id, district_id")
         .eq("id", session.user.id)
         .single();
 
-      let schoolId = profile?.school_id;
-      let districtId = profile?.district_id;
-
-      // If teacher doesn't have a district, create a default one
-      if (!districtId) {
-        const { data: defaultDistrict, error: districtError } = await supabase
-          .from("districts")
-          .select("id")
-          .eq("name", "Rede Independente")
-          .single();
-
-        if (districtError && districtError.code === 'PGRST116') {
-          // District doesn't exist, create it
-          const { data: newDistrict, error: createDistrictError } = await supabase
-            .from("districts")
-            .insert({ name: "Rede Independente" })
-            .select("id")
-            .single();
-
-          if (createDistrictError) throw createDistrictError;
-          districtId = newDistrict.id;
-        } else if (districtError) {
-          throw districtError;
-        } else {
-          districtId = defaultDistrict.id;
-        }
-      }
-
-      // Find or create school
-      if (!schoolId || editingClass) {
-        // Check if school exists with this name
-        const { data: existingSchool } = await supabase
-          .from("schools")
-          .select("id")
-          .eq("name", formData.school_name.trim())
-          .eq("district_id", districtId)
-          .single();
-
-        if (existingSchool) {
-          schoolId = existingSchool.id;
-        } else {
-          // Create new school
-          const { data: newSchool, error: schoolError } = await supabase
-            .from("schools")
-            .insert({
-              name: formData.school_name.trim(),
-              district_id: districtId,
-            })
-            .select("id")
-            .single();
-
-          if (schoolError) throw schoolError;
-          schoolId = newSchool.id;
-        }
-
-        // Update teacher's profile with school and district
+      if (profile?.school_id !== formData.school_id) {
         const { error: profileError } = await supabase
           .from("profiles")
           .update({
-            school_id: schoolId,
-            district_id: districtId,
+            school_id: formData.school_id,
+            district_id: school.district_id,
           })
           .eq("id", session.user.id);
 
@@ -222,7 +243,7 @@ const ClassDialog = ({ open, onOpenChange, editingClass }: ClassDialogProps) => 
         total_alunos: formData.total_alunos ? parseInt(formData.total_alunos) : null,
         possui_ane: formData.possui_ane,
         detalhes_ane: aneDetails,
-        school_id: schoolId,
+        school_id: formData.school_id,
         teacher_id: session.user.id,
       };
 
@@ -277,16 +298,48 @@ const ClassDialog = ({ open, onOpenChange, editingClass }: ClassDialogProps) => 
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="school_name">Nome da Escola *</Label>
-            <Input
-              id="school_name"
-              placeholder="Ex: Escola Municipal João Silva"
-              value={formData.school_name}
-              onChange={(e) => setFormData({ ...formData, school_name: e.target.value })}
+            <Label htmlFor="city">Cidade *</Label>
+            <Select
+              value={formData.city}
+              onValueChange={(value) => setFormData({ ...formData, city: value, school_id: "" })}
               required
-            />
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione a cidade" />
+              </SelectTrigger>
+              <SelectContent>
+                {CITIES.map((city) => (
+                  <SelectItem key={city} value={city}>
+                    {city}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="school">Escola *</Label>
+            <Select
+              value={formData.school_id}
+              onValueChange={(value) => setFormData({ ...formData, school_id: value })}
+              required
+              disabled={!formData.city}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder={formData.city ? "Selecione a escola" : "Primeiro selecione a cidade"} />
+              </SelectTrigger>
+              <SelectContent>
+                {availableSchools.map((school) => (
+                  <SelectItem key={school.id} value={school.id}>
+                    {school.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <p className="text-xs text-muted-foreground">
-              Se a escola já existir no sistema, ela será vinculada automaticamente
+              {availableSchools.length === 0 && formData.city 
+                ? "Nenhuma escola encontrada nesta cidade" 
+                : `${availableSchools.length} escola(s) disponível(is)`}
             </p>
           </div>
 

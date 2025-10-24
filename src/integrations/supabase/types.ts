@@ -301,6 +301,7 @@ export type Database = {
       }
       schools: {
         Row: {
+          city: string
           created_at: string
           district_id: string
           id: string
@@ -308,6 +309,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          city?: string
           created_at?: string
           district_id: string
           id?: string
@@ -315,6 +317,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          city?: string
           created_at?: string
           district_id?: string
           id?: string
