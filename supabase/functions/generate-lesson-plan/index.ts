@@ -127,16 +127,17 @@ serve(async (req) => {
           .replace('[duration]', duration);
       }
     } else {
+      const lessonDuration = duration || 50; // Default to 50 minutes if not specified
       userPrompt = `Crie um plano de aula detalhado para ${grade} sobre o tema "${topic}" na disciplina de ${subject}.
       
 Código BNCC: ${bnccCode}
-Duração: ${duration} minutos${classContextText}
+Duração: ${lessonDuration} minutos${classContextText}
 
 O plano de aula deve incluir:
 1. Objetivos de Aprendizagem (alinhados à BNCC)
 2. Materiais Necessários
 3. Introdução (10 minutos)
-4. Desenvolvimento (${duration - 20} minutos)
+4. Desenvolvimento (${lessonDuration - 20} minutos)
 5. Avaliação (10 minutos)
 6. Recursos Adicionais
 
