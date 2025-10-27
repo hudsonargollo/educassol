@@ -76,9 +76,17 @@ const Dashboard = () => {
             <h1 className="text-2xl font-bold">EDUCA SOL</h1>
           </div>
           <div className="flex items-center gap-4">
+            <Button variant="ghost" size="sm" onClick={() => navigate("/search")}>
+              <Users className="h-4 w-4 mr-2" />
+              Buscar
+            </Button>
             <Button variant="ghost" size="sm" onClick={() => navigate("/classes")}>
               <Users className="h-4 w-4 mr-2" />
               Minhas Turmas
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => navigate("/admin")}>
+              <Users className="h-4 w-4 mr-2" />
+              Admin
             </Button>
             <span className="text-sm text-muted-foreground">{user?.email}</span>
             <Button variant="ghost" size="sm" onClick={handleSignOut}>
