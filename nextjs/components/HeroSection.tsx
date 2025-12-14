@@ -1,13 +1,42 @@
+'use client'
+
 import Image from 'next/image'
+import { useState, useEffect } from 'react'
 
 export default function HeroSection() {
+  const cities = ["Jequié", "Itagi", "Ipiaú", "Jitaúna", "Ilhéus", "Ibirataia"]
+  const [currentCityIndex, setCurrentCityIndex] = useState(0)
+  const [displayedText, setDisplayedText] = useState("")
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  useEffect(() => {
+    const currentCity = cities[currentCityIndex]
+    const typingSpeed = isDeleting ? 50 : 100
+    const pauseTime = 1500
+
+    const timeout = setTimeout(() => {
+      if (!isDeleting && displayedText === currentCity) {
+        setTimeout(() => setIsDeleting(true), pauseTime)
+      } else if (isDeleting && displayedText === "") {
+        setIsDeleting(false)
+        setCurrentCityIndex((prevIndex) => (prevIndex + 1) % cities.length)
+      } else if (isDeleting) {
+        setDisplayedText(currentCity.substring(0, displayedText.length - 1))
+      } else {
+        setDisplayedText(currentCity.substring(0, displayedText.length + 1))
+      }
+    }, typingSpeed)
+
+    return () => clearTimeout(timeout)
+  }, [displayedText, isDeleting, currentCityIndex, cities])
+
   return (
     <section className="relative bg-white overflow-hidden">
       <div className="container mx-auto px-6 py-24 md:py-32 flex flex-col md:flex-row items-center">
         {/* Left Content */}
         <div className="md:w-1/2 text-center md:text-left z-10">
           <span className="bg-orange-100 text-orange-600 font-semibold px-3 py-1 rounded-full text-sm">
-            A REVOLUÇÃO DA IA PARA A EDUCAÇÃO DE JEQUIÉ
+            A REVOLUÇÃO DA IA PARA A EDUCAÇÃO DE <span className="inline-block min-w-[60px]">{displayedText}<span className="animate-pulse">|</span></span>
           </span>
           <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 mt-4 mb-6 leading-tight">
             Planejamento Pedagógico Inteligente e Alinhado à BNCC.
