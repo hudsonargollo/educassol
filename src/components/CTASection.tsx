@@ -1,129 +1,97 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Sun, Users, Heart, Sparkles, ArrowRight } from "lucide-react";
+import { Sparkles, ArrowRight, Sun } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { EDUCASSOL_SPRING } from "@/lib/motion";
+import { EDUCASSOL_COLORS } from "@/lib/colors";
 
 const CTASection = () => {
   const navigate = useNavigate();
   
   return (
-    <section className="py-12 sm:py-16 lg:py-20 bg-gradient-hero">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center space-y-12">
-          {/* Header */}
-          <div className="space-y-4 sm:space-y-6">
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
-              <Users className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
-              <h2 className="font-bold text-foreground text-center" style={{ fontSize: 'clamp(1.5rem, 4vw, 2.5rem)' }}>
-                O Futuro da Educação{" "}
-                <span className="bg-gradient-sun bg-clip-text text-transparent">
-                  Começa Agora
-                </span>
-              </h2>
-            </div>
-            
-            <p className="text-muted-foreground leading-relaxed max-w-2xl mx-auto text-center px-4" style={{ fontSize: 'clamp(1rem, 3vw, 1.25rem)' }}>
-              Junte-se aos educadores de Jequié que já estão transformando suas práticas 
-              pedagógicas com a inteligência artificial. Seja parte desta revolução.
-            </p>
-          </div>
+    <section className="py-24 lg:py-32 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
+      {/* Background elements */}
+      <div className="absolute inset-0">
+        <motion.div 
+          animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.3, 0.2] }}
+          transition={{ duration: 10, repeat: Infinity }}
+          className="absolute top-0 left-1/4 w-[500px] h-[500px] rounded-full blur-3xl"
+          style={{ background: `radial-gradient(circle, ${EDUCASSOL_COLORS.primary}30 0%, transparent 70%)` }}
+        />
+        <motion.div 
+          animate={{ scale: [1.2, 1, 1.2], opacity: [0.15, 0.25, 0.15] }}
+          transition={{ duration: 12, repeat: Infinity }}
+          className="absolute bottom-0 right-1/4 w-[600px] h-[600px] rounded-full blur-3xl"
+          style={{ background: `radial-gradient(circle, ${EDUCASSOL_COLORS.accent}25 0%, transparent 70%)` }}
+        />
+      </div>
 
-          {/* Community Benefits */}
-          <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
-            <Card className="border-primary/20 bg-card/70 backdrop-blur-sm">
-              <CardContent className="p-4 sm:p-6 text-center">
-                <div className="w-12 h-12 bg-gradient-sun rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Sun className="h-6 w-6 text-primary-foreground" />
-                </div>
-                <h3 className="font-semibold text-foreground mb-2">Inovação Local</h3>
-                <p className="text-sm text-muted-foreground">
-                  Desenvolvido especificamente para as necessidades dos professores de Jequié
-                </p>
-              </CardContent>
-            </Card>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="max-w-4xl mx-auto text-center"
+        >
+          {/* Logo */}
+          <motion.div
+            initial={{ scale: 0 }}
+            whileInView={{ scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ type: "spring", stiffness: 200, damping: 15 }}
+            className="w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-amber-500/30"
+          >
+            <Sun className="h-10 w-10 text-white" />
+          </motion.div>
 
-            <Card className="border-accent/20 bg-card/70 backdrop-blur-sm">
-              <CardContent className="p-4 sm:p-6 text-center">
-                <div className="w-12 h-12 bg-gradient-warm rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Heart className="h-6 w-6 text-primary-foreground" />
-                </div>
-                <h3 className="font-semibold text-foreground mb-2">Impacto Real</h3>
-                <p className="text-sm text-muted-foreground">
-                  Melhore a qualidade do ensino e o engajamento dos seus alunos
-                </p>
-              </CardContent>
-            </Card>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 leading-tight">
+            Pronto para transformar{" "}
+            <span className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
+              sua rotina?
+            </span>
+          </h2>
+          
+          <p className="text-lg sm:text-xl text-slate-300 mb-10 max-w-2xl mx-auto leading-relaxed">
+            Junte-se a centenas de educadores que já economizam horas toda semana 
+            com EducaSol. Comece grátis, sem cartão de crédito.
+          </p>
 
-            <Card className="border-secondary/30 bg-card/70 backdrop-blur-sm">
-              <CardContent className="p-4 sm:p-6 text-center">
-                <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Sparkles className="h-6 w-6 text-accent-foreground" />
-                </div>
-                <h3 className="font-semibold text-foreground mb-2">Crescimento Contínuo</h3>
-                <p className="text-sm text-muted-foreground">
-                  Evolua constantemente com novas funcionalidades e melhorias
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Impact Statement */}
-          <div className="bg-card/50 backdrop-blur-sm border border-primary/20 rounded-2xl p-8 shadow-warm">
-            <div className="space-y-4">
-              <h3 className="text-2xl font-bold text-foreground">
-                Transforme Sua Prática Educacional Hoje
-              </h3>
-              <p className="text-foreground/80 leading-relaxed">
-                Não espere mais para revolucionar sua forma de ensinar. Com EDUCA SOL, 
-                você terá mais tempo para se dedicar ao que realmente importa: conectar-se 
-                com seus alunos, inspirá-los e acompanhar seu desenvolvimento único.
-              </p>
-              
-              <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground pt-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  <span>Cadastro gratuito</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-accent rounded-full"></div>
-                  <span>Sem compromisso inicial</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-secondary rounded-full"></div>
-                  <span>Suporte especializado</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Final CTA */}
-          <div className="space-y-4 sm:space-y-6">
-            <Button 
-              variant="hero" 
-              size="xl" 
-              className="group px-6 sm:px-8 lg:px-12 py-3 sm:py-4 w-full sm:w-auto min-h-[52px] text-sm sm:text-base lg:text-lg"
-              onClick={() => navigate('/auth')}
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              transition={EDUCASSOL_SPRING}
             >
-              <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 group-hover:animate-spin" />
-              <span className="truncate">Comece agora!</span>
-              <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            
-            <p className="text-muted-foreground text-center px-4" style={{ fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>
-              Comece sua jornada rumo a uma educação mais eficiente e impactante.
-              <br />
-              <span className="text-primary font-medium">Jequié merece o melhor da educação. Você também.</span>
-            </p>
+              <Button
+                size="lg"
+                className="h-16 px-10 text-lg font-semibold shadow-2xl shadow-amber-500/30 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-900"
+                onClick={() => navigate('/auth')}
+              >
+                <Sparkles className="h-5 w-5 mr-2" />
+                Começar Grátis Agora
+                <ArrowRight className="h-5 w-5 ml-2" />
+              </Button>
+            </motion.div>
           </div>
 
-          {/* Decorative Elements */}
-          <div className="relative">
-            <div className="absolute inset-0 -z-10">
-              <div className="absolute top-0 left-1/4 w-32 h-32 bg-primary/10 rounded-full blur-3xl"></div>
-              <div className="absolute bottom-0 right-1/4 w-40 h-40 bg-accent/10 rounded-full blur-3xl"></div>
+          {/* Trust badges */}
+          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-slate-400">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-emerald-400" />
+              <span>Setup em 2 minutos</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-amber-400" />
+              <span>Alinhado à BNCC</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-blue-400" />
+              <span>Suporte em português</span>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
