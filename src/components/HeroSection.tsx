@@ -9,8 +9,7 @@ import { EDUCASSOL_COLORS } from "@/lib/colors";
 const HeroSection = () => {
   const navigate = useNavigate();
 
-  // Word-by-word stagger animation for headline
-  const headlineWords = ["Corrigir", "provas", "levava", "horas.", "Agora", "leva", "segundos."];
+  const headlineWords = ["Planejar", "aulas", "levava", "horas.", "Agora", "leva", "minutos."];
 
   return (
     <section className="relative min-h-[100dvh] bg-gradient-to-b from-slate-50 via-white to-slate-50 flex items-center overflow-hidden">
@@ -36,11 +35,11 @@ const HeroSection = () => {
                 className="px-4 py-2 text-sm font-medium border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100 transition-colors"
               >
                 <Sparkles className="h-4 w-4 mr-2" style={{ color: EDUCASSOL_COLORS.accent }} />
-                Novo: Reconhecimento de Escrita Manual
+                IA especializada em educação brasileira
               </Badge>
             </motion.div>
 
-            {/* Main Headline - Word by word stagger */}
+            {/* Main Headline */}
             <div className="space-y-2">
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1]">
                 {headlineWords.map((word, index) => (
@@ -71,8 +70,8 @@ const HeroSection = () => {
               className="text-lg sm:text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed"
               style={{ color: EDUCASSOL_COLORS.textMuted }}
             >
-              Educassol é o assistente de correção com IA que cria provas, 
-              corrige trabalhos e fornece feedback detalhado instantaneamente. 
+              Educassol é o assistente de IA que cria planos de aula, 
+              atividades e avaliações alinhados à BNCC instantaneamente. 
               <span className="font-semibold" style={{ color: EDUCASSOL_COLORS.textMain }}>
                 {" "}Recupere suas noites.
               </span>
@@ -97,7 +96,7 @@ const HeroSection = () => {
                   onClick={() => navigate('/auth')}
                 >
                   <Sparkles className="h-5 w-5 mr-2" />
-                  Comece a Corrigir Grátis
+                  Comece Grátis
                 </Button>
               </motion.div>
 
@@ -130,11 +129,11 @@ const HeroSection = () => {
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-5 w-5" style={{ color: EDUCASSOL_COLORS.success }} />
-                <span>50 correções grátis/mês</span>
+                <span>Alinhado à BNCC</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-5 w-5" style={{ color: EDUCASSOL_COLORS.success }} />
-                <span>Alinhado à BNCC</span>
+                <span>Conteúdo ilimitado</span>
               </div>
             </motion.div>
           </motion.div>
@@ -174,9 +173,9 @@ const HeroSection = () => {
                   <div className="grid grid-cols-3 gap-4 mb-6">
                     {/* Stat cards */}
                     {[
-                      { label: "Provas Corrigidas", value: "247", color: EDUCASSOL_COLORS.primary },
-                      { label: "Média da Turma", value: "8.4", color: EDUCASSOL_COLORS.success },
-                      { label: "Tempo Economizado", value: "32h", color: EDUCASSOL_COLORS.accent },
+                      { label: "Planos Criados", value: "127", color: EDUCASSOL_COLORS.primary },
+                      { label: "Atividades Geradas", value: "384", color: EDUCASSOL_COLORS.success },
+                      { label: "Tempo Economizado", value: "48h", color: EDUCASSOL_COLORS.accent },
                     ].map((stat, i) => (
                       <motion.div
                         key={i}
@@ -191,7 +190,7 @@ const HeroSection = () => {
                     ))}
                   </div>
                   
-                  {/* AI Grading preview */}
+                  {/* AI Generation preview */}
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -206,14 +205,14 @@ const HeroSection = () => {
                         <Sparkles className="h-4 w-4" style={{ color: EDUCASSOL_COLORS.accent }} />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-slate-900">Correção em andamento...</p>
-                        <p className="text-xs text-slate-500">Matemática 9º Ano - Prova Bimestral</p>
+                        <p className="text-sm font-medium text-slate-900">Gerando plano de aula...</p>
+                        <p className="text-xs text-slate-500">Matemática 5º Ano - Frações</p>
                       </div>
                     </div>
                     <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
-                        animate={{ width: "75%" }}
+                        animate={{ width: "85%" }}
                         transition={{ delay: 1.3, duration: 1.5, ease: "easeOut" }}
                         className="h-full rounded-full"
                         style={{ background: `linear-gradient(90deg, ${EDUCASSOL_COLORS.primary} 0%, ${EDUCASSOL_COLORS.accent} 100%)` }}

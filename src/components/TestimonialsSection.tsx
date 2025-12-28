@@ -7,21 +7,21 @@ import { EDUCASSOL_COLORS } from "@/lib/colors";
 
 const testimonials = [
   {
-    quote: "Eu costumava passar meus fins de semana corrigindo provas. Agora passo com minha família. Educassol é um salva-vidas.",
-    author: "Dra. Maria Santos",
+    quote: "Eu costumava passar horas planejando aulas. Agora crio um plano completo em 5 minutos. Sobra tempo para o que realmente importa: meus alunos.",
+    author: "Profa. Maria Santos",
     role: "Professora de Matemática",
     initials: "MS",
     rating: 5,
   },
   {
-    quote: "O feedback é mais detalhado do que eu jamais conseguiria escrever à mão para 150 alunos. A qualidade é impressionante.",
+    quote: "As atividades geradas são criativas e engajantes. Meus alunos adoram! E o melhor: tudo já vem alinhado à BNCC.",
     author: "Prof. Carlos Oliveira",
-    role: "Professor de História",
+    role: "Professor de Português",
     initials: "CO",
     rating: 5,
   },
   {
-    quote: "Finalmente uma ferramenta que entende a realidade do professor brasileiro. Alinhada à BNCC e fácil de usar.",
+    quote: "Finalmente uma ferramenta que entende a realidade do professor brasileiro. Simples, rápida e eficiente.",
     author: "Ana Paula Lima",
     role: "Coordenadora Pedagógica",
     initials: "AL",
@@ -148,7 +148,7 @@ const TestimonialsSection = () => {
           className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
         >
           {[
-            { value: "10,000+", label: "Provas Corrigidas" },
+            { value: "5,000+", label: "Planos Criados" },
             { value: "500+", label: "Professores Ativos" },
             { value: "98%", label: "Satisfação" },
             { value: "15h", label: "Economizadas/Semana" },
