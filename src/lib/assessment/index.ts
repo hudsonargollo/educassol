@@ -13,12 +13,14 @@ export {
   HandwritingQuality,
   StudentMetadataSchema,
   QuestionResultSchema,
+  QuestionOverrideSchema,
   GradingResultSchema,
   parseGradingResult,
   serializeGradingResult,
   deserializeGradingResult,
   type StudentMetadata,
   type QuestionResult,
+  type QuestionOverride,
   type GradingResult,
   type ParseResult,
 } from './grading-result';
@@ -64,3 +66,32 @@ export {
   type SubmissionAccessContext,
   type ResultAccessContext,
 } from './access-control';
+
+// Annotation schema and validation
+export {
+  AnnotationType,
+  TextLocationSchema,
+  ImageLocationSchema,
+  AnnotationLocationSchema,
+  AnnotationSchema,
+  validateAnnotation,
+  isTextLocation,
+  isImageLocation,
+  type TextLocation,
+  type ImageLocation,
+  type AnnotationLocation,
+  type Annotation,
+  type AnnotationValidationResult,
+} from './annotation';
+
+// Override schema and calculation functions
+export {
+  CreateOverrideSchema,
+  createOverride,
+  calculateFinalScore,
+  hasOverride,
+  getOverride,
+  getEffectiveScore,
+  type CreateOverrideInput,
+  type OverrideValidationResult,
+} from './override';

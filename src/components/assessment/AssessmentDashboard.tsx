@@ -14,6 +14,7 @@ import {
   Eye
 } from "lucide-react";
 import type { Rubric } from "@/lib/assessment/rubric";
+import { AccessControlGuard } from "./AccessControlGuard";
 
 /**
  * Submission status counts for an exam
@@ -44,6 +45,8 @@ interface AssessmentDashboardProps {
   onSelectExam: (examId: string) => void;
   onUpload: (examId: string, examTitle: string) => void;
   refreshTrigger?: number;
+  /** Callback to navigate to login */
+  onLoginRequired?: () => void;
 }
 
 /**
@@ -80,7 +83,8 @@ export function aggregateSubmissionStats(
 const AssessmentDashboard = ({ 
   onSelectExam, 
   onUpload,
-  refreshTrigger 
+  refreshTrigger,
+  onLoginRequired,
 }: AssessmentDashboardProps) => {
   const { toast } = useToast();
   const [exams, setExams] = useState<ExamWithStats[]>([]);
@@ -199,22 +203,31 @@ const AssessmentDashboard = ({
 
   if (exams.length === 0) {
     return (
-      <Card>
-        <CardContent className="flex flex-col items-center justify-center py-12">
-          <BarChart3 className="h-12 w-12 text-muted-foreground mb-4" />
-          <p className="text-muted-foreground mb-2">
-            Nenhuma prova encontrada
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Crie uma prova para começar a acompanhar as avaliações
-          </p>
-        </CardContent>
-      </Card>
+      <AccessControlGuard 
+        requireEducator={true}
+        onLoginRequired={onLoginRequired}
+      >
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <BarChart3 className="h-12 w-12 text-muted-foreground mb-4" />
+            <p className="text-muted-foreground mb-2">
+              Nenhuma prova encontrada
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Crie uma prova para começar a acompanhar as avaliações
+            </p>
+          </CardContent>
+        </Card>
+      </AccessControlGuard>
     );
   }
 
   return (
-    <div className="space-y-4">
+    <AccessControlGuard 
+      requireEducator={true}
+      onLoginRequired={onLoginRequired}
+    >
+      <div className="space-y-4">
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card>
@@ -395,6 +408,7 @@ const AssessmentDashboard = ({
         ))}
       </div>
     </div>
+    </AccessControlGuard>
   );
 };
 

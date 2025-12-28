@@ -7,6 +7,19 @@ export const HandwritingQuality = z.enum(['excellent', 'good', 'poor', 'illegibl
 export type HandwritingQuality = z.infer<typeof HandwritingQuality>;
 
 /**
+ * Schema for a question override (educator's manual adjustment to AI score)
+ */
+export const QuestionOverrideSchema = z.object({
+  questionNumber: z.string().min(1, 'Question number is required'),
+  originalScore: z.number().min(0, 'Original score must be non-negative'),
+  overrideScore: z.number().min(0, 'Override score must be non-negative'),
+  overrideReason: z.string().optional(),
+  overriddenAt: z.coerce.date(),
+});
+
+export type QuestionOverride = z.infer<typeof QuestionOverrideSchema>;
+
+/**
  * Schema for student metadata extracted from the exam
  */
 export const StudentMetadataSchema = z.object({
@@ -37,6 +50,8 @@ export const GradingResultSchema = z.object({
   questions: z.array(QuestionResultSchema).min(1),
   summary_comment: z.string(),
   total_score: z.number(),
+  confidenceScore: z.number().min(0).max(100).optional(),
+  overrides: z.array(QuestionOverrideSchema).optional(),
 });
 
 /**
@@ -70,6 +85,8 @@ export interface GradingResult {
   questions: QuestionResult[];
   summary_comment: string;
   total_score: number;
+  confidenceScore?: number;
+  overrides?: QuestionOverride[];
 }
 
 /**
@@ -95,7 +112,7 @@ export function parseGradingResult(input: unknown): ParseResult<GradingResult> {
   if (result.success) {
     return {
       success: true,
-      data: result.data,
+      data: result.data as GradingResult,
     };
   }
   

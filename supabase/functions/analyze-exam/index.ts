@@ -16,11 +16,6 @@ const RETRY_CONFIG = {
   backoffMultiplier: 2,
 };
 
-// Request validation schema
-const AnalyzeExamRequestSchema = z.object({
-  submission_id: z.string().uuid('submission_id must be a valid UUID'),
-});
-
 // Rubric question schema for validation
 const RubricQuestionSchema = z.object({
   number: z.string(),
@@ -39,7 +34,21 @@ const RubricSchema = z.object({
   grading_instructions: z.string().optional(),
 });
 
-// Grading result schema from Gemini
+// Request validation schema - supports both submission_id lookup and direct rubric/submission input
+const AnalyzeExamRequestSchema = z.object({
+  submission_id: z.string().uuid('submission_id must be a valid UUID').optional(),
+  // Direct input mode - rubric and submission content provided directly
+  rubric: RubricSchema.optional(),
+  submission_content: z.string().optional(), // Base64 encoded file content
+  submission_mime_type: z.string().optional(),
+  // Streaming mode flag
+  stream: z.boolean().optional().default(false),
+}).refine(
+  (data) => data.submission_id || (data.rubric && data.submission_content && data.submission_mime_type),
+  { message: 'Either submission_id or (rubric, submission_content, submission_mime_type) must be provided' }
+);
+
+// Grading result schema from Gemini - includes confidence score
 const GradingResultSchema = z.object({
   student_metadata: z.object({
     name: z.string(),
@@ -58,8 +67,8 @@ const GradingResultSchema = z.object({
   })),
   summary_comment: z.string(),
   total_score: z.number(),
+  confidenceScore: z.number().min(0).max(100),
 });
-
 
 /**
  * Retry wrapper with exponential backoff for API calls
@@ -124,14 +133,19 @@ function buildSystemPrompt(): string {
 2. Transcribe each student answer accurately
 3. Grade each answer according to the provided rubric
 4. Provide constructive feedback in Portuguese
+5. Assess your confidence in the grading (0-100%)
 
 Be fair, consistent, and thorough in your grading. Consider partial credit where appropriate.
 Extract the student's name and ID if visible on the exam.
 Assess the overall handwriting quality.
 
+Your confidence score should reflect:
+- How legible the handwriting is
+- How clearly you could match answers to rubric criteria
+- Any ambiguity in the student's responses
+
 IMPORTANT: You must respond with valid JSON matching the exact schema provided.`;
 }
-
 
 /**
  * Build the user prompt with rubric details
@@ -163,11 +177,12 @@ function buildUserPrompt(rubric: z.infer<typeof RubricSchema>): string {
   }
   
   prompt += `\nPlease analyze the attached exam and provide your grading in the specified JSON format.`;
+  prompt += `\nInclude a confidenceScore (0-100) indicating how confident you are in your grading.`;
   return prompt;
 }
 
 /**
- * Build the JSON schema for Gemini's structured output
+ * Build the JSON schema for Gemini's structured output - includes confidence score
  */
 function buildResponseSchema() {
   return {
@@ -205,14 +220,180 @@ function buildResponseSchema() {
       },
       summary_comment: { type: "string", description: "Overall feedback for the student in Portuguese" },
       total_score: { type: "number", description: "Total points awarded" },
+      confidenceScore: { type: "number", description: "AI confidence in grading accuracy (0-100)" },
     },
-    required: ["student_metadata", "questions", "summary_comment", "total_score"],
+    required: ["student_metadata", "questions", "summary_comment", "total_score", "confidenceScore"],
   };
 }
 
+/**
+ * Call Gemini API with streaming response for real-time feedback
+ */
+async function* callGeminiAPIStreaming(
+  base64Content: string,
+  mimeType: string,
+  rubric: z.infer<typeof RubricSchema>,
+  apiKey: string
+): AsyncGenerator<{ type: 'progress' | 'question' | 'complete' | 'error'; data: unknown }> {
+  const systemPrompt = buildSystemPrompt();
+  const userPrompt = buildUserPrompt(rubric);
+  const responseSchema = buildResponseSchema();
+
+  const requestBody = {
+    contents: [
+      {
+        role: "user",
+        parts: [
+          {
+            inline_data: {
+              mime_type: mimeType,
+              data: base64Content,
+            },
+          },
+          {
+            text: userPrompt,
+          },
+        ],
+      },
+    ],
+    systemInstruction: {
+      parts: [{ text: systemPrompt }],
+    },
+    generationConfig: {
+      responseMimeType: "application/json",
+      responseSchema: responseSchema,
+      temperature: 0.1,
+      maxOutputTokens: 8192,
+    },
+  };
+
+  // Emit progress event
+  yield { type: 'progress', data: { status: 'starting', message: 'Initiating AI grading...' } };
+
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:streamGenerateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Gemini API error:', response.status, errorText);
+      yield { type: 'error', data: { message: `Gemini API error: ${response.status}` } };
+      return;
+    }
+
+    yield { type: 'progress', data: { status: 'processing', message: 'AI is analyzing the submission...' } };
+
+    // Read the streaming response
+    const reader = response.body?.getReader();
+    if (!reader) {
+      yield { type: 'error', data: { message: 'No response body' } };
+      return;
+    }
+
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let fullContent = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      
+      // Try to parse complete JSON objects from the buffer
+      // Gemini streaming returns an array of response chunks
+      try {
+        // The streaming response is a JSON array, try to extract content
+        const lines = buffer.split('\n');
+        for (const line of lines) {
+          if (line.trim().startsWith('{') || line.trim().startsWith('[')) {
+            try {
+              const parsed = JSON.parse(line.trim().replace(/^\[|\]$/g, '').trim());
+              if (parsed.candidates?.[0]?.content?.parts?.[0]?.text) {
+                fullContent = parsed.candidates[0].content.parts[0].text;
+                yield { type: 'progress', data: { status: 'grading', message: 'Processing grading results...' } };
+              }
+            } catch {
+              // Continue accumulating
+            }
+          }
+        }
+      } catch {
+        // Continue accumulating buffer
+      }
+    }
+
+    // Parse the final accumulated content
+    if (!fullContent) {
+      // Try to parse the entire buffer as the response
+      try {
+        const parsed = JSON.parse(buffer);
+        if (Array.isArray(parsed) && parsed[0]?.candidates?.[0]?.content?.parts?.[0]?.text) {
+          fullContent = parsed[0].candidates[0].content.parts[0].text;
+        } else if (parsed.candidates?.[0]?.content?.parts?.[0]?.text) {
+          fullContent = parsed.candidates[0].content.parts[0].text;
+        }
+      } catch {
+        yield { type: 'error', data: { message: 'Failed to parse streaming response' } };
+        return;
+      }
+    }
+
+    if (!fullContent) {
+      yield { type: 'error', data: { message: 'Empty response from Gemini' } };
+      return;
+    }
+
+    // Parse and validate the grading result
+    let gradingResult;
+    try {
+      gradingResult = JSON.parse(fullContent);
+    } catch {
+      yield { type: 'error', data: { message: 'Invalid JSON in Gemini response' } };
+      return;
+    }
+
+    const validationResult = GradingResultSchema.safeParse(gradingResult);
+    if (!validationResult.success) {
+      console.error('Grading result validation failed:', validationResult.error);
+      yield { type: 'error', data: { message: `Invalid grading result: ${validationResult.error.message}` } };
+      return;
+    }
+
+    // Emit individual question results for real-time feedback
+    for (const question of validationResult.data.questions) {
+      yield { 
+        type: 'question', 
+        data: {
+          number: question.number,
+          topic: question.topic,
+          points_awarded: question.points_awarded,
+          max_points: question.max_points,
+          feedback: question.feedback_for_student,
+          is_correct: question.is_correct,
+        }
+      };
+    }
+
+    // Emit complete result
+    yield { type: 'complete', data: validationResult.data };
+
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    yield { type: 'error', data: { message: errorMessage } };
+  }
+}
 
 /**
- * Call Gemini API with the exam image and rubric
+ * Call Gemini API with non-streaming response (original behavior)
  */
 async function callGeminiAPI(
   base64Content: string,
@@ -271,7 +452,6 @@ async function callGeminiAPI(
 
   const data = await response.json();
   
-  // Extract the generated content
   if (!data.candidates || data.candidates.length === 0) {
     throw new Error('No response generated by Gemini');
   }
@@ -286,7 +466,6 @@ async function callGeminiAPI(
     throw new Error('Empty response from Gemini');
   }
 
-  // Parse and validate the JSON response
   let parsedResult;
   try {
     parsedResult = JSON.parse(content);
@@ -303,6 +482,43 @@ async function callGeminiAPI(
   return validationResult.data;
 }
 
+/**
+ * Handle streaming response
+ */
+async function handleStreamingResponse(
+  base64Content: string,
+  mimeType: string,
+  rubric: z.infer<typeof RubricSchema>,
+  apiKey: string
+): Promise<Response> {
+  const encoder = new TextEncoder();
+  
+  const stream = new ReadableStream({
+    async start(controller) {
+      try {
+        for await (const event of callGeminiAPIStreaming(base64Content, mimeType, rubric, apiKey)) {
+          const data = `data: ${JSON.stringify(event)}\n\n`;
+          controller.enqueue(encoder.encode(data));
+        }
+        controller.close();
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        const errorEvent = `data: ${JSON.stringify({ type: 'error', data: { message: errorMessage } })}\n\n`;
+        controller.enqueue(encoder.encode(errorEvent));
+        controller.close();
+      }
+    },
+  });
+
+  return new Response(stream, {
+    headers: {
+      ...corsHeaders,
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive',
+    },
+  });
+}
 
 serve(async (req) => {
   // Handle CORS preflight
@@ -352,7 +568,57 @@ serve(async (req) => {
       );
     }
 
-    const { submission_id } = validationResult.data;
+    const { submission_id, rubric: directRubric, submission_content, submission_mime_type, stream } = validationResult.data;
+
+    // Get Gemini API key
+    const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
+    if (!geminiApiKey) {
+      return new Response(
+        JSON.stringify({ error: 'AI service not configured' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Mode 1: Direct rubric and submission content provided
+    if (directRubric && submission_content && submission_mime_type) {
+      console.log('Direct grading mode with provided rubric and submission');
+      
+      if (stream) {
+        return await handleStreamingResponse(submission_content, submission_mime_type, directRubric, geminiApiKey);
+      }
+
+      // Non-streaming direct mode
+      let gradingResult: z.infer<typeof GradingResultSchema>;
+      try {
+        gradingResult = await withRetry(() => 
+          callGeminiAPI(submission_content, submission_mime_type, directRubric, geminiApiKey)
+        );
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown AI error';
+        return new Response(
+          JSON.stringify({ error: 'AI grading failed', details: errorMessage }),
+          { status: 502, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      return new Response(
+        JSON.stringify({
+          status: 'graded',
+          ai_output: gradingResult,
+          total_score: gradingResult.total_score,
+          confidenceScore: gradingResult.confidenceScore,
+        }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Mode 2: Submission ID lookup mode (original behavior)
+    if (!submission_id) {
+      return new Response(
+        JSON.stringify({ error: 'submission_id is required when not providing direct content' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     // Fetch submission with exam details
     const { data: submission, error: submissionError } = await supabaseClient
@@ -432,21 +698,12 @@ serve(async (req) => {
 
     console.log('File converted to Base64, calling Gemini API...');
 
-    // Get Gemini API key
-    const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
-    if (!geminiApiKey) {
-      await supabaseClient
-        .from('submissions')
-        .update({ status: 'failed', error_message: 'Gemini API key not configured' })
-        .eq('id', submission_id);
-      
-      return new Response(
-        JSON.stringify({ error: 'AI service not configured' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+    // Handle streaming mode for submission_id lookup
+    if (stream) {
+      return await handleStreamingResponse(base64Content, mimeType, rubric, geminiApiKey);
     }
 
-    // Call Gemini API with retry logic
+    // Call Gemini API with retry logic (non-streaming)
     let gradingResult: z.infer<typeof GradingResultSchema>;
     try {
       gradingResult = await withRetry(() => 
@@ -511,11 +768,12 @@ serve(async (req) => {
 
     console.log('Analysis complete, result_id:', result.id);
 
-    // Return success response
+    // Return success response with confidence score
     return new Response(
       JSON.stringify({
         result_id: result.id,
         total_score: gradingResult.total_score,
+        confidenceScore: gradingResult.confidenceScore,
         status: 'graded',
         ai_output: gradingResult,
       }),
