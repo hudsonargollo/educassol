@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sun, LogOut, FileText, ClipboardList, FileQuestion, Plus, Users } from "lucide-react";
+import { Sun, LogOut, FileText, ClipboardList, FileQuestion, Plus, Users, GraduationCap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import ContentWizard from "@/components/dashboard/ContentWizard";
 import ContentList from "@/components/dashboard/ContentList";
@@ -83,6 +83,10 @@ const Dashboard = () => {
             <Button variant="ghost" size="sm" onClick={() => navigate("/classes")}>
               <Users className="h-4 w-4 mr-2" />
               Minhas Turmas
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => navigate("/assessments")}>
+              <GraduationCap className="h-4 w-4 mr-2" />
+              Avaliações
             </Button>
             <Button variant="ghost" size="sm" onClick={() => navigate("/admin")}>
               <Users className="h-4 w-4 mr-2" />

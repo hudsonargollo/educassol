@@ -10,6 +10,8 @@ import Dashboard from "./pages/Dashboard";
 import Classes from "./pages/Classes";
 import Search from "./pages/Search";
 import AdminPanel from "./pages/AdminPanel";
+import Verify from "./pages/Verify";
+import Assessments from "./pages/Assessments";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +30,8 @@ const App = () => (
           <Route path="/classes" element={<Classes />} />
           <Route path="/search" element={<Search />} />
           <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/verify" element={<Verify />} />
+          <Route path="/assessments" element={<Assessments />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

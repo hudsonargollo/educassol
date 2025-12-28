@@ -163,6 +163,67 @@ export type Database = {
         }
         Relationships: []
       }
+      exams: {
+        Row: {
+          id: string
+          educator_id: string
+          school_id: string
+          class_id: string | null
+          title: string
+          description: string | null
+          rubric: Json
+          status: Database["public"]["Enums"]["exam_status"]
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          educator_id: string
+          school_id: string
+          class_id?: string | null
+          title: string
+          description?: string | null
+          rubric: Json
+          status?: Database["public"]["Enums"]["exam_status"]
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          educator_id?: string
+          school_id?: string
+          class_id?: string | null
+          title?: string
+          description?: string | null
+          rubric?: Json
+          status?: Database["public"]["Enums"]["exam_status"]
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exams_educator_id_fkey"
+            columns: ["educator_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exams_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exams_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       generated_content: {
         Row: {
           accessibility_options: string[] | null
@@ -334,6 +395,89 @@ export type Database = {
           },
         ]
       }
+      submissions: {
+        Row: {
+          id: string
+          exam_id: string
+          student_identifier: string | null
+          storage_path: string
+          file_type: Database["public"]["Enums"]["submission_file_type"]
+          file_size_bytes: number
+          status: Database["public"]["Enums"]["submission_status"]
+          error_message: string | null
+          uploaded_at: string
+          processed_at: string | null
+        }
+        Insert: {
+          id?: string
+          exam_id: string
+          student_identifier?: string | null
+          storage_path: string
+          file_type: Database["public"]["Enums"]["submission_file_type"]
+          file_size_bytes: number
+          status?: Database["public"]["Enums"]["submission_status"]
+          error_message?: string | null
+          uploaded_at?: string
+          processed_at?: string | null
+        }
+        Update: {
+          id?: string
+          exam_id?: string
+          student_identifier?: string | null
+          storage_path?: string
+          file_type?: Database["public"]["Enums"]["submission_file_type"]
+          file_size_bytes?: number
+          status?: Database["public"]["Enums"]["submission_status"]
+          error_message?: string | null
+          uploaded_at?: string
+          processed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "submissions_exam_id_fkey"
+            columns: ["exam_id"]
+            isOneToOne: false
+            referencedRelation: "exams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      results: {
+        Row: {
+          id: string
+          submission_id: string
+          ai_output: Json
+          total_score: number | null
+          pdf_report_url: string | null
+          verification_token: string
+          graded_at: string
+        }
+        Insert: {
+          id?: string
+          submission_id: string
+          ai_output: Json
+          pdf_report_url?: string | null
+          verification_token?: string
+          graded_at?: string
+        }
+        Update: {
+          id?: string
+          submission_id?: string
+          ai_output?: Json
+          pdf_report_url?: string | null
+          verification_token?: string
+          graded_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "results_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: true
+            referencedRelation: "submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -381,6 +525,9 @@ export type Database = {
         | "collaborative"
         | "inquiry_based"
       difficulty_level: "basic" | "intermediate" | "advanced"
+      exam_status: "draft" | "published" | "archived"
+      submission_status: "uploaded" | "processing" | "graded" | "failed"
+      submission_file_type: "pdf" | "jpeg" | "png"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -519,6 +666,9 @@ export const Constants = {
         "inquiry_based",
       ],
       difficulty_level: ["basic", "intermediate", "advanced"],
+      exam_status: ["draft", "published", "archived"],
+      submission_status: ["uploaded", "processing", "graded", "failed"],
+      submission_file_type: ["pdf", "jpeg", "png"],
     },
   },
 } as const
