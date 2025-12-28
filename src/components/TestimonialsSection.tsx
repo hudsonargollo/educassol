@@ -3,7 +3,6 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Star } from "lucide-react";
 import { motion } from "framer-motion";
 import { STAGGER_PARENT, FADE_UP_ITEM } from "@/lib/motion";
-import { EDUCASSOL_COLORS } from "@/lib/colors";
 
 const testimonials = [
   {
@@ -38,7 +37,7 @@ const stats = [
 
 const TestimonialsSection = () => {
   return (
-    <section className="py-24 lg:py-32 bg-slate-50 relative overflow-hidden">
+    <section className="py-24 lg:py-32 bg-muted/30 dark:bg-muted/10 relative overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <motion.div
@@ -48,26 +47,17 @@ const TestimonialsSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center max-w-3xl mx-auto mb-16"
         >
-          <span 
-            className="inline-block px-4 py-1.5 rounded-full text-sm font-medium mb-6"
-            style={{ background: `${EDUCASSOL_COLORS.success}15`, color: EDUCASSOL_COLORS.success }}
-          >
+          <span className="inline-block px-4 py-1.5 rounded-full text-sm font-medium mb-6 bg-green-500/10 text-green-600 dark:text-green-400">
             Depoimentos
           </span>
-          <h2 
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6"
-            style={{ color: EDUCASSOL_COLORS.textMain }}
-          >
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-foreground">
             Amado por{" "}
-            <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-examai-purple-500 to-examai-purple-400 bg-clip-text text-transparent">
               educadores
             </span>
           </h2>
-          <p 
-            className="text-lg sm:text-xl leading-relaxed"
-            style={{ color: EDUCASSOL_COLORS.textMuted }}
-          >
-            Veja como EducaSol está transformando a rotina de professores em todo o Brasil.
+          <p className="text-lg sm:text-xl leading-relaxed text-muted-foreground">
+            Veja como ExamAI está transformando a rotina de professores em todo o Brasil.
           </p>
         </motion.div>
 
@@ -81,48 +71,35 @@ const TestimonialsSection = () => {
         >
           {testimonials.map((testimonial, index) => (
             <motion.div key={index} variants={FADE_UP_ITEM}>
-              <Card className="h-full bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-500">
+              <Card className="h-full hover:border-primary/40 transition-all duration-300">
                 <CardContent className="p-8 h-full flex flex-col">
                   {/* Rating */}
                   <div className="flex gap-1 mb-6">
                     {Array.from({ length: testimonial.rating }).map((_, i) => (
                       <Star 
                         key={i} 
-                        className="h-5 w-5 fill-current" 
-                        style={{ color: EDUCASSOL_COLORS.accent }}
+                        className="h-5 w-5 fill-current text-examai-amber-500" 
                       />
                     ))}
                   </div>
 
                   {/* Quote */}
-                  <blockquote 
-                    className="text-lg leading-relaxed flex-1 mb-8"
-                    style={{ color: EDUCASSOL_COLORS.textMain }}
-                  >
+                  <blockquote className="text-lg leading-relaxed flex-1 mb-8 text-foreground">
                     "{testimonial.quote}"
                   </blockquote>
 
                   {/* Author */}
                   <div className="flex items-center gap-4">
                     <Avatar className="h-12 w-12">
-                      <AvatarFallback 
-                        className="text-white font-semibold"
-                        style={{ background: `linear-gradient(135deg, ${EDUCASSOL_COLORS.primary} 0%, #4F46E5 100%)` }}
-                      >
+                      <AvatarFallback className="text-white font-semibold gradient-purple-solid">
                         {testimonial.initials}
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p 
-                        className="font-semibold"
-                        style={{ color: EDUCASSOL_COLORS.textMain }}
-                      >
+                      <p className="font-semibold text-foreground">
                         {testimonial.author}
                       </p>
-                      <p 
-                        className="text-sm"
-                        style={{ color: EDUCASSOL_COLORS.textMuted }}
-                      >
+                      <p className="text-sm text-muted-foreground">
                         {testimonial.role}
                       </p>
                     </div>
@@ -139,25 +116,21 @@ const TestimonialsSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="bg-white rounded-2xl shadow-lg p-8 md:p-12 max-w-4xl mx-auto"
         >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <p 
-                  className="text-3xl lg:text-4xl font-bold mb-2 bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent"
-                >
-                  {stat.value}
-                </p>
-                <p 
-                  className="text-sm font-medium"
-                  style={{ color: EDUCASSOL_COLORS.textMuted }}
-                >
-                  {stat.label}
-                </p>
-              </div>
-            ))}
-          </div>
+          <Card className="p-8 md:p-12 max-w-4xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {stats.map((stat, index) => (
+                <div key={index} className="text-center">
+                  <p className="text-3xl lg:text-4xl font-bold mb-2 bg-gradient-to-r from-examai-purple-500 to-examai-purple-400 bg-clip-text text-transparent">
+                    {stat.value}
+                  </p>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    {stat.label}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </Card>
         </motion.div>
       </div>
     </section>

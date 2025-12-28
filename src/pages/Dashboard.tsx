@@ -2,14 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sun, LogOut, FileText, ClipboardList, FileQuestion, Plus, Users, GraduationCap } from "lucide-react";
+import { FileText, ClipboardList, FileQuestion, BookOpen, BarChart3, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import ContentWizard from "@/components/dashboard/ContentWizard";
 import ContentList from "@/components/dashboard/ContentList";
 import CalendarWidget from "@/components/calendar/CalendarWidget";
 import UpcomingEventsNotification from "@/components/calendar/UpcomingEventsNotification";
+import Header from "@/components/Header";
+import { FeatureCard, WelcomeBanner } from "@/components/dashboard";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -68,46 +69,21 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Sun className="h-8 w-8 text-primary" />
-            <h1 className="text-2xl font-bold">EDUCA SOL</h1>
-          </div>
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" onClick={() => navigate("/search")}>
-              <Users className="h-4 w-4 mr-2" />
-              Buscar
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => navigate("/classes")}>
-              <Users className="h-4 w-4 mr-2" />
-              Minhas Turmas
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => navigate("/assessments")}>
-              <GraduationCap className="h-4 w-4 mr-2" />
-              Avaliações
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => navigate("/admin")}>
-              <Users className="h-4 w-4 mr-2" />
-              Admin
-            </Button>
-            <span className="text-sm text-muted-foreground">{user?.email}</span>
-            <Button variant="ghost" size="sm" onClick={handleSignOut}>
-              <LogOut className="h-4 w-4 mr-2" />
-              Sair
-            </Button>
-          </div>
-        </div>
-      </header>
+      {/* Header with theme support */}
+      <Header 
+        user={user} 
+        onSignOut={handleSignOut} 
+        showNav={true} 
+      />
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      {/* Main Content - Add padding-top to account for fixed header */}
+      <main className="container mx-auto px-4 py-8 pt-24">
+        {/* Welcome Banner with AI Exam Generator */}
         <div className="mb-8">
-          <h2 className="text-3xl font-bold mb-2">Painel do Professor</h2>
-          <p className="text-muted-foreground">
-            Crie conteúdos educacionais com inteligência artificial
-          </p>
+          <WelcomeBanner 
+            userName={user?.user_metadata?.name || user?.email?.split('@')[0]}
+            onGenerateExam={() => handleGenerateContent("assessment")}
+          />
         </div>
 
         {/* Upcoming Events Notifications */}
@@ -115,65 +91,95 @@ const Dashboard = () => {
           <UpcomingEventsNotification onGenerateContent={handleGenerateFromEvent} />
         </div>
 
-        {/* Grid Layout: Calendar + Quick Actions */}
+        {/* Feature Cards Grid - Responsive layout */}
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold mb-4 text-foreground">Criar Conteúdo</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <FeatureCard
+              icon={<FileText className="h-5 w-5" />}
+              title="Plano de Aula"
+              description="Crie um plano de aula completo alinhado à BNCC"
+              onClick={() => handleGenerateContent("lesson_plan")}
+              gradient="purple"
+            />
+            <FeatureCard
+              icon={<ClipboardList className="h-5 w-5" />}
+              title="Atividade"
+              description="Gere atividades práticas e engajadoras"
+              onClick={() => handleGenerateContent("activity")}
+              gradient="blue"
+            />
+            <FeatureCard
+              icon={<FileQuestion className="h-5 w-5" />}
+              title="Avaliação"
+              description="Crie provas e avaliações personalizadas"
+              onClick={() => handleGenerateContent("assessment")}
+              gradient="amber"
+            />
+          </div>
+        </div>
+
+        {/* Grid Layout: Calendar + Quick Stats */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
           {/* Calendar Widget - Takes 2 columns on large screens */}
           <div className="lg:col-span-2">
             <CalendarWidget onGenerateContent={handleGenerateFromEvent} />
           </div>
 
-          {/* Quick Actions - Takes 1 column */}
+          {/* Quick Stats - Takes 1 column */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold mb-4">Criar Conteúdo</h3>
-            
-            <Card 
-              className="cursor-pointer hover:shadow-lg transition-shadow"
-              onClick={() => handleGenerateContent("lesson_plan")}
-            >
-              <CardHeader className="pb-3">
-                <FileText className="h-8 w-8 text-primary mb-2" />
-                <CardTitle className="text-lg">Plano de Aula</CardTitle>
-                <CardDescription className="text-sm">
-                  Crie um plano de aula completo alinhado à BNCC
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card 
-              className="cursor-pointer hover:shadow-lg transition-shadow"
-              onClick={() => handleGenerateContent("activity")}
-            >
-              <CardHeader className="pb-3">
-                <ClipboardList className="h-8 w-8 text-primary mb-2" />
-                <CardTitle className="text-lg">Atividade</CardTitle>
-                <CardDescription className="text-sm">
-                  Gere atividades práticas e engajadoras
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card 
-              className="cursor-pointer hover:shadow-lg transition-shadow"
-              onClick={() => handleGenerateContent("assessment")}
-            >
-              <CardHeader className="pb-3">
-                <FileQuestion className="h-8 w-8 text-primary mb-2" />
-                <CardTitle className="text-lg">Avaliação</CardTitle>
-                <CardDescription className="text-sm">
-                  Crie provas e avaliações personalizadas
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            <h3 className="text-lg font-semibold text-foreground">Acesso Rápido</h3>
+            <FeatureCard
+              icon={<BookOpen className="h-5 w-5" />}
+              title="Minhas Turmas"
+              description="Gerencie suas turmas e alunos"
+              href="/classes"
+              gradient="green"
+            />
+            <FeatureCard
+              icon={<BarChart3 className="h-5 w-5" />}
+              title="Avaliações"
+              description="Acesse o sistema de correção automática"
+              href="/assessments"
+              gradient="purple"
+            />
+            <FeatureCard
+              icon={<Users className="h-5 w-5" />}
+              title="Administração"
+              description="Painel administrativo da escola"
+              href="/admin"
+              gradient="blue"
+            />
           </div>
         </div>
 
-        {/* Content Tabs */}
+        {/* Content Tabs with ExamAI styling */}
         <Tabs defaultValue="all" className="w-full">
-          <TabsList>
-            <TabsTrigger value="all">Todos</TabsTrigger>
-            <TabsTrigger value="lesson_plan">Planos de Aula</TabsTrigger>
-            <TabsTrigger value="activity">Atividades</TabsTrigger>
-            <TabsTrigger value="assessment">Avaliações</TabsTrigger>
+          <TabsList className="bg-card border border-border">
+            <TabsTrigger 
+              value="all"
+              className="data-[state=active]:bg-examai-purple-500 data-[state=active]:text-white"
+            >
+              Todos
+            </TabsTrigger>
+            <TabsTrigger 
+              value="lesson_plan"
+              className="data-[state=active]:bg-examai-purple-500 data-[state=active]:text-white"
+            >
+              Planos de Aula
+            </TabsTrigger>
+            <TabsTrigger 
+              value="activity"
+              className="data-[state=active]:bg-examai-purple-500 data-[state=active]:text-white"
+            >
+              Atividades
+            </TabsTrigger>
+            <TabsTrigger 
+              value="assessment"
+              className="data-[state=active]:bg-examai-purple-500 data-[state=active]:text-white"
+            >
+              Avaliações
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="all">
             <ContentList type="all" />

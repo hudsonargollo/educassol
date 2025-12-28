@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sun, LogOut, Plus, Users, AlertCircle } from "lucide-react";
+import { Plus, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import ClassDialog from "@/components/classes/ClassDialog";
 import ClassCard from "@/components/classes/ClassCard";
+import Header from "@/components/Header";
 
 interface Class {
   id: string;
@@ -117,28 +118,15 @@ const Classes = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Sun className="h-8 w-8 text-primary" />
-            <h1 className="text-2xl font-bold">EDUCA SOL</h1>
-          </div>
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard")}>
-              Voltar ao Painel
-            </Button>
-            <span className="text-sm text-muted-foreground">{user?.email}</span>
-            <Button variant="ghost" size="sm" onClick={handleSignOut}>
-              <LogOut className="h-4 w-4 mr-2" />
-              Sair
-            </Button>
-          </div>
-        </div>
-      </header>
+      {/* Header with theme support */}
+      <Header 
+        user={user} 
+        onSignOut={handleSignOut} 
+        showNav={true} 
+      />
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      {/* Main Content - Add padding-top to account for fixed header */}
+      <main className="container mx-auto px-4 py-8 pt-24">
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h2 className="text-3xl font-bold mb-2">Minhas Turmas</h2>

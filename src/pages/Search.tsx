@@ -4,10 +4,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sun, LogOut, Users, Search as SearchIcon } from "lucide-react";
+import { Search as SearchIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import AdvancedSearch from "@/components/search/AdvancedSearch";
 import PrintableContent from "@/components/print/PrintableContent";
+import Header from "@/components/Header";
 
 interface SearchFilters {
   bnccCode?: string;
@@ -160,29 +161,15 @@ Avaliação:
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Sun className="h-8 w-8 text-primary" />
-            <h1 className="text-2xl font-bold">EDUCA SOL</h1>
-          </div>
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard")}>
-              <SearchIcon className="h-4 w-4 mr-2" />
-              Dashboard
-            </Button>
-            <span className="text-sm text-muted-foreground">{user?.email}</span>
-            <Button variant="ghost" size="sm" onClick={handleSignOut}>
-              <LogOut className="h-4 w-4 mr-2" />
-              Sair
-            </Button>
-          </div>
-        </div>
-      </header>
+      {/* Header with theme support */}
+      <Header 
+        user={user} 
+        onSignOut={handleSignOut} 
+        showNav={true} 
+      />
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      {/* Main Content - Add padding-top to account for fixed header */}
+      <main className="container mx-auto px-4 py-8 pt-24">
         <div className="mb-8">
           <h2 className="text-3xl font-bold mb-2">Buscar Conteúdo</h2>
           <p className="text-muted-foreground">

@@ -1,95 +1,58 @@
-# Welcome to your Lovable project
+# EDUCA SOL
 
-## Project info
+Plataforma de IA para auxiliar professores na criação de conteúdo educacional alinhado à Base Nacional Comum Curricular (BNCC).
 
-**URL**: https://lovable.dev/projects/a33c469a-bde7-4bd3-901d-c72b3a0072fe
+## Sobre o Projeto
 
-## How can I edit this code?
+EDUCA SOL é uma plataforma desenvolvida para professores da educação primária em Jequié e região, oferecendo ferramentas de IA para:
 
-There are several ways of editing your application.
+- Geração de planos de aula
+- Criação de atividades educacionais
+- Elaboração de avaliações
+- Sugestões de habilidades BNCC
 
-**Use Lovable**
+## Tecnologias
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/a33c469a-bde7-4bd3-901d-c72b3a0072fe) and start prompting.
+- React + TypeScript
+- Vite
+- Tailwind CSS
+- Supabase (Backend & Auth)
+- shadcn/ui
 
-Changes made via Lovable will be committed automatically to this repo.
+## Desenvolvimento Local
 
-**Use your preferred IDE**
+### Pré-requisitos
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- Node.js 18+
+- npm ou bun
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Instalação
 
-Follow these steps:
+```bash
+# Instalar dependências
+npm install
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Iniciar servidor de desenvolvimento
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+O servidor estará disponível em `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Estrutura do Projeto
 
-**Use GitHub Codespaces**
+```
+src/
+├── components/     # Componentes React
+├── hooks/          # Custom hooks
+├── integrations/   # Integrações (Supabase)
+├── lib/            # Utilitários
+└── pages/          # Páginas da aplicação
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+supabase/
+├── functions/      # Edge Functions
+└── migrations/     # Migrações do banco
+```
 
-## What technologies are used for this project?
+## Deploy
 
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## Novas Funcionalidades Implementadas (MVP)
-
-As seguintes funcionalidades foram adicionadas ao projeto base, conforme o PRD:
-
-| Funcionalidade | Componentes Principais | Descrição |
-| :--- | :--- | :--- |
-| **Busca Avançada de Conteúdo** | `src/pages/Search.tsx`, `src/components/search/AdvancedSearch.tsx` | Permite que o professor pesquise conteúdo educacional filtrando por **Código BNCC**, **Palavra-chave**, **Ano Escolar**, **Disciplina** e **Tipo de Conteúdo** (Plano de Aula, Atividade, Avaliação, Jogo, Projeto). |
-| **Painel de Administração Escolar** | `src/pages/AdminPanel.tsx`, `src/components/admin/SchoolAdminDashboard.tsx` | Implementação inicial de um painel para Coordenadores/Gestores. Inclui mockups de estatísticas (Total de Professores, Conteúdo Gerado, Usuários Ativos) e a aba de **Gerenciamento de Professores** (Adicionar/Remover). |
-| **Gênio Criador (Mockup)** | `src/components/ai/CreativeGenius.tsx` | Componente placeholder para a funcionalidade de geração de conteúdo por IA. Pronto para integração com o backend de LLM. |
-| **Coleções Pessoais (Mockup)** | `src/components/collections/CollectionsManager.tsx` | Componente placeholder para a funcionalidade de salvar e organizar conteúdo em coleções pessoais. |
-| **Funcionalidade de Impressão (Mockup)** | `src/components/print/PrintableContent.tsx` | Componente de visualização de conteúdo com botão "Imprimir", pronto para estilização de impressão (`@media print`). |
-
-## Próximos Passos (Sugestões)
-
-1. **Implementação do Backend:** Conectar os componentes de Busca Avançada, Gênio Criador e Painel Admin a um backend real (Supabase, Firebase ou outro) para persistência de dados.
-2. **Integração com LLM:** Implementar a lógica de chamada de API para o "Gênio Criador" (usando a chave de API do OpenAI/Gemini) para gerar conteúdo real.
-3. **Estilização e Responsividade:** Refinar a interface de usuário e garantir a responsividade em diferentes dispositivos.
-4. **Testes Unitários/E2E:** Adicionar testes para as novas funcionalidades.
-
----
-*Este desenvolvimento foi realizado por **Manus AI**.*
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/a33c469a-bde7-4bd3-901d-c72b3a0072fe) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+O projeto pode ser deployado em qualquer plataforma que suporte aplicações Vite/React estáticas.

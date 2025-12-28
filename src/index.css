@@ -2,109 +2,183 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* ExamAI Design System
+   All colors MUST be HSL.
+   Features: Dark/Light mode, Purple/Violet accents, Glassmorphism, Gradients
 */
 
 @layer base {
+  /* ========================================
+     LIGHT MODE - ExamAI Design System
+     ======================================== */
   :root {
-    /* Sun-inspired color palette for EDUCA SOL */
-    --background: 45 100% 98%;
-    --foreground: 25 20% 15%;
+    /* Backgrounds - Clean whites and light grays */
+    --background: 0 0% 100%;
+    --background-secondary: 210 40% 98%;
+    --foreground: 222 47% 11%;
 
+    /* Card - White with subtle depth */
     --card: 0 0% 100%;
-    --card-foreground: 25 20% 15%;
+    --card-hover: 210 40% 96%;
+    --card-foreground: 222 47% 11%;
 
+    /* Popover */
     --popover: 0 0% 100%;
-    --popover-foreground: 25 20% 15%;
+    --popover-foreground: 222 47% 11%;
 
-    /* Primary: Warm sun yellow */
-    --primary: 45 100% 60%;
-    --primary-foreground: 25 20% 15%;
+    /* Primary - Purple/Violet accent */
+    --primary: 270 95% 55%;
+    --primary-foreground: 0 0% 100%;
 
-    /* Secondary: Soft orange */
-    --secondary: 30 100% 85%;
-    --secondary-foreground: 25 50% 25%;
+    /* Secondary - Amber/Orange for CTAs */
+    --secondary: 38 92% 50%;
+    --secondary-foreground: 0 0% 100%;
 
-    /* Muted: Light cream */
-    --muted: 45 40% 95%;
-    --muted-foreground: 25 15% 45%;
+    /* Muted */
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
 
-    /* Accent: Light blue sky */
-    --accent: 200 100% 85%;
-    --accent-foreground: 200 50% 25%;
+    /* Accent - Purple variations */
+    --accent: 270 95% 55%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Semantic colors */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 0%;
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 100%;
 
-    --border: 45 30% 90%;
-    --input: 45 30% 90%;
-    --ring: 45 100% 60%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    /* Custom sun gradients */
+    /* Borders - Light mode */
+    --border: 214 32% 91%;
+    --border-subtle: 214 32% 95%;
+    --input: 214 32% 91%;
+    --ring: 270 95% 55%;
+
+    /* ExamAI accent variations */
+    --accent-purple: 270 95% 55%;
+    --accent-violet: 258 90% 66%;
+    --accent-blue: 217 91% 60%;
+    --accent-cyan: 192 91% 36%;
+    --accent-green: 142 71% 45%;
+    --accent-amber: 38 92% 50%;
+    --accent-orange: 25 95% 53%;
+    --accent-red: 0 84% 60%;
+
+    /* Gradients */
     --gradient-sun: linear-gradient(135deg, hsl(45 100% 70%), hsl(35 100% 65%));
-    --gradient-hero: linear-gradient(135deg, hsl(45 100% 95%), hsl(200 100% 95%));
+    --gradient-hero: linear-gradient(135deg, hsl(270 95% 98%), hsl(217 91% 98%));
     --gradient-warm: linear-gradient(45deg, hsl(45 100% 85%), hsl(30 100% 80%));
     
-    /* Shadows with warm glow */
+    /* Shadows */
     --shadow-warm: 0 10px 30px -10px hsl(45 100% 60% / 0.3);
-    --shadow-glow: 0 0 40px hsl(45 100% 70% / 0.4);
+    --shadow-glow: 0 0 40px hsl(270 95% 55% / 0.2);
+
+    /* Glassmorphism - Light mode */
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(168, 85, 247, 0.15);
 
     --radius: 0.5rem;
 
+    /* Sidebar */
     --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 270 95% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 270 95% 97%;
+    --sidebar-accent-foreground: 270 95% 35%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 270 95% 55%;
   }
 
+  /* ========================================
+     DARK MODE - ExamAI Design System
+     Deep navy/slate with purple accents
+     ======================================== */
   .dark {
-    --background: 222.2 84% 4.9%;
+    /* Backgrounds - Deep navy/slate */
+    --background: 222 47% 6%;
+    --background-secondary: 222 47% 9%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    /* Card - Slightly lighter navy */
+    --card: 222 47% 11%;
+    --card-hover: 222 47% 14%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
+    /* Popover */
+    --popover: 222 47% 11%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Primary - Purple/Violet accent */
+    --primary: 270 95% 65%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    /* Secondary - Amber/Orange for CTAs */
+    --secondary: 38 92% 50%;
+    --secondary-foreground: 0 0% 0%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    /* Muted */
+    --muted: 222 47% 14%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    /* Accent - Purple variations */
+    --accent: 270 95% 65%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62.8% 30.6%;
+    /* Semantic colors */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 0%;
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 100%;
+
+    --destructive: 0 62% 30%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    /* Borders - Dark mode with purple tint */
+    --border: 215 20% 20%;
+    --border-subtle: 215 20% 15%;
+    --input: 222 47% 14%;
+    --ring: 270 95% 65%;
+
+    /* ExamAI accent variations */
+    --accent-purple: 270 95% 65%;
+    --accent-violet: 258 90% 66%;
+    --accent-blue: 217 91% 60%;
+    --accent-cyan: 192 91% 36%;
+    --accent-green: 142 71% 45%;
+    --accent-amber: 38 92% 50%;
+    --accent-orange: 25 95% 53%;
+    --accent-red: 0 84% 60%;
+
+    /* Gradients - Dark mode */
+    --gradient-sun: linear-gradient(135deg, hsl(270 95% 65%), hsl(258 90% 60%));
+    --gradient-hero: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 119, 198, 0.3), transparent);
+    --gradient-warm: linear-gradient(45deg, hsl(270 95% 30%), hsl(258 90% 25%));
+    
+    /* Shadows - Dark mode with purple glow */
+    --shadow-warm: 0 10px 30px -10px hsl(270 95% 65% / 0.2);
+    --shadow-glow: 0 0 40px hsl(270 95% 65% / 0.3);
+
+    /* Glassmorphism - Dark mode */
+    --glass-bg: rgba(20, 26, 38, 0.8);
+    --glass-border: rgba(168, 85, 247, 0.2);
+
+    /* Sidebar - Dark mode */
+    --sidebar-background: 222 47% 9%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 270 95% 65%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 222 47% 14%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 215 20% 20%;
+    --sidebar-ring: 270 95% 65%;
   }
 }
 
@@ -219,6 +293,264 @@ All colors MUST be HSL.
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ========================================
+   ExamAI Glassmorphism Utilities
+   ======================================== */
+@layer components {
+  /* Glass effect - standard */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+  }
+
+  /* Glass effect - subtle */
+  .glass-subtle {
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+  }
+
+  /* Glass effect - strong */
+  .glass-strong {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+  }
+
+  /* Glass card variant */
+  .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 0.75rem;
+  }
+}
+
+/* ========================================
+   ExamAI Gradient Utilities
+   ======================================== */
+@layer components {
+  /* Hero gradient - Purple to blue radial */
+  .gradient-hero-examai {
+    background: radial-gradient(
+      ellipse 80% 50% at 50% -20%,
+      rgba(120, 119, 198, 0.3),
+      transparent
+    );
+  }
+
+  /* Card gradient - Subtle purple */
+  .gradient-card-examai {
+    background: linear-gradient(
+      135deg,
+      rgba(168, 85, 247, 0.1) 0%,
+      rgba(139, 92, 246, 0.05) 100%
+    );
+  }
+
+  /* CTA gradient - Amber to orange */
+  .gradient-cta-examai {
+    background: linear-gradient(
+      90deg,
+      hsl(38, 92%, 50%) 0%,
+      hsl(25, 95%, 53%) 100%
+    );
+  }
+
+  /* Primary button gradient - Purple */
+  .gradient-primary-examai {
+    background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%);
+  }
+
+  /* Feature card gradients */
+  .gradient-purple-examai {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(139, 92, 246, 0.1) 100%);
+  }
+
+  .gradient-blue-examai {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(6, 182, 212, 0.1) 100%);
+  }
+
+  .gradient-green-examai {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%);
+  }
+
+  .gradient-amber-examai {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(249, 115, 22, 0.1) 100%);
+  }
+
+  /* Solid gradients for icons/badges */
+  .gradient-purple-solid {
+    background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%);
+  }
+
+  .gradient-blue-solid {
+    background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  }
+
+  .gradient-green-solid {
+    background: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
+  }
+
+  .gradient-amber-solid {
+    background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+  }
+}
+
+/* ========================================
+   ExamAI Card Styling Utilities
+   ======================================== */
+@layer components {
+  /* Default card with ExamAI styling */
+  .examai-card {
+    @apply rounded-xl border bg-card p-6;
+    border-color: hsl(var(--border));
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .examai-card:hover {
+    border-color: hsl(var(--accent-purple) / 0.4);
+  }
+
+  /* Interactive card */
+  .examai-card-interactive {
+    @apply examai-card cursor-pointer;
+  }
+
+  .examai-card-interactive:hover {
+    background-color: hsl(var(--card-hover));
+    border-color: hsl(var(--accent-purple) / 0.4);
+  }
+
+  /* Feature card */
+  .examai-feature-card {
+    @apply examai-card;
+    border-color: hsl(var(--border));
+  }
+
+  .examai-feature-card:hover {
+    border-color: hsl(var(--accent-purple) / 0.4);
+  }
+}
+
+/* ========================================
+   ExamAI Button Styling Utilities
+   ======================================== */
+@layer components {
+  /* Primary button with purple gradient */
+  .examai-btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 font-medium text-white;
+    background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%);
+    transition: filter 0.2s ease, transform 0.1s ease;
+  }
+
+  .examai-btn-primary:hover {
+    filter: brightness(1.1);
+  }
+
+  .examai-btn-primary:active {
+    transform: scale(0.98);
+  }
+
+  .examai-btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: none;
+  }
+
+  /* Secondary button with transparent/border style */
+  .examai-btn-secondary {
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 font-medium;
+    background: transparent;
+    border: 1px solid hsl(var(--accent-purple));
+    color: hsl(var(--accent-purple));
+    transition: background-color 0.2s ease;
+  }
+
+  .examai-btn-secondary:hover {
+    background: hsl(var(--accent-purple) / 0.1);
+  }
+
+  .examai-btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* CTA button with amber gradient */
+  .examai-btn-cta {
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 font-medium;
+    background: linear-gradient(90deg, hsl(38, 92%, 50%) 0%, hsl(25, 95%, 53%) 100%);
+    color: hsl(0, 0%, 0%);
+    transition: filter 0.2s ease, transform 0.1s ease;
+  }
+
+  .examai-btn-cta:hover {
+    filter: brightness(1.1);
+  }
+
+  .examai-btn-cta:active {
+    transform: scale(0.98);
+  }
+
+  .examai-btn-cta:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: none;
+  }
+}
+
+/* ========================================
+   ExamAI Input Styling Utilities
+   ======================================== */
+@layer components {
+  .examai-input {
+    @apply w-full rounded-lg px-4 py-3 outline-none transition-all;
+    background: hsl(var(--background-secondary, var(--background)));
+    border: 1px solid hsl(var(--border));
+    color: hsl(var(--foreground));
+  }
+
+  .examai-input::placeholder {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .examai-input:focus {
+    border-color: hsl(var(--accent-purple));
+    box-shadow: 0 0 0 2px hsl(var(--accent-purple) / 0.2);
+  }
+
+  .examai-input-error {
+    border-color: hsl(var(--accent-red)) !important;
+  }
+
+  .examai-input-error:focus {
+    box-shadow: 0 0 0 2px hsl(var(--accent-red) / 0.2);
+  }
+}
+
+/* ========================================
+   Theme Transition
+   ======================================== */
+@layer base {
+  /* Smooth color transitions when switching themes */
+  html {
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Apply transition to common elements */
+  body,
+  .examai-card,
+  .glass,
+  .glass-card {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  }
 }
 
 /* Accessibility utilities */
