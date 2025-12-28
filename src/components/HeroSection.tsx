@@ -1,134 +1,229 @@
 import { Button } from "@/components/ui/button";
-import { Sun, Sparkles } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Sparkles, Play, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { STAGGER_PARENT, FADE_UP_ITEM, EDUCASSOL_SPRING } from "@/lib/motion";
+import { EDUCASSOL_COLORS } from "@/lib/colors";
 
 const HeroSection = () => {
   const navigate = useNavigate();
-  const cities = ["Jequié", "Itagi", "Ipiaú", "Jitaúna", "Ilhéus", "Ibirataia"];
-  const [currentCityIndex, setCurrentCityIndex] = useState(0);
-  const [displayedText, setDisplayedText] = useState("");
-  const [isDeleting, setIsDeleting] = useState(false);
 
-  useEffect(() => {
-    const currentCity = cities[currentCityIndex];
-    const typingSpeed = isDeleting ? 50 : 100;
-    const pauseTime = 1500;
+  // Word-by-word stagger animation for headline
+  const headlineWords = ["Corrigir", "provas", "levava", "horas.", "Agora", "leva", "segundos."];
 
-    const timeout = setTimeout(() => {
-      if (!isDeleting && displayedText === currentCity) {
-        // Pause before deleting
-        setTimeout(() => setIsDeleting(true), pauseTime);
-      } else if (isDeleting && displayedText === "") {
-        // Move to next city
-        setIsDeleting(false);
-        setCurrentCityIndex((prevIndex) => (prevIndex + 1) % cities.length);
-      } else if (isDeleting) {
-        // Delete character
-        setDisplayedText(currentCity.substring(0, displayedText.length - 1));
-      } else {
-        // Type character
-        setDisplayedText(currentCity.substring(0, displayedText.length + 1));
-      }
-    }, typingSpeed);
-
-    return () => clearTimeout(timeout);
-  }, [displayedText, isDeleting, currentCityIndex, cities]);
   return (
-    <section className="relative min-h-[100dvh] bg-gradient-hero flex items-center overflow-hidden py-8 sm:py-12">
+    <section className="relative min-h-[100dvh] bg-gradient-to-b from-slate-50 via-white to-slate-50 flex items-center overflow-hidden">
       {/* Background decorative elements */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-sun rounded-full blur-xl"></div>
-        <div className="absolute bottom-32 right-20 w-40 h-40 bg-gradient-warm rounded-full blur-2xl"></div>
-        <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-accent rounded-full blur-lg"></div>
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-blue-500/3 to-transparent rounded-full" />
       </div>
-      
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-20 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          {/* Content Side */}
-          <div className="space-y-4 sm:space-y-6 lg:space-y-8">
-            {/* Logo/Brand */}
-            <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-              <div className="p-2 sm:p-3 bg-gradient-sun rounded-xl shadow-warm">
-                <Sun className="h-6 w-6 sm:h-8 sm:w-8 text-primary-foreground" />
-              </div>
-              <h1 className="text-xl sm:text-2xl font-bold bg-gradient-sun bg-clip-text text-transparent">
-                EDUCA SOL
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 relative z-10">
+        <div className="max-w-5xl mx-auto text-center">
+          <motion.div
+            variants={STAGGER_PARENT}
+            initial="hidden"
+            animate="show"
+            className="space-y-8"
+          >
+            {/* Badge */}
+            <motion.div variants={FADE_UP_ITEM}>
+              <Badge 
+                variant="outline" 
+                className="px-4 py-2 text-sm font-medium border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100 transition-colors"
+              >
+                <Sparkles className="h-4 w-4 mr-2" style={{ color: EDUCASSOL_COLORS.accent }} />
+                Novo: Reconhecimento de Escrita Manual
+              </Badge>
+            </motion.div>
+
+            {/* Main Headline - Word by word stagger */}
+            <div className="space-y-2">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1]">
+                {headlineWords.map((word, index) => (
+                  <motion.span
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      delay: 0.1 + index * 0.08,
+                      type: "spring",
+                      stiffness: 260,
+                      damping: 20,
+                    }}
+                    className="inline-block mr-3"
+                    style={{ 
+                      color: index >= 4 ? EDUCASSOL_COLORS.primary : EDUCASSOL_COLORS.textMain 
+                    }}
+                  >
+                    {word}
+                  </motion.span>
+                ))}
               </h1>
             </div>
 
-            {/* Main Headlines */}
-            <div className="space-y-3 sm:space-y-4">
-              <h1 className="font-bold text-foreground leading-tight break-words" style={{ fontSize: 'clamp(1.875rem, 5vw, 3.75rem)' }}>
-                Ilumine o Futuro da{" "}
-                <span className="bg-gradient-sun bg-clip-text text-transparent">
-                  Educação Primária
-                </span>{" "}
-                em <span className="inline-block min-w-[120px]">{displayedText}<span className="animate-pulse">|</span></span>.
-              </h1>
-              
-              <h2 className="text-muted-foreground font-medium leading-relaxed" style={{ fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}>
-                Transforme sua Rotina de Planejamento com IA, 
-                Alinhada à BNCC.
-              </h2>
-            </div>
-
-            {/* Intro Paragraph */}
-            <p className="text-base sm:text-lg text-foreground/80 leading-relaxed max-w-xl">
-              Economize horas preciosas na preparação de aulas e atividades. 
-              EducaSol cria conteúdo educacional personalizado, sempre seguindo 
-              as diretrizes da BNCC, para que você possa focar no que realmente 
-              importa: ensinar e inspirar seus alunos.
-            </p>
+            {/* Subheadline */}
+            <motion.p 
+              variants={FADE_UP_ITEM}
+              className="text-lg sm:text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed"
+              style={{ color: EDUCASSOL_COLORS.textMuted }}
+            >
+              Educassol é o assistente de correção com IA que cria provas, 
+              corrige trabalhos e fornece feedback detalhado instantaneamente. 
+              <span className="font-semibold" style={{ color: EDUCASSOL_COLORS.textMain }}>
+                {" "}Recupere suas noites.
+              </span>
+            </motion.p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-3 sm:pt-4">
-              <Button 
-                variant="hero" 
-                size="xl" 
-                className="group w-full sm:w-auto min-h-[48px] text-sm sm:text-base px-6 py-3"
-                onClick={() => navigate('/auth')}
+            <motion.div 
+              variants={FADE_UP_ITEM}
+              className="flex flex-col sm:flex-row gap-4 justify-center pt-4"
+            >
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                transition={EDUCASSOL_SPRING}
               >
-                <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 group-hover:animate-spin" />
-                <span className="truncate">Comece a Brilhar!</span>
-              </Button>
+                <Button
+                  size="lg"
+                  className="h-14 px-8 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                  style={{ 
+                    background: `linear-gradient(135deg, ${EDUCASSOL_COLORS.primary} 0%, #4F46E5 100%)`,
+                  }}
+                  onClick={() => navigate('/auth')}
+                >
+                  <Sparkles className="h-5 w-5 mr-2" />
+                  Comece a Corrigir Grátis
+                </Button>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                transition={EDUCASSOL_SPRING}
+              >
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="h-14 px-8 text-lg font-semibold border-2 hover:bg-slate-50"
+                  onClick={() => navigate('/auth')}
+                >
+                  <Play className="h-5 w-5 mr-2" />
+                  Ver Demonstração
+                </Button>
+              </motion.div>
+            </motion.div>
+
+            {/* Trust indicators */}
+            <motion.div 
+              variants={FADE_UP_ITEM}
+              className="flex flex-wrap items-center justify-center gap-6 pt-8 text-sm"
+              style={{ color: EDUCASSOL_COLORS.textMuted }}
+            >
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-5 w-5" style={{ color: EDUCASSOL_COLORS.success }} />
+                <span>Sem cartão de crédito</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-5 w-5" style={{ color: EDUCASSOL_COLORS.success }} />
+                <span>50 correções grátis/mês</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-5 w-5" style={{ color: EDUCASSOL_COLORS.success }} />
+                <span>Alinhado à BNCC</span>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          {/* Dashboard Preview Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 60, rotateX: 10 }}
+            animate={{ opacity: 1, y: 0, rotateX: 0 }}
+            transition={{ delay: 0.6, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-16 lg:mt-20"
+          >
+            <div className="relative max-w-4xl mx-auto">
+              {/* Glow effect behind card */}
+              <div 
+                className="absolute inset-0 blur-3xl opacity-20 rounded-3xl"
+                style={{ background: `linear-gradient(135deg, ${EDUCASSOL_COLORS.primary} 0%, ${EDUCASSOL_COLORS.accent} 100%)` }}
+              />
               
-              <Button 
-                variant="outline" 
-                size="xl"
-                className="w-full sm:w-auto min-h-[48px] px-6 py-3"
-                onClick={() => navigate('/auth')}
-              >
-                Já tem conta? Faça Login
-              </Button>
-            </div>
-
-          </div>
-
-          {/* Visual Side */}
-          <div className="relative">
-            {/* Placeholder for product visual - Dashboard screenshot or AI education illustration */}
-            <div className="relative bg-card rounded-2xl p-6 sm:p-8 shadow-warm hover:shadow-glow transition-all duration-500 transform hover:scale-105">
-              <div className="bg-gradient-hero rounded-xl p-4 sm:p-6 min-h-[250px] sm:min-h-[300px] lg:min-h-[400px] flex items-center justify-center border border-border/20">
-                <div className="text-center space-y-4">
-                  <div className="w-20 h-20 bg-gradient-sun rounded-full flex items-center justify-center mx-auto animate-glow-pulse">
-                    <Sparkles className="h-10 w-10 text-primary-foreground" />
+              {/* Main card */}
+              <div className="relative bg-white rounded-2xl shadow-2xl border border-slate-200/50 overflow-hidden">
+                {/* Browser chrome */}
+                <div className="flex items-center gap-2 px-4 py-3 bg-slate-100 border-b border-slate-200">
+                  <div className="flex gap-1.5">
+                    <div className="w-3 h-3 rounded-full bg-red-400" />
+                    <div className="w-3 h-3 rounded-full bg-amber-400" />
+                    <div className="w-3 h-3 rounded-full bg-green-400" />
                   </div>
-                  <p className="text-muted-foreground font-medium">
-                    Dashboard Preview
-                  </p>
-                  <p className="text-sm text-muted-foreground/70">
-                    {/* Compelling product visual placeholder - screenshot of dashboard or AI education illustration */}
-                    Interface intuitiva da plataforma EDUCA SOL
-                  </p>
+                  <div className="flex-1 mx-4">
+                    <div className="bg-white rounded-md px-3 py-1 text-xs text-slate-400 max-w-xs mx-auto">
+                      educassol.pages.dev/dashboard
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Dashboard preview content */}
+                <div className="p-6 sm:p-8 bg-gradient-to-br from-slate-50 to-white min-h-[300px] sm:min-h-[400px]">
+                  <div className="grid grid-cols-3 gap-4 mb-6">
+                    {/* Stat cards */}
+                    {[
+                      { label: "Provas Corrigidas", value: "247", color: EDUCASSOL_COLORS.primary },
+                      { label: "Média da Turma", value: "8.4", color: EDUCASSOL_COLORS.success },
+                      { label: "Tempo Economizado", value: "32h", color: EDUCASSOL_COLORS.accent },
+                    ].map((stat, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.8 + i * 0.1 }}
+                        className="bg-white rounded-xl p-4 shadow-sm border border-slate-100"
+                      >
+                        <p className="text-xs text-slate-500 mb-1">{stat.label}</p>
+                        <p className="text-2xl font-bold" style={{ color: stat.color }}>{stat.value}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                  
+                  {/* AI Grading preview */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.1 }}
+                    className="bg-white rounded-xl p-4 shadow-sm border border-slate-100"
+                  >
+                    <div className="flex items-center gap-3 mb-3">
+                      <div 
+                        className="w-8 h-8 rounded-lg flex items-center justify-center"
+                        style={{ background: `${EDUCASSOL_COLORS.accent}20` }}
+                      >
+                        <Sparkles className="h-4 w-4" style={{ color: EDUCASSOL_COLORS.accent }} />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-slate-900">Correção em andamento...</p>
+                        <p className="text-xs text-slate-500">Matemática 9º Ano - Prova Bimestral</p>
+                      </div>
+                    </div>
+                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: "75%" }}
+                        transition={{ delay: 1.3, duration: 1.5, ease: "easeOut" }}
+                        className="h-full rounded-full"
+                        style={{ background: `linear-gradient(90deg, ${EDUCASSOL_COLORS.primary} 0%, ${EDUCASSOL_COLORS.accent} 100%)` }}
+                      />
+                    </div>
+                  </motion.div>
                 </div>
               </div>
             </div>
-
-            {/* Floating elements */}
-            <div className="absolute -top-4 -right-4 w-24 h-24 bg-accent/20 rounded-full blur-xl"></div>
-            <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-primary/10 rounded-full blur-2xl"></div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
