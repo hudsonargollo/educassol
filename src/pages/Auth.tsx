@@ -1,7 +1,7 @@
 ﻿import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
-import { GraduationCap, Sparkles, Mail, Lock, Eye, EyeOff, ArrowRight, Brain, BarChart3, FileCheck, BookOpen } from "lucide-react";
+import { GraduationCap, Sparkles, Mail, Lock, Eye, EyeOff, ArrowRight, Brain, BarChart3, FileCheck, BookOpen, Lightbulb, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
@@ -57,24 +57,32 @@ const Auth = () => {
     <div className="min-h-screen bg-[#0a0d14] relative overflow-hidden flex items-center justify-center p-4">
       {/* Orbit animation styles */}
       <style>{`
-        @keyframes orbit {
-          from { transform: rotate(0deg) translateX(60px) rotate(0deg); }
-          to { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
+        @keyframes orbit-inner {
+          from { transform: rotate(0deg) translateX(55px) rotate(0deg); }
+          to { transform: rotate(360deg) translateX(55px) rotate(-360deg); }
         }
-        @keyframes orbit-reverse {
-          from { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
-          to { transform: rotate(0deg) translateX(80px) rotate(0deg); }
+        @keyframes orbit-inner-reverse {
+          from { transform: rotate(360deg) translateX(55px) rotate(-360deg); }
+          to { transform: rotate(0deg) translateX(55px) rotate(0deg); }
+        }
+        @keyframes orbit-outer {
+          from { transform: rotate(0deg) translateX(90px) rotate(0deg); }
+          to { transform: rotate(360deg) translateX(90px) rotate(-360deg); }
+        }
+        @keyframes orbit-outer-reverse {
+          from { transform: rotate(360deg) translateX(90px) rotate(-360deg); }
+          to { transform: rotate(0deg) translateX(90px) rotate(0deg); }
         }
         @keyframes pulse-glow {
           0%, 100% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.3); }
-          50% { box-shadow: 0 0 35px rgba(168, 85, 247, 0.5); }
+          50% { box-shadow: 0 0 40px rgba(168, 85, 247, 0.5); }
         }
-        .orbit-1 { animation: orbit 12s linear infinite; }
-        .orbit-2 { animation: orbit 12s linear infinite; animation-delay: -3s; }
-        .orbit-3 { animation: orbit 12s linear infinite; animation-delay: -6s; }
-        .orbit-4 { animation: orbit 12s linear infinite; animation-delay: -9s; }
-        .orbit-outer-1 { animation: orbit-reverse 18s linear infinite; }
-        .orbit-outer-2 { animation: orbit-reverse 18s linear infinite; animation-delay: -9s; }
+        .orbit-inner-1 { animation: orbit-inner 10s linear infinite; }
+        .orbit-inner-2 { animation: orbit-inner-reverse 12s linear infinite; animation-delay: -3s; }
+        .orbit-inner-3 { animation: orbit-inner 10s linear infinite; animation-delay: -5s; }
+        .orbit-outer-1 { animation: orbit-outer-reverse 16s linear infinite; }
+        .orbit-outer-2 { animation: orbit-outer 20s linear infinite; animation-delay: -5s; }
+        .orbit-outer-3 { animation: orbit-outer-reverse 16s linear infinite; animation-delay: -10.5s; }
         .center-glow { animation: pulse-glow 3s ease-in-out infinite; }
       `}</style>
 
@@ -105,7 +113,7 @@ const Auth = () => {
             </p>
 
             {/* Orbiting icons */}
-            <div className="relative flex-1 min-h-[220px] flex items-center justify-center">
+            <div className="relative flex-1 min-h-[240px] flex items-center justify-center">
               {/* Center icon with glow */}
               <div className="relative z-20 center-glow rounded-full">
                 <div className="relative p-5 rounded-full bg-gradient-to-br from-examai-purple-500 to-violet-600 shadow-lg">
@@ -113,38 +121,54 @@ const Auth = () => {
                 </div>
               </div>
               
-              {/* Inner orbit ring (visual) */}
-              <div className="absolute w-[120px] h-[120px] rounded-full border border-dashed border-examai-purple-500/20" />
+              {/* Inner orbit ring */}
+              <div className="absolute w-[110px] h-[110px] rounded-full border border-dashed border-examai-purple-500/20" />
               
-              {/* Outer orbit ring (visual) */}
-              <div className="absolute w-[160px] h-[160px] rounded-full border border-dashed border-violet-500/10" />
+              {/* Outer orbit ring */}
+              <div className="absolute w-[180px] h-[180px] rounded-full border border-dashed border-violet-500/15" />
 
-              {/* Inner orbiting icons */}
+              {/* Inner orbit - 3 icons, mixed directions */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="orbit-1">
+                <div className="orbit-inner-1">
                   <div className="p-2.5 rounded-full bg-examai-purple-500/20 border border-examai-purple-500/30 backdrop-blur-sm">
                     <Brain className="h-4 w-4 text-examai-purple-400" />
                   </div>
                 </div>
               </div>
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="orbit-2">
+                <div className="orbit-inner-2">
                   <div className="p-2.5 rounded-full bg-violet-500/20 border border-violet-500/30 backdrop-blur-sm">
                     <Sparkles className="h-4 w-4 text-violet-400" />
                   </div>
                 </div>
               </div>
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="orbit-3">
+                <div className="orbit-inner-3">
+                  <div className="p-2 rounded-full bg-cyan-500/20 border border-cyan-500/30 backdrop-blur-sm">
+                    <Lightbulb className="h-3.5 w-3.5 text-cyan-400" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Outer orbit - 3 icons, opposite direction */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="orbit-outer-1">
                   <div className="p-2.5 rounded-full bg-amber-500/20 border border-amber-500/30 backdrop-blur-sm">
                     <FileCheck className="h-4 w-4 text-amber-400" />
                   </div>
                 </div>
               </div>
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="orbit-4">
+                <div className="orbit-outer-2">
                   <div className="p-2 rounded-full bg-blue-500/20 border border-blue-500/30 backdrop-blur-sm">
                     <BarChart3 className="h-3.5 w-3.5 text-blue-400" />
+                  </div>
+                </div>
+              </div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="orbit-outer-3">
+                  <div className="p-2 rounded-full bg-green-500/20 border border-green-500/30 backdrop-blur-sm">
+                    <Target className="h-3.5 w-3.5 text-green-400" />
                   </div>
                 </div>
               </div>
