@@ -55,6 +55,29 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen bg-[#0a0d14] relative overflow-hidden flex items-center justify-center p-4">
+      {/* Orbit animation styles */}
+      <style>{`
+        @keyframes orbit {
+          from { transform: rotate(0deg) translateX(60px) rotate(0deg); }
+          to { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
+        }
+        @keyframes orbit-reverse {
+          from { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
+          to { transform: rotate(0deg) translateX(80px) rotate(0deg); }
+        }
+        @keyframes pulse-glow {
+          0%, 100% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.3); }
+          50% { box-shadow: 0 0 35px rgba(168, 85, 247, 0.5); }
+        }
+        .orbit-1 { animation: orbit 12s linear infinite; }
+        .orbit-2 { animation: orbit 12s linear infinite; animation-delay: -3s; }
+        .orbit-3 { animation: orbit 12s linear infinite; animation-delay: -6s; }
+        .orbit-4 { animation: orbit 12s linear infinite; animation-delay: -9s; }
+        .orbit-outer-1 { animation: orbit-reverse 18s linear infinite; }
+        .orbit-outer-2 { animation: orbit-reverse 18s linear infinite; animation-delay: -9s; }
+        .center-glow { animation: pulse-glow 3s ease-in-out infinite; }
+      `}</style>
+
       {/* Background dots */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(30)].map((_, i) => (
@@ -63,7 +86,7 @@ const Auth = () => {
         ))}
       </div>
 
-      {/* Main container - card style like reference */}
+      {/* Main container */}
       <div className="relative w-full max-w-5xl">
         <div className="absolute -inset-1 bg-gradient-to-r from-examai-purple-500/10 via-violet-500/5 to-examai-purple-500/10 rounded-3xl blur-xl" />
         <div className="relative bg-[#0f1219]/95 backdrop-blur-xl rounded-2xl border border-gray-800/50 overflow-hidden flex flex-col lg:flex-row">
@@ -81,40 +104,53 @@ const Auth = () => {
               Transforme a educacao com ferramentas inteligentes de IA construidas para o futuro do aprendizado
             </p>
 
-            {/* Floating icons - compact cluster */}
-            <div className="relative flex-1 min-h-[200px] flex items-center justify-center">
-              {/* Center icon */}
-              <div className="relative z-20">
-                <div className="absolute inset-0 bg-examai-purple-500/30 rounded-full blur-lg animate-pulse" />
-                <div className="relative p-4 rounded-full bg-gradient-to-br from-examai-purple-500 to-violet-600 shadow-lg shadow-examai-purple-500/30">
-                  <BookOpen className="h-7 w-7 text-white" />
+            {/* Orbiting icons */}
+            <div className="relative flex-1 min-h-[220px] flex items-center justify-center">
+              {/* Center icon with glow */}
+              <div className="relative z-20 center-glow rounded-full">
+                <div className="relative p-5 rounded-full bg-gradient-to-br from-examai-purple-500 to-violet-600 shadow-lg">
+                  <BookOpen className="h-8 w-8 text-white" />
                 </div>
               </div>
               
-              {/* Orbiting icons - closer to center */}
-              <div className="absolute -top-2 left-1/2 -translate-x-1/2 animate-float">
-                <div className="p-2.5 rounded-full bg-violet-500/20 border border-violet-500/30">
-                  <Sparkles className="h-4 w-4 text-violet-400" />
+              {/* Inner orbit ring (visual) */}
+              <div className="absolute w-[120px] h-[120px] rounded-full border border-dashed border-examai-purple-500/20" />
+              
+              {/* Outer orbit ring (visual) */}
+              <div className="absolute w-[160px] h-[160px] rounded-full border border-dashed border-violet-500/10" />
+
+              {/* Inner orbiting icons */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="orbit-1">
+                  <div className="p-2.5 rounded-full bg-examai-purple-500/20 border border-examai-purple-500/30 backdrop-blur-sm">
+                    <Brain className="h-4 w-4 text-examai-purple-400" />
+                  </div>
                 </div>
               </div>
-              <div className="absolute top-1/2 -left-8 -translate-y-1/2 animate-float" style={{ animationDelay: '0.5s' }}>
-                <div className="p-2.5 rounded-full bg-examai-purple-500/20 border border-examai-purple-500/30">
-                  <Brain className="h-4 w-4 text-examai-purple-400" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="orbit-2">
+                  <div className="p-2.5 rounded-full bg-violet-500/20 border border-violet-500/30 backdrop-blur-sm">
+                    <Sparkles className="h-4 w-4 text-violet-400" />
+                  </div>
                 </div>
               </div>
-              <div className="absolute top-1/2 -right-8 -translate-y-1/2 animate-float" style={{ animationDelay: '1s' }}>
-                <div className="p-2.5 rounded-full bg-amber-500/20 border border-amber-500/30">
-                  <FileCheck className="h-4 w-4 text-amber-400" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="orbit-3">
+                  <div className="p-2.5 rounded-full bg-amber-500/20 border border-amber-500/30 backdrop-blur-sm">
+                    <FileCheck className="h-4 w-4 text-amber-400" />
+                  </div>
                 </div>
               </div>
-              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 animate-float" style={{ animationDelay: '1.5s' }}>
-                <div className="p-2 rounded-full bg-blue-500/20 border border-blue-500/30">
-                  <BarChart3 className="h-3.5 w-3.5 text-blue-400" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="orbit-4">
+                  <div className="p-2 rounded-full bg-blue-500/20 border border-blue-500/30 backdrop-blur-sm">
+                    <BarChart3 className="h-3.5 w-3.5 text-blue-400" />
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Feature items - bottom */}
+            {/* Feature items */}
             <div className="grid grid-cols-3 gap-4 mt-6">
               <FeatureItem icon={<Brain className="h-4 w-4" />} label="Correcao com IA" />
               <FeatureItem icon={<FileCheck className="h-4 w-4" />} label="Avaliacoes Inteligentes" />
