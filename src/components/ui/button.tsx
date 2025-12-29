@@ -5,22 +5,23 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "bg-gradient-to-br from-examai-purple-500 to-examai-purple-600 text-white hover:brightness-110 active:scale-[0.98] shadow-examai-purple",
+        default: "bg-gradient-to-br from-examai-purple-500 to-examai-purple-600 text-white hover:brightness-110 hover:shadow-examai-purple-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] shadow-examai-purple",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90 hover:-translate-y-0.5 active:translate-y-0",
         outline:
-          "border border-examai-purple-500 bg-transparent text-examai-purple-500 hover:bg-examai-purple-500/10",
+          "border-2 border-examai-purple-500 bg-transparent text-examai-purple-500 hover:bg-examai-purple-500 hover:text-white hover:-translate-y-0.5 active:translate-y-0",
         secondary:
-          "border border-examai-purple-500 bg-transparent text-examai-purple-500 hover:bg-examai-purple-500/10",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+          "border-2 border-examai-purple-500 bg-transparent text-examai-purple-500 hover:bg-examai-purple-500/10 hover:-translate-y-0.5 active:translate-y-0",
+        ghost: "hover:bg-accent hover:text-accent-foreground hover:-translate-y-0.5 active:translate-y-0",
         link: "text-primary underline-offset-4 hover:underline",
-        cta: "bg-gradient-to-r from-examai-amber-500 to-examai-amber-600 text-black font-semibold hover:brightness-110 active:scale-[0.98]",
-        hero: "bg-gradient-to-br from-examai-purple-500 to-examai-purple-600 text-white hover:brightness-110 hover:shadow-examai-purple-lg transform hover:scale-105 font-semibold animate-purple-glow",
-        sun: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-warm hover:shadow-glow transform hover:scale-105",
+        cta: "bg-gradient-to-r from-examai-amber-500 to-examai-amber-600 text-black font-semibold hover:brightness-110 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]",
+        hero: "bg-gradient-to-br from-examai-purple-500 to-examai-purple-600 text-white hover:brightness-110 hover:shadow-examai-purple-lg hover:-translate-y-1 hover:scale-105 active:translate-y-0 active:scale-100 font-semibold animate-purple-glow",
+        sun: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-warm hover:shadow-glow hover:-translate-y-0.5 hover:scale-105 active:translate-y-0 active:scale-100",
+        solid: "bg-examai-purple-500 text-white font-semibold hover:bg-examai-purple-600 hover:-translate-y-0.5 hover:shadow-examai-purple active:translate-y-0 active:scale-[0.98]",
       },
       size: {
         default: "h-10 px-4 py-2",

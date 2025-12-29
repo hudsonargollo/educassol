@@ -92,8 +92,11 @@ const Dashboard = () => {
         </div>
 
         {/* Feature Cards Grid - Responsive layout */}
-        <div className="mb-8">
-          <h3 className="text-lg font-semibold mb-4 text-foreground">Criar Conteúdo</h3>
+        <div className="mb-8 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+          <h3 className="text-lg font-bold mb-4 text-foreground flex items-center gap-2">
+            <span className="w-1 h-6 bg-gradient-to-b from-examai-purple-500 to-violet-500 rounded-full"></span>
+            Criar Conteúdo
+          </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <FeatureCard
               icon={<FileText className="h-5 w-5" />}
@@ -120,7 +123,7 @@ const Dashboard = () => {
         </div>
 
         {/* Grid Layout: Calendar + Quick Stats */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-slide-up" style={{ animationDelay: '0.2s' }}>
           {/* Calendar Widget - Takes 2 columns on large screens */}
           <div className="lg:col-span-2">
             <CalendarWidget onGenerateContent={handleGenerateFromEvent} />
@@ -128,7 +131,10 @@ const Dashboard = () => {
 
           {/* Quick Stats - Takes 1 column */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-foreground">Acesso Rápido</h3>
+            <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+              <span className="w-1 h-6 bg-gradient-to-b from-examai-purple-500 to-violet-500 rounded-full"></span>
+              Acesso Rápido
+            </h3>
             <FeatureCard
               icon={<BookOpen className="h-5 w-5" />}
               title="Minhas Turmas"
@@ -154,29 +160,30 @@ const Dashboard = () => {
         </div>
 
         {/* Content Tabs with ExamAI styling */}
+        <div className="animate-slide-up" style={{ animationDelay: '0.3s' }}>
         <Tabs defaultValue="all" className="w-full">
-          <TabsList className="bg-card border border-border">
+          <TabsList className="bg-card border border-border shadow-sm">
             <TabsTrigger 
               value="all"
-              className="data-[state=active]:bg-examai-purple-500 data-[state=active]:text-white"
+              className="data-[state=active]:bg-examai-purple-500 data-[state=active]:text-white transition-all duration-200"
             >
               Todos
             </TabsTrigger>
             <TabsTrigger 
               value="lesson_plan"
-              className="data-[state=active]:bg-examai-purple-500 data-[state=active]:text-white"
+              className="data-[state=active]:bg-examai-purple-500 data-[state=active]:text-white transition-all duration-200"
             >
               Planos de Aula
             </TabsTrigger>
             <TabsTrigger 
               value="activity"
-              className="data-[state=active]:bg-examai-purple-500 data-[state=active]:text-white"
+              className="data-[state=active]:bg-examai-purple-500 data-[state=active]:text-white transition-all duration-200"
             >
               Atividades
             </TabsTrigger>
             <TabsTrigger 
               value="assessment"
-              className="data-[state=active]:bg-examai-purple-500 data-[state=active]:text-white"
+              className="data-[state=active]:bg-examai-purple-500 data-[state=active]:text-white transition-all duration-200"
             >
               Avaliações
             </TabsTrigger>
@@ -194,6 +201,7 @@ const Dashboard = () => {
             <ContentList type="assessment" />
           </TabsContent>
         </Tabs>
+        </div>
       </main>
 
       {/* Generate Content Dialog */}

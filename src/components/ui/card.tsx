@@ -4,17 +4,18 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const cardVariants = cva(
-  "rounded-xl text-card-foreground transition-all duration-200",
+  "rounded-xl text-card-foreground transition-all duration-300",
   {
     variants: {
       variant: {
-        default: "bg-card border border-border shadow-sm hover:border-examai-purple-500/40",
-        gradient: "bg-gradient-to-br from-examai-purple-500/10 to-violet-500/5 border border-examai-purple-500/20 hover:border-examai-purple-500/40",
-        glass: "backdrop-blur-md border bg-[var(--glass-bg)] border-[var(--glass-border)]",
-        feature: "bg-card border border-border hover:border-examai-purple-500/40 hover:bg-card-hover cursor-pointer",
+        default: "bg-card border border-border shadow-[var(--shadow-card)] hover:border-examai-purple-500/40 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-1",
+        gradient: "bg-gradient-to-br from-examai-purple-500/10 to-violet-500/5 border border-examai-purple-500/20 hover:border-examai-purple-500/40 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-1",
+        glass: "backdrop-blur-md border bg-[var(--glass-bg)] border-[var(--glass-border)] hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-1",
+        feature: "bg-card border border-border hover:border-examai-purple-500/40 hover:bg-card-hover hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-1 cursor-pointer",
+        elevated: "bg-card border border-border shadow-lg hover:shadow-xl hover:border-examai-purple-500/40 hover:-translate-y-2",
       },
       interactive: {
-        true: "cursor-pointer",
+        true: "cursor-pointer active:scale-[0.98]",
         false: "",
       },
     },

@@ -10,89 +10,92 @@
 @layer base {
   /* ========================================
      LIGHT MODE - ExamAI Design System
+     Enhanced contrast for better readability
      ======================================== */
   :root {
-    /* Backgrounds - Clean whites and light grays */
-    --background: 0 0% 100%;
-    --background-secondary: 210 40% 98%;
-    --foreground: 222 47% 11%;
+    /* Backgrounds - Subtle warm tint for depth */
+    --background: 240 10% 98%;
+    --background-secondary: 240 10% 95%;
+    --foreground: 222 47% 8%;
 
-    /* Card - White with subtle depth */
+    /* Card - White with stronger depth */
     --card: 0 0% 100%;
-    --card-hover: 210 40% 96%;
-    --card-foreground: 222 47% 11%;
+    --card-hover: 270 30% 97%;
+    --card-foreground: 222 47% 8%;
 
     /* Popover */
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 222 47% 8%;
 
-    /* Primary - Purple/Violet accent */
-    --primary: 270 95% 55%;
+    /* Primary - Purple/Violet accent - Darker for contrast */
+    --primary: 270 85% 50%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary - Amber/Orange for CTAs */
-    --secondary: 38 92% 50%;
+    /* Secondary - Amber/Orange for CTAs - Darker */
+    --secondary: 38 92% 45%;
     --secondary-foreground: 0 0% 100%;
 
-    /* Muted */
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    /* Muted - Better contrast */
+    --muted: 240 10% 92%;
+    --muted-foreground: 215 20% 40%;
 
     /* Accent - Purple variations */
-    --accent: 270 95% 55%;
+    --accent: 270 85% 50%;
     --accent-foreground: 0 0% 100%;
 
-    /* Semantic colors */
-    --success: 142 71% 45%;
+    /* Semantic colors - Enhanced contrast */
+    --success: 142 76% 36%;
     --success-foreground: 0 0% 100%;
-    --warning: 38 92% 50%;
+    --warning: 38 92% 45%;
     --warning-foreground: 0 0% 0%;
-    --info: 217 91% 60%;
+    --info: 217 91% 50%;
     --info-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 84% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Borders - Light mode */
-    --border: 214 32% 91%;
-    --border-subtle: 214 32% 95%;
-    --input: 214 32% 91%;
-    --ring: 270 95% 55%;
+    /* Borders - Light mode with more definition */
+    --border: 214 32% 85%;
+    --border-subtle: 214 32% 90%;
+    --input: 214 32% 85%;
+    --ring: 270 85% 50%;
 
-    /* ExamAI accent variations */
-    --accent-purple: 270 95% 55%;
-    --accent-violet: 258 90% 66%;
-    --accent-blue: 217 91% 60%;
-    --accent-cyan: 192 91% 36%;
-    --accent-green: 142 71% 45%;
-    --accent-amber: 38 92% 50%;
-    --accent-orange: 25 95% 53%;
-    --accent-red: 0 84% 60%;
+    /* ExamAI accent variations - Darker for light mode */
+    --accent-purple: 270 85% 50%;
+    --accent-violet: 258 85% 55%;
+    --accent-blue: 217 91% 50%;
+    --accent-cyan: 192 91% 32%;
+    --accent-green: 142 76% 36%;
+    --accent-amber: 38 92% 45%;
+    --accent-orange: 25 95% 48%;
+    --accent-red: 0 84% 50%;
 
-    /* Gradients */
-    --gradient-sun: linear-gradient(135deg, hsl(45 100% 70%), hsl(35 100% 65%));
-    --gradient-hero: linear-gradient(135deg, hsl(270 95% 98%), hsl(217 91% 98%));
-    --gradient-warm: linear-gradient(45deg, hsl(45 100% 85%), hsl(30 100% 80%));
+    /* Gradients - Light mode with visible contrast */
+    --gradient-sun: linear-gradient(135deg, hsl(270 85% 50%), hsl(258 85% 55%));
+    --gradient-hero: linear-gradient(135deg, hsl(270 50% 97%), hsl(217 50% 97%));
+    --gradient-warm: linear-gradient(45deg, hsl(270 40% 95%), hsl(258 40% 93%));
     
-    /* Shadows */
-    --shadow-warm: 0 10px 30px -10px hsl(45 100% 60% / 0.3);
-    --shadow-glow: 0 0 40px hsl(270 95% 55% / 0.2);
+    /* Shadows - More visible in light mode */
+    --shadow-warm: 0 10px 30px -10px hsl(270 85% 50% / 0.15);
+    --shadow-glow: 0 0 40px hsl(270 85% 50% / 0.15);
+    --shadow-card: 0 4px 20px -4px hsl(222 47% 11% / 0.08);
+    --shadow-card-hover: 0 8px 30px -4px hsl(270 85% 50% / 0.15);
 
     /* Glassmorphism - Light mode */
-    --glass-bg: rgba(255, 255, 255, 0.8);
-    --glass-border: rgba(168, 85, 247, 0.15);
+    --glass-bg: rgba(255, 255, 255, 0.9);
+    --glass-border: rgba(168, 85, 247, 0.2);
 
     --radius: 0.5rem;
 
     /* Sidebar */
     --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 270 95% 55%;
+    --sidebar-foreground: 222 47% 8%;
+    --sidebar-primary: 270 85% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 270 95% 97%;
-    --sidebar-accent-foreground: 270 95% 35%;
-    --sidebar-border: 214 32% 91%;
-    --sidebar-ring: 270 95% 55%;
+    --sidebar-accent: 270 50% 96%;
+    --sidebar-accent-foreground: 270 85% 35%;
+    --sidebar-border: 214 32% 85%;
+    --sidebar-ring: 270 85% 50%;
   }
 
   /* ========================================
@@ -293,6 +296,98 @@
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ========================================
+   ExamAI Button & Card Animations
+   ======================================== */
+@keyframes btn-shine {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+@keyframes card-lift {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 hsl(var(--accent-purple) / 0.5);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px hsl(var(--accent-purple) / 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 hsl(var(--accent-purple) / 0);
+  }
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes bounce-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes icon-wiggle {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-5deg);
+  }
+  75% {
+    transform: rotate(5deg);
+  }
+}
+
+.animate-btn-shine {
+  background-size: 200% auto;
+  animation: btn-shine 3s linear infinite;
+}
+
+.animate-card-lift {
+  animation: card-lift 3s ease-in-out infinite;
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 4s ease infinite;
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 2s ease-in-out infinite;
+}
+
+.animate-icon-wiggle:hover {
+  animation: icon-wiggle 0.5s ease-in-out;
 }
 
 /* ========================================
