@@ -77,10 +77,10 @@ const Auth = () => {
           0%, 100% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.3); }
           50% { box-shadow: 0 0 40px rgba(168, 85, 247, 0.5); }
         }
-        .orbit-inner { animation: orbit-cw 18s linear infinite; }
-        .orbit-outer { animation: orbit-ccw 30s linear infinite; }
-        .counter-inner { animation: counter-rotate-cw 18s linear infinite; }
-        .counter-outer { animation: counter-rotate-ccw 30s linear infinite; }
+        .orbit-inner { animation: orbit-cw 20s linear infinite; }
+        .orbit-outer { animation: orbit-ccw 35s linear infinite; }
+        .counter-inner { animation: counter-rotate-cw 20s linear infinite; }
+        .counter-outer { animation: counter-rotate-ccw 35s linear infinite; }
         .center-glow { animation: pulse-glow 3s ease-in-out infinite; }
       `}</style>
 
@@ -106,27 +106,27 @@ const Auth = () => {
               </div>
               <h1 className="text-2xl font-bold text-white">Educa Sol</h1>
             </div>
-            <p className="text-gray-400 text-sm mb-6 max-w-xs">
+            <p className="text-gray-400 text-sm mb-4 max-w-xs">
               Transforme a educacao com ferramentas inteligentes de IA construidas para o futuro do aprendizado
             </p>
 
             {/* Orbiting icons */}
-            <div className="relative flex-1 min-h-[280px] flex items-center justify-center">
+            <div className="relative flex-1 min-h-[300px] flex items-center justify-center">
               {/* Center icon with glow */}
               <div className="relative z-20 center-glow rounded-full">
-                <div className="relative p-5 rounded-full bg-gradient-to-br from-examai-purple-500 to-violet-600 shadow-lg">
-                  <BookOpen className="h-8 w-8 text-white" />
+                <div className="relative p-4 rounded-full bg-gradient-to-br from-examai-purple-500 to-violet-600 shadow-lg">
+                  <BookOpen className="h-7 w-7 text-white" />
                 </div>
               </div>
               
-              {/* Inner orbit ring - 140px */}
-              <div className="absolute w-[140px] h-[140px] rounded-full border border-dashed border-examai-purple-500/20" />
+              {/* Inner orbit ring - 180px */}
+              <div className="absolute w-[180px] h-[180px] rounded-full border border-dashed border-examai-purple-500/20" />
               
-              {/* Outer orbit ring - 240px */}
-              <div className="absolute w-[240px] h-[240px] rounded-full border border-dashed border-violet-500/15" />
+              {/* Outer orbit ring - 280px */}
+              <div className="absolute w-[280px] h-[280px] rounded-full border border-dashed border-violet-500/15" />
 
-              {/* Inner orbit container - 140px, rotates clockwise */}
-              <div className="absolute w-[140px] h-[140px] orbit-inner">
+              {/* Inner orbit container - 180px, rotates clockwise */}
+              <div className="absolute w-[180px] h-[180px] orbit-inner">
                 {/* Icon at top (0deg) */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 counter-inner">
                   <div className="p-2.5 rounded-full bg-examai-purple-500/20 border border-examai-purple-500/30 backdrop-blur-sm">
@@ -147,8 +147,8 @@ const Auth = () => {
                 </div>
               </div>
 
-              {/* Outer orbit container - 240px, rotates counter-clockwise */}
-              <div className="absolute w-[240px] h-[240px] orbit-outer">
+              {/* Outer orbit container - 280px, rotates counter-clockwise */}
+              <div className="absolute w-[280px] h-[280px] orbit-outer">
                 {/* Icon at top (0deg) */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 counter-outer">
                   <div className="p-2.5 rounded-full bg-amber-500/20 border border-amber-500/30 backdrop-blur-sm">
@@ -171,7 +171,7 @@ const Auth = () => {
             </div>
 
             {/* Feature items */}
-            <div className="grid grid-cols-3 gap-4 mt-4">
+            <div className="grid grid-cols-3 gap-4 mt-2">
               <FeatureItem icon={<Brain className="h-4 w-4" />} label="Correcao com IA" />
               <FeatureItem icon={<FileCheck className="h-4 w-4" />} label="Avaliacoes Inteligentes" />
               <FeatureItem icon={<BarChart3 className="h-4 w-4" />} label="Analise de Aprendizado" />
