@@ -57,32 +57,30 @@ const Auth = () => {
     <div className="min-h-screen bg-[#0a0d14] relative overflow-hidden flex items-center justify-center p-4">
       {/* Orbit animation styles */}
       <style>{`
-        @keyframes orbit-inner {
-          from { transform: rotate(0deg) translateX(55px) rotate(0deg); }
-          to { transform: rotate(360deg) translateX(55px) rotate(-360deg); }
+        @keyframes orbit-cw {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
-        @keyframes orbit-inner-reverse {
-          from { transform: rotate(360deg) translateX(55px) rotate(-360deg); }
-          to { transform: rotate(0deg) translateX(55px) rotate(0deg); }
+        @keyframes orbit-ccw {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(-360deg); }
         }
-        @keyframes orbit-outer {
-          from { transform: rotate(0deg) translateX(90px) rotate(0deg); }
-          to { transform: rotate(360deg) translateX(90px) rotate(-360deg); }
+        @keyframes counter-rotate-cw {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(-360deg); }
         }
-        @keyframes orbit-outer-reverse {
-          from { transform: rotate(360deg) translateX(90px) rotate(-360deg); }
-          to { transform: rotate(0deg) translateX(90px) rotate(0deg); }
+        @keyframes counter-rotate-ccw {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
         @keyframes pulse-glow {
           0%, 100% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.3); }
           50% { box-shadow: 0 0 40px rgba(168, 85, 247, 0.5); }
         }
-        .orbit-inner-1 { animation: orbit-inner 10s linear infinite; }
-        .orbit-inner-2 { animation: orbit-inner-reverse 12s linear infinite; animation-delay: -3s; }
-        .orbit-inner-3 { animation: orbit-inner 10s linear infinite; animation-delay: -5s; }
-        .orbit-outer-1 { animation: orbit-outer-reverse 16s linear infinite; }
-        .orbit-outer-2 { animation: orbit-outer 20s linear infinite; animation-delay: -5s; }
-        .orbit-outer-3 { animation: orbit-outer-reverse 16s linear infinite; animation-delay: -10.5s; }
+        .orbit-inner { animation: orbit-cw 15s linear infinite; }
+        .orbit-outer { animation: orbit-ccw 25s linear infinite; }
+        .counter-inner { animation: counter-rotate-cw 15s linear infinite; }
+        .counter-outer { animation: counter-rotate-ccw 25s linear infinite; }
         .center-glow { animation: pulse-glow 3s ease-in-out infinite; }
       `}</style>
 
@@ -122,51 +120,49 @@ const Auth = () => {
               </div>
               
               {/* Inner orbit ring */}
-              <div className="absolute w-[110px] h-[110px] rounded-full border border-dashed border-examai-purple-500/20" />
+              <div className="absolute w-[120px] h-[120px] rounded-full border border-dashed border-examai-purple-500/20" />
               
               {/* Outer orbit ring */}
-              <div className="absolute w-[180px] h-[180px] rounded-full border border-dashed border-violet-500/15" />
+              <div className="absolute w-[190px] h-[190px] rounded-full border border-dashed border-violet-500/15" />
 
-              {/* Inner orbit - 3 icons, mixed directions */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="orbit-inner-1">
+              {/* Inner orbit container - rotates clockwise */}
+              <div className="absolute w-[120px] h-[120px] orbit-inner">
+                {/* Icon at top (0deg) */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 counter-inner">
                   <div className="p-2.5 rounded-full bg-examai-purple-500/20 border border-examai-purple-500/30 backdrop-blur-sm">
                     <Brain className="h-4 w-4 text-examai-purple-400" />
                   </div>
                 </div>
-              </div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="orbit-inner-2">
+                {/* Icon at bottom-left (120deg) */}
+                <div className="absolute bottom-[15%] left-[6%] -translate-x-1/2 counter-inner">
                   <div className="p-2.5 rounded-full bg-violet-500/20 border border-violet-500/30 backdrop-blur-sm">
                     <Sparkles className="h-4 w-4 text-violet-400" />
                   </div>
                 </div>
-              </div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="orbit-inner-3">
+                {/* Icon at bottom-right (240deg) */}
+                <div className="absolute bottom-[15%] right-[6%] translate-x-1/2 counter-inner">
                   <div className="p-2 rounded-full bg-cyan-500/20 border border-cyan-500/30 backdrop-blur-sm">
                     <Lightbulb className="h-3.5 w-3.5 text-cyan-400" />
                   </div>
                 </div>
               </div>
 
-              {/* Outer orbit - 3 icons, opposite direction */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="orbit-outer-1">
+              {/* Outer orbit container - rotates counter-clockwise */}
+              <div className="absolute w-[190px] h-[190px] orbit-outer">
+                {/* Icon at top (0deg) */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 counter-outer">
                   <div className="p-2.5 rounded-full bg-amber-500/20 border border-amber-500/30 backdrop-blur-sm">
                     <FileCheck className="h-4 w-4 text-amber-400" />
                   </div>
                 </div>
-              </div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="orbit-outer-2">
+                {/* Icon at bottom-left (120deg) */}
+                <div className="absolute bottom-[13%] left-[3%] -translate-x-1/2 counter-outer">
                   <div className="p-2 rounded-full bg-blue-500/20 border border-blue-500/30 backdrop-blur-sm">
                     <BarChart3 className="h-3.5 w-3.5 text-blue-400" />
                   </div>
                 </div>
-              </div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="orbit-outer-3">
+                {/* Icon at bottom-right (240deg) */}
+                <div className="absolute bottom-[13%] right-[3%] translate-x-1/2 counter-outer">
                   <div className="p-2 rounded-full bg-green-500/20 border border-green-500/30 backdrop-blur-sm">
                     <Target className="h-3.5 w-3.5 text-green-400" />
                   </div>
