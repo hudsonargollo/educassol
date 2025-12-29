@@ -77,10 +77,10 @@ const Auth = () => {
           0%, 100% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.3); }
           50% { box-shadow: 0 0 40px rgba(168, 85, 247, 0.5); }
         }
-        .orbit-inner { animation: orbit-cw 15s linear infinite; }
-        .orbit-outer { animation: orbit-ccw 25s linear infinite; }
-        .counter-inner { animation: counter-rotate-cw 15s linear infinite; }
-        .counter-outer { animation: counter-rotate-ccw 25s linear infinite; }
+        .orbit-inner { animation: orbit-cw 18s linear infinite; }
+        .orbit-outer { animation: orbit-ccw 30s linear infinite; }
+        .counter-inner { animation: counter-rotate-cw 18s linear infinite; }
+        .counter-outer { animation: counter-rotate-ccw 30s linear infinite; }
         .center-glow { animation: pulse-glow 3s ease-in-out infinite; }
       `}</style>
 
@@ -106,12 +106,12 @@ const Auth = () => {
               </div>
               <h1 className="text-2xl font-bold text-white">Educa Sol</h1>
             </div>
-            <p className="text-gray-400 text-sm mb-8 max-w-xs">
+            <p className="text-gray-400 text-sm mb-6 max-w-xs">
               Transforme a educacao com ferramentas inteligentes de IA construidas para o futuro do aprendizado
             </p>
 
             {/* Orbiting icons */}
-            <div className="relative flex-1 min-h-[240px] flex items-center justify-center">
+            <div className="relative flex-1 min-h-[280px] flex items-center justify-center">
               {/* Center icon with glow */}
               <div className="relative z-20 center-glow rounded-full">
                 <div className="relative p-5 rounded-full bg-gradient-to-br from-examai-purple-500 to-violet-600 shadow-lg">
@@ -119,14 +119,14 @@ const Auth = () => {
                 </div>
               </div>
               
-              {/* Inner orbit ring */}
-              <div className="absolute w-[120px] h-[120px] rounded-full border border-dashed border-examai-purple-500/20" />
+              {/* Inner orbit ring - 140px */}
+              <div className="absolute w-[140px] h-[140px] rounded-full border border-dashed border-examai-purple-500/20" />
               
-              {/* Outer orbit ring */}
-              <div className="absolute w-[190px] h-[190px] rounded-full border border-dashed border-violet-500/15" />
+              {/* Outer orbit ring - 240px */}
+              <div className="absolute w-[240px] h-[240px] rounded-full border border-dashed border-violet-500/15" />
 
-              {/* Inner orbit container - rotates clockwise */}
-              <div className="absolute w-[120px] h-[120px] orbit-inner">
+              {/* Inner orbit container - 140px, rotates clockwise */}
+              <div className="absolute w-[140px] h-[140px] orbit-inner">
                 {/* Icon at top (0deg) */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 counter-inner">
                   <div className="p-2.5 rounded-full bg-examai-purple-500/20 border border-examai-purple-500/30 backdrop-blur-sm">
@@ -134,21 +134,21 @@ const Auth = () => {
                   </div>
                 </div>
                 {/* Icon at bottom-left (120deg) */}
-                <div className="absolute bottom-[15%] left-[6%] -translate-x-1/2 counter-inner">
+                <div className="absolute bottom-[13%] left-[3%] -translate-x-1/2 counter-inner">
                   <div className="p-2.5 rounded-full bg-violet-500/20 border border-violet-500/30 backdrop-blur-sm">
                     <Sparkles className="h-4 w-4 text-violet-400" />
                   </div>
                 </div>
                 {/* Icon at bottom-right (240deg) */}
-                <div className="absolute bottom-[15%] right-[6%] translate-x-1/2 counter-inner">
+                <div className="absolute bottom-[13%] right-[3%] translate-x-1/2 counter-inner">
                   <div className="p-2 rounded-full bg-cyan-500/20 border border-cyan-500/30 backdrop-blur-sm">
                     <Lightbulb className="h-3.5 w-3.5 text-cyan-400" />
                   </div>
                 </div>
               </div>
 
-              {/* Outer orbit container - rotates counter-clockwise */}
-              <div className="absolute w-[190px] h-[190px] orbit-outer">
+              {/* Outer orbit container - 240px, rotates counter-clockwise */}
+              <div className="absolute w-[240px] h-[240px] orbit-outer">
                 {/* Icon at top (0deg) */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 counter-outer">
                   <div className="p-2.5 rounded-full bg-amber-500/20 border border-amber-500/30 backdrop-blur-sm">
@@ -157,21 +157,21 @@ const Auth = () => {
                 </div>
                 {/* Icon at bottom-left (120deg) */}
                 <div className="absolute bottom-[13%] left-[3%] -translate-x-1/2 counter-outer">
-                  <div className="p-2 rounded-full bg-blue-500/20 border border-blue-500/30 backdrop-blur-sm">
-                    <BarChart3 className="h-3.5 w-3.5 text-blue-400" />
+                  <div className="p-2.5 rounded-full bg-blue-500/20 border border-blue-500/30 backdrop-blur-sm">
+                    <BarChart3 className="h-4 w-4 text-blue-400" />
                   </div>
                 </div>
                 {/* Icon at bottom-right (240deg) */}
                 <div className="absolute bottom-[13%] right-[3%] translate-x-1/2 counter-outer">
-                  <div className="p-2 rounded-full bg-green-500/20 border border-green-500/30 backdrop-blur-sm">
-                    <Target className="h-3.5 w-3.5 text-green-400" />
+                  <div className="p-2.5 rounded-full bg-green-500/20 border border-green-500/30 backdrop-blur-sm">
+                    <Target className="h-4 w-4 text-green-400" />
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Feature items */}
-            <div className="grid grid-cols-3 gap-4 mt-6">
+            <div className="grid grid-cols-3 gap-4 mt-4">
               <FeatureItem icon={<Brain className="h-4 w-4" />} label="Correcao com IA" />
               <FeatureItem icon={<FileCheck className="h-4 w-4" />} label="Avaliacoes Inteligentes" />
               <FeatureItem icon={<BarChart3 className="h-4 w-4" />} label="Analise de Aprendizado" />
