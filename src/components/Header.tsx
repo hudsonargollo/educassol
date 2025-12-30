@@ -73,16 +73,12 @@ export function Header({
       className={cn(
         // Fixed positioning
         "fixed top-0 left-0 right-0 z-50",
-        // Glassmorphism effect
-        "glass",
         // Height and layout
         "h-16",
         // Border bottom with theme-aware color
-        "border-b border-border/50",
-        // Dark mode specific styling
-        "dark:bg-examai-navy-950/80 dark:border-examai-purple-500/20",
-        // Light mode specific styling  
-        "bg-white/80",
+        "border-b",
+        // Dark mode styling for landing page
+        "bg-[#0a0d14]/80 backdrop-blur-xl border-examai-purple-500/10",
         className
       )}
     >
@@ -92,8 +88,8 @@ export function Header({
           to={user ? "/dashboard" : "/"} 
           className="flex items-center gap-2 hover:opacity-80 transition-opacity"
         >
-          <Sun className="h-8 w-8 text-primary" />
-          <span className="text-xl font-bold text-foreground">EDUCA SOL</span>
+          <Sun className="h-8 w-8 text-examai-purple-400" />
+          <span className="text-xl font-bold text-white">EDUCA SOL</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -124,14 +120,14 @@ export function Header({
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate('/auth')}
-                className="text-muted-foreground hover:text-primary hover:bg-primary/10"
+                className="text-gray-300 hover:text-white hover:bg-white/10"
               >
                 Entrar
               </Button>
               <Button
                 size="sm"
                 onClick={() => navigate('/auth')}
-                className="bg-primary hover:bg-primary/90"
+                className="bg-gradient-to-r from-examai-purple-500 to-violet-500 hover:from-examai-purple-400 hover:to-violet-400 text-white shadow-lg shadow-examai-purple-500/25"
               >
                 Começar Grátis
               </Button>
@@ -179,8 +175,7 @@ export function Header({
         <div 
           className={cn(
             "md:hidden absolute top-16 left-0 right-0",
-            "glass border-b border-border/50",
-            "dark:bg-examai-navy-950/95 bg-white/95",
+            "bg-[#0a0d14]/95 backdrop-blur-xl border-b border-examai-purple-500/10",
             "py-4 px-4"
           )}
         >
@@ -208,7 +203,7 @@ export function Header({
                   navigate('/auth');
                   closeMobileMenu();
                 }}
-                className="justify-start text-muted-foreground hover:text-primary hover:bg-primary/10"
+                className="justify-start text-gray-300 hover:text-white hover:bg-white/10"
               >
                 Entrar
               </Button>
@@ -217,7 +212,7 @@ export function Header({
                   navigate('/auth');
                   closeMobileMenu();
                 }}
-                className="bg-primary hover:bg-primary/90"
+                className="bg-gradient-to-r from-examai-purple-500 to-violet-500 hover:from-examai-purple-400 hover:to-violet-400"
               >
                 Começar Grátis
               </Button>
