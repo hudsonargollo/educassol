@@ -96,11 +96,11 @@ const CalendarWidget = ({ onGenerateContent }: CalendarWidgetProps) => {
 
   return (
     <>
-      <Card>
+      <Card className="border-border/60 dark:border-border/40 shadow-lg dark:shadow-none">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <CalendarIcon className="h-5 w-5 text-primary" />
+            <CardTitle className="flex items-center gap-2 text-foreground">
+              <CalendarIcon className="h-5 w-5 text-examai-purple-500" />
               Calendário Pedagógico
             </CardTitle>
             <div className="flex items-center gap-2">
@@ -143,10 +143,10 @@ const CalendarWidget = ({ onGenerateContent }: CalendarWidgetProps) => {
                 <div
                   key={day.toString()}
                   className={`
-                    min-h-[60px] p-1 border rounded-md relative cursor-pointer transition-colors
+                    min-h-[60px] p-1 border rounded-md relative cursor-pointer transition-all duration-200
                     ${!isSameMonth(day, currentDate) ? "opacity-30" : ""}
-                    ${isToday ? "bg-primary/5 border-primary" : "hover:bg-muted"}
-                    ${hasEvents ? "border-primary/30" : ""}
+                    ${isToday ? "bg-examai-purple-500/10 border-examai-purple-500 dark:bg-examai-purple-500/20" : "hover:bg-muted/50 dark:hover:bg-muted/30 border-border/50"}
+                    ${hasEvents ? "border-examai-purple-500/40 dark:border-examai-purple-500/50" : ""}
                   `}
                   onClick={() => {
                     if (dayEvents.length === 1) {
@@ -165,7 +165,7 @@ const CalendarWidget = ({ onGenerateContent }: CalendarWidgetProps) => {
                       {dayEvents.slice(0, 2).map((event) => (
                         <div
                           key={event.id}
-                          className="text-[10px] truncate bg-primary/10 px-1 rounded"
+                          className="text-[10px] truncate bg-examai-purple-500/15 dark:bg-examai-purple-500/25 text-examai-purple-700 dark:text-examai-purple-300 px-1 rounded"
                           title={event.titulo}
                         >
                           {event.titulo}

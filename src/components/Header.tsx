@@ -78,8 +78,9 @@ export function Header({
         "h-16",
         // Border bottom with theme-aware color
         "border-b",
-        // Dark mode styling for landing page
-        "bg-[#0a0d14]/80 backdrop-blur-xl border-examai-purple-500/10",
+        // Theme-aware styling - glassmorphism effect
+        "bg-background/80 dark:bg-[#0a0d14]/80 backdrop-blur-xl",
+        "border-border/50 dark:border-examai-purple-500/10",
         className
       )}
     >
@@ -89,8 +90,8 @@ export function Header({
           to={user ? "/dashboard" : "/"} 
           className="flex items-center gap-2 hover:opacity-80 transition-opacity"
         >
-          <Sun className="h-8 w-8 text-examai-purple-400" />
-          <span className="text-xl font-bold text-white">EDUCA SOL</span>
+          <Sun className="h-8 w-8 text-examai-purple-500 dark:text-examai-purple-400" />
+          <span className="text-xl font-bold text-foreground">EDUCA SOL</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -121,7 +122,7 @@ export function Header({
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate('/auth')}
-                className="text-gray-300 hover:text-white hover:bg-white/10"
+                className="text-muted-foreground hover:text-foreground hover:bg-primary/10"
               >
                 Entrar
               </Button>
@@ -176,7 +177,8 @@ export function Header({
         <div 
           className={cn(
             "md:hidden absolute top-16 left-0 right-0",
-            "bg-[#0a0d14]/95 backdrop-blur-xl border-b border-examai-purple-500/10",
+            "bg-background/95 dark:bg-[#0a0d14]/95 backdrop-blur-xl",
+            "border-b border-border/50 dark:border-examai-purple-500/10",
             "py-4 px-4"
           )}
         >
@@ -204,7 +206,7 @@ export function Header({
                   navigate('/auth');
                   closeMobileMenu();
                 }}
-                className="justify-start text-gray-300 hover:text-white hover:bg-white/10"
+                className="justify-start text-muted-foreground hover:text-foreground hover:bg-primary/10"
               >
                 Entrar
               </Button>

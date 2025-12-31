@@ -14,10 +14,10 @@ export interface FeatureCardProps {
 }
 
 const gradientClasses = {
-  purple: "from-examai-purple-500/20 to-violet-500/10 hover:from-examai-purple-500/30 hover:to-violet-500/20",
-  blue: "from-blue-500/20 to-cyan-500/10 hover:from-blue-500/30 hover:to-cyan-500/20",
-  green: "from-green-500/20 to-emerald-500/10 hover:from-green-500/30 hover:to-emerald-500/20",
-  amber: "from-amber-500/20 to-orange-500/10 hover:from-amber-500/30 hover:to-orange-500/20",
+  purple: "from-examai-purple-500/10 to-violet-500/5 dark:from-examai-purple-500/20 dark:to-violet-500/10 hover:from-examai-purple-500/20 hover:to-violet-500/10 dark:hover:from-examai-purple-500/30 dark:hover:to-violet-500/20",
+  blue: "from-blue-500/10 to-cyan-500/5 dark:from-blue-500/20 dark:to-cyan-500/10 hover:from-blue-500/20 hover:to-cyan-500/10 dark:hover:from-blue-500/30 dark:hover:to-cyan-500/20",
+  green: "from-green-500/10 to-emerald-500/5 dark:from-green-500/20 dark:to-emerald-500/10 hover:from-green-500/20 hover:to-emerald-500/10 dark:hover:from-green-500/30 dark:hover:to-emerald-500/20",
+  amber: "from-amber-500/10 to-orange-500/5 dark:from-amber-500/20 dark:to-orange-500/10 hover:from-amber-500/20 hover:to-orange-500/10 dark:hover:from-amber-500/30 dark:hover:to-orange-500/20",
   none: "",
 };
 
@@ -77,8 +77,9 @@ export function FeatureCard({
   );
 
   const baseClasses = cn(
-    "group relative overflow-hidden rounded-xl border border-border bg-card p-6",
-    "hover:border-examai-purple-500/50 hover:shadow-[var(--shadow-card-hover)]",
+    "group relative overflow-hidden rounded-xl border bg-card p-6",
+    "border-border/60 dark:border-border/40",
+    "hover:border-examai-purple-500/50 hover:shadow-lg dark:hover:shadow-examai-purple-500/10",
     "hover:-translate-y-1 active:translate-y-0 active:scale-[0.99]",
     "transition-all duration-300 ease-out",
     gradient !== "none" && `bg-gradient-to-br ${gradientClasses[gradient]}`,

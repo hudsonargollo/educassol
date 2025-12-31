@@ -20,10 +20,11 @@ export function WelcomeBanner({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-examai-purple-500/30",
-        "bg-gradient-to-br from-examai-purple-500/15 via-violet-500/10 to-blue-500/5",
+        "relative overflow-hidden rounded-2xl",
+        "border border-examai-purple-500/20 dark:border-examai-purple-500/30",
+        "bg-gradient-to-br from-examai-purple-500/5 via-violet-500/5 to-blue-500/5",
         "dark:from-examai-purple-500/20 dark:via-violet-500/10 dark:to-transparent",
-        "p-6 md:p-8 shadow-[var(--shadow-card)]",
+        "p-6 md:p-8 shadow-lg dark:shadow-examai-purple-500/5",
         className
       )}
     >
@@ -56,9 +57,10 @@ export function WelcomeBanner({
         <div
           className={cn(
             "flex-shrink-0 p-5 rounded-xl",
-            "bg-card/80 dark:bg-card/60 backdrop-blur-sm",
-            "border border-examai-purple-500/30",
-            "hover:border-examai-purple-500/50 hover:shadow-[var(--shadow-card-hover)]",
+            "bg-white/80 dark:bg-card/60 backdrop-blur-sm",
+            "border border-examai-purple-500/20 dark:border-examai-purple-500/30",
+            "hover:border-examai-purple-500/40 dark:hover:border-examai-purple-500/50",
+            "hover:shadow-lg dark:hover:shadow-examai-purple-500/10",
             "hover:-translate-y-1 transition-all duration-300",
             "group"
           )}
