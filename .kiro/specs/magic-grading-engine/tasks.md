@@ -24,7 +24,7 @@ This implementation plan transforms the Educassol platform into an AI-powered gr
     - Support both text offsets and image coordinates
     - _Requirements: 4.2, 4.3, 4.4_
 
-  - [ ]* 1.4 Write property test for annotation structure validity
+  - [x]* 1.4 Write property test for annotation structure validity
     - **Property 6: Annotation Structure Validity**
     - **Validates: Requirements 4.2, 4.3, 4.4**
 
@@ -34,7 +34,7 @@ This implementation plan transforms the Educassol platform into an AI-powered gr
     - Implement `calculateFinalScore()` function
     - _Requirements: 5.1, 5.2, 5.3, 5.5_
 
-  - [ ]* 1.6 Write property tests for override bounds and final score calculation
+  - [x]* 1.6 Write property tests for override bounds and final score calculation
     - **Property 7: Override Bounds and Preservation**
     - **Property 8: Final Score Calculation with Overrides**
     - **Validates: Requirements 5.1, 5.2, 5.3, 5.5**
@@ -70,7 +70,7 @@ This implementation plan transforms the Educassol platform into an AI-powered gr
     - Validate using existing `validateRubric()` function
     - _Requirements: 1.1, 1.4, 1.5_
 
-  - [ ]* 4.3 Write property test for rubric total points invariant
+  - [x]* 4.3 Write property test for rubric total points invariant
     - **Property 2: Rubric Total Points Invariant**
     - **Validates: Requirements 1.4**
 
@@ -115,7 +115,7 @@ This implementation plan transforms the Educassol platform into an AI-powered gr
     - Apply card shadows and layout animations
     - _Requirements: 8.1, 8.2, 9.2_
 
-  - [ ]* 6.5 Write property test for panel proportion persistence
+  - [x]* 6.5 Write property test for panel proportion persistence
     - **Property 10: Panel Proportion Persistence Round-Trip**
     - **Validates: Requirements 8.2**
 
@@ -135,7 +135,7 @@ This implementation plan transforms the Educassol platform into an AI-powered gr
     - Generate formatted report suitable for sharing
     - _Requirements: 6.3_
 
-  - [ ]* 8.3 Write property test for grading result round-trip
+  - [x]* 8.3 Write property test for grading result round-trip
     - **Property 9: Grading Result Round-Trip**
     - **Validates: Requirements 6.1, 6.2**
     - Note: Basic round-trip test exists in grading-result.property.test.ts, but may need extension for overrides

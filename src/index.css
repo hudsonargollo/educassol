@@ -681,3 +681,142 @@
     outline-offset: 2px;
   }
 }
+
+
+/* ========================================
+   React Big Calendar Customization
+   ======================================== */
+@layer components {
+  /* Calendar container */
+  .rbc-calendar {
+    @apply bg-background rounded-lg;
+    font-family: inherit;
+  }
+
+  /* Header row */
+  .rbc-header {
+    @apply py-3 px-2 text-sm font-medium text-muted-foreground border-b border-border;
+    background: hsl(var(--muted) / 0.3);
+  }
+
+  /* Time gutter */
+  .rbc-time-gutter {
+    @apply text-xs text-muted-foreground;
+  }
+
+  .rbc-time-slot {
+    @apply border-t border-border/50;
+  }
+
+  /* Day cells */
+  .rbc-day-bg {
+    @apply border-l border-border/50;
+  }
+
+  .rbc-day-bg.rbc-today {
+    background: hsl(var(--primary) / 0.05);
+  }
+
+  .rbc-day-bg.rbc-off-range-bg {
+    background: hsl(var(--muted) / 0.3);
+  }
+
+  /* Events */
+  .rbc-event {
+    @apply rounded px-2 py-1 text-xs font-medium;
+    border: none !important;
+  }
+
+  .rbc-event:focus {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  .rbc-event-label {
+    @apply text-xs;
+  }
+
+  .rbc-event-content {
+    @apply truncate;
+  }
+
+  /* Selected slot */
+  .rbc-slot-selection {
+    background: hsl(var(--primary) / 0.2);
+    border: 1px dashed hsl(var(--primary));
+  }
+
+  /* Month view */
+  .rbc-month-view {
+    @apply border border-border rounded-lg overflow-hidden;
+  }
+
+  .rbc-month-row {
+    @apply border-b border-border;
+  }
+
+  .rbc-date-cell {
+    @apply text-right p-1 text-sm;
+  }
+
+  .rbc-date-cell.rbc-now {
+    @apply font-bold;
+    color: hsl(var(--primary));
+  }
+
+  .rbc-date-cell.rbc-off-range {
+    @apply text-muted-foreground/50;
+  }
+
+  /* Week view */
+  .rbc-time-view {
+    @apply border border-border rounded-lg overflow-hidden;
+  }
+
+  .rbc-time-header {
+    @apply border-b border-border;
+  }
+
+  .rbc-time-content {
+    @apply border-t border-border;
+  }
+
+  /* Current time indicator */
+  .rbc-current-time-indicator {
+    background: hsl(var(--destructive));
+    height: 2px;
+  }
+
+  /* Show more link */
+  .rbc-show-more {
+    @apply text-xs text-primary hover:underline cursor-pointer;
+  }
+
+  /* Toolbar override - hide default toolbar since we use custom */
+  .rbc-toolbar {
+    @apply hidden;
+  }
+
+  /* Row content */
+  .rbc-row-content {
+    @apply z-10;
+  }
+
+  /* Agenda view */
+  .rbc-agenda-view {
+    @apply border border-border rounded-lg overflow-hidden;
+  }
+
+  .rbc-agenda-table {
+    @apply w-full;
+  }
+
+  .rbc-agenda-date-cell,
+  .rbc-agenda-time-cell {
+    @apply px-3 py-2 text-sm whitespace-nowrap;
+  }
+
+  .rbc-agenda-event-cell {
+    @apply px-3 py-2;
+  }
+}

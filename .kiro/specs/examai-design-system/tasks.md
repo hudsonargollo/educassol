@@ -20,7 +20,7 @@ This implementation plan transforms the ExamAI design system specification into 
     - Add gradient background classes
     - _Requirements: 3.1, 3.2, 3.3, 3.5, 3.6, 4.1, 4.4, 5.1, 5.2, 5.3, 5.4, 5.5_
 
-  - [ ]* 1.3 Write property test for WCAG contrast compliance
+  - [x]* 1.3 Write property test for WCAG contrast compliance
     - **Property 5: WCAG Contrast Compliance**
     - **Validates: Requirements 3.4, 4.3**
 
@@ -32,7 +32,7 @@ This implementation plan transforms the ExamAI design system specification into 
     - Apply theme class to document root
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
 
-  - [ ]* 2.2 Write property test for theme persistence round-trip
+  - [x]* 2.2 Write property test for theme persistence round-trip
     - **Property 1: Theme Persistence Round-Trip**
     - **Validates: Requirements 1.1, 1.2**
 
@@ -42,12 +42,12 @@ This implementation plan transforms the ExamAI design system specification into 
     - Add keyboard accessibility and ARIA labels
     - _Requirements: 2.1, 2.2, 2.3, 2.4_
 
-  - [ ]* 2.4 Write property tests for theme toggle behavior
+  - [x]* 2.4 Write property tests for theme toggle behavior
     - **Property 2: Theme Toggle Inversion**
     - **Property 3: Theme Icon Consistency**
     - **Validates: Requirements 2.1, 2.2**
 
-  - [ ]* 2.5 Write property test for document root class application
+  - [x]* 2.5 Write property test for document root class application
     - **Property 4: Document Root Class Application**
     - **Validates: Requirements 1.4**
 
@@ -66,7 +66,7 @@ This implementation plan transforms the ExamAI design system specification into 
     - Add hover state transitions
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6_
 
-  - [ ]* 4.2 Write property test for card variant styling
+  - [x]* 4.2 Write property test for card variant styling
     - **Property 6: Card Variant Styling Consistency**
     - **Validates: Requirements 6.1, 6.2, 6.3, 6.5**
 
@@ -77,7 +77,7 @@ This implementation plan transforms the ExamAI design system specification into 
     - Implement hover, focus, and disabled states
     - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6_
 
-  - [ ]* 4.4 Write property test for button state styling
+  - [x]* 4.4 Write property test for button state styling
     - **Property 7: Button State Styling**
     - **Validates: Requirements 8.1, 8.2, 8.3, 8.4, 8.5, 8.6**
 

@@ -8,6 +8,7 @@ import {
   type QuestionResult,
   type StudentMetadata,
   type HandwritingQuality,
+  type QuestionOverride,
 } from '../grading-result';
 
 // Configure fast-check to run 100 iterations
@@ -45,7 +46,19 @@ const arbitraryQuestionResult = (): fc.Arbitrary<QuestionResult> =>
   });
 
 /**
- * Arbitrary for valid grading results
+ * Arbitrary for question override
+ */
+const arbitraryQuestionOverride = (): fc.Arbitrary<QuestionOverride> =>
+  fc.record({
+    questionNumber: fc.string({ minLength: 1, maxLength: 10 }),
+    originalScore: fc.float({ min: 0, max: 100, noNaN: true }),
+    overrideScore: fc.float({ min: 0, max: 100, noNaN: true }),
+    overrideReason: fc.option(fc.string({ maxLength: 200 }), { nil: undefined }),
+    overriddenAt: fc.date(),
+  });
+
+/**
+ * Arbitrary for valid grading results (basic, without overrides)
  */
 const arbitraryGradingResult = (): fc.Arbitrary<GradingResult> =>
   fc.record({
@@ -53,6 +66,22 @@ const arbitraryGradingResult = (): fc.Arbitrary<GradingResult> =>
     questions: fc.array(arbitraryQuestionResult(), { minLength: 1, maxLength: 20 }),
     summary_comment: fc.string({ maxLength: 500 }),
     total_score: fc.float({ min: 0, max: 1000, noNaN: true }),
+  });
+
+/**
+ * Arbitrary for grading results with overrides and confidence score
+ */
+const arbitraryGradingResultWithOverrides = (): fc.Arbitrary<GradingResult> =>
+  fc.record({
+    student_metadata: arbitraryStudentMetadata(),
+    questions: fc.array(arbitraryQuestionResult(), { minLength: 1, maxLength: 10 }),
+    summary_comment: fc.string({ maxLength: 500 }),
+    total_score: fc.float({ min: 0, max: 1000, noNaN: true }),
+    confidenceScore: fc.option(fc.integer({ min: 0, max: 100 }), { nil: undefined }),
+    overrides: fc.option(
+      fc.array(arbitraryQuestionOverride(), { minLength: 0, maxLength: 5 }),
+      { nil: undefined }
+    ),
   });
 
 describe('Grading Result Property Tests', () => {
@@ -186,6 +215,107 @@ describe('Grading Result Property Tests', () => {
         (invalidJson) => {
           const result = deserializeGradingResult(invalidJson);
           expect(result.success).toBe(false);
+        }
+      )
+    );
+  });
+
+  /**
+   * **Feature: magic-grading-engine, Property 9: Grading Result Round-Trip (Extended)**
+   * **Validates: Requirements 6.1, 6.2**
+   * 
+   * *For any* valid grading result with overrides and confidence score, serializing 
+   * then deserializing SHALL produce an equivalent grading result object with all 
+   * fields preserved including overrides and confidence score.
+   */
+  test('Property 9: grading result with overrides round-trip preserves all data', () => {
+    fc.assert(
+      fc.property(arbitraryGradingResultWithOverrides(), (gradingResult) => {
+        // Serialize to JSON
+        const json = serializeGradingResult(gradingResult);
+        
+        // Deserialize back
+        const result = deserializeGradingResult(json);
+        
+        expect(result.success).toBe(true);
+        expect(result.data).toBeDefined();
+        
+        // Verify base fields are preserved
+        expect(result.data?.student_metadata.name).toBe(gradingResult.student_metadata.name);
+        expect(result.data?.student_metadata.student_id).toBe(gradingResult.student_metadata.student_id);
+        expect(result.data?.questions.length).toBe(gradingResult.questions.length);
+        expect(result.data?.summary_comment).toBe(gradingResult.summary_comment);
+        expect(result.data?.total_score).toBe(gradingResult.total_score);
+        
+        // Verify confidence score is preserved
+        expect(result.data?.confidenceScore).toBe(gradingResult.confidenceScore);
+        
+        // Verify overrides are preserved
+        if (gradingResult.overrides) {
+          expect(result.data?.overrides).toBeDefined();
+          expect(result.data?.overrides?.length).toBe(gradingResult.overrides.length);
+          
+          for (let i = 0; i < gradingResult.overrides.length; i++) {
+            expect(result.data?.overrides?.[i].questionNumber).toBe(gradingResult.overrides[i].questionNumber);
+            expect(result.data?.overrides?.[i].originalScore).toBe(gradingResult.overrides[i].originalScore);
+            expect(result.data?.overrides?.[i].overrideScore).toBe(gradingResult.overrides[i].overrideScore);
+            expect(result.data?.overrides?.[i].overrideReason).toBe(gradingResult.overrides[i].overrideReason);
+          }
+        } else {
+          expect(result.data?.overrides).toBeUndefined();
+        }
+      })
+    );
+  });
+
+  /**
+   * **Feature: magic-grading-engine, Property 9: Grading Result Round-Trip (Extended)**
+   * **Validates: Requirements 6.1, 6.2**
+   * 
+   * Grading results with valid confidence scores (0-100) should be accepted.
+   */
+  test('Property 9: grading results with valid confidence scores are accepted', () => {
+    fc.assert(
+      fc.property(
+        fc.record({
+          student_metadata: arbitraryStudentMetadata(),
+          questions: fc.array(arbitraryQuestionResult(), { minLength: 1, maxLength: 5 }),
+          summary_comment: fc.string({ maxLength: 500 }),
+          total_score: fc.float({ min: 0, max: 1000, noNaN: true }),
+          confidenceScore: fc.integer({ min: 0, max: 100 }),
+        }),
+        (gradingResult) => {
+          const result = parseGradingResult(gradingResult);
+          expect(result.success).toBe(true);
+          expect(result.data?.confidenceScore).toBe(gradingResult.confidenceScore);
+        }
+      )
+    );
+  });
+
+  /**
+   * **Feature: magic-grading-engine, Property 9: Grading Result Round-Trip (Extended)**
+   * **Validates: Requirements 6.1, 6.2**
+   * 
+   * Grading results with invalid confidence scores (outside 0-100) should be rejected.
+   */
+  test('Property 9: grading results with invalid confidence scores are rejected', () => {
+    fc.assert(
+      fc.property(
+        fc.record({
+          student_metadata: arbitraryStudentMetadata(),
+          questions: fc.array(arbitraryQuestionResult(), { minLength: 1, maxLength: 5 }),
+          summary_comment: fc.string({ maxLength: 500 }),
+          total_score: fc.float({ min: 0, max: 1000, noNaN: true }),
+          confidenceScore: fc.oneof(
+            fc.integer({ min: -100, max: -1 }),
+            fc.integer({ min: 101, max: 200 }),
+          ),
+        }),
+        (gradingResult) => {
+          const result = parseGradingResult(gradingResult);
+          expect(result.success).toBe(false);
+          expect(result.errors).toBeDefined();
         }
       )
     );

@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import LandingV2 from "./pages/LandingV2";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import Planner from "./pages/Planner";
 import Classes from "./pages/Classes";
 import Search from "./pages/Search";
 import AdminPanel from "./pages/AdminPanel";
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/v2" element={<LandingV2 />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/planner" element={<Planner />} />
           <Route path="/classes" element={<Classes />} />
           <Route path="/search" element={<Search />} />
           <Route path="/admin" element={<AdminPanel />} />

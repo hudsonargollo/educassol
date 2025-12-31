@@ -1,7 +1,7 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme";
-import { Sun, LogOut, Users, GraduationCap, Search, Menu, X } from "lucide-react";
+import { Sun, LogOut, Users, GraduationCap, Search, Menu, X, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
@@ -60,6 +60,7 @@ export function Header({
   const isActive = (path: string) => location.pathname === path;
 
   const navItems = [
+    { to: "/planner", label: "Planejador", icon: <Calendar className="h-4 w-4" /> },
     { to: "/search", label: "Buscar", icon: <Search className="h-4 w-4" /> },
     { to: "/classes", label: "Minhas Turmas", icon: <Users className="h-4 w-4" /> },
     { to: "/assessments", label: "Avaliações", icon: <GraduationCap className="h-4 w-4" /> },

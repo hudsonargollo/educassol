@@ -77,6 +77,28 @@ const arbitraryInvalidRubric = (): fc.Arbitrary<unknown> =>
     fc.boolean(),
   );
 
+/**
+ * Arbitrary for valid rubrics with consistent total_points
+ * (total_points equals sum of all question max_points)
+ */
+const arbitraryConsistentRubric = (): fc.Arbitrary<Rubric> =>
+  fc.array(arbitraryRubricQuestion(), { minLength: 1, maxLength: 20 }).chain((questions) => {
+    const calculatedTotal = questions.reduce((sum, q) => sum + q.max_points, 0);
+    return fc.record({
+      title: fc.string({ minLength: 1, maxLength: 200 }),
+      total_points: fc.constant(calculatedTotal),
+      questions: fc.constant(questions),
+      grading_instructions: fc.option(fc.string({ maxLength: 1000 }), { nil: undefined }),
+    });
+  });
+
+/**
+ * Helper function to calculate total points from questions
+ */
+function calculateTotalPoints(questions: RubricQuestion[]): number {
+  return questions.reduce((sum, q) => sum + q.max_points, 0);
+}
+
 describe('Rubric Validation Property Tests', () => {
   /**
    * **Feature: automated-assessment, Property 2: Rubric validation correctness**
@@ -138,6 +160,75 @@ describe('Rubric Validation Property Tests', () => {
         (rubricWithInvalidPoints) => {
           const result = validateRubric(rubricWithInvalidPoints);
           expect(result.success).toBe(false);
+        }
+      )
+    );
+  });
+
+  /**
+   * **Feature: magic-grading-engine, Property 2: Rubric Total Points Invariant**
+   * **Validates: Requirements 1.4**
+   * 
+   * *For any* valid rubric with one or more criteria, the total_points field SHALL 
+   * equal the sum of all criteria max_points values.
+   */
+  test('Property 2: rubric total points equals sum of question max_points', () => {
+    fc.assert(
+      fc.property(arbitraryConsistentRubric(), (rubric) => {
+        const result = validateRubric(rubric);
+        expect(result.success).toBe(true);
+        expect(result.data).toBeDefined();
+        
+        // Verify total_points equals sum of all question max_points
+        const calculatedTotal = calculateTotalPoints(rubric.questions);
+        expect(result.data?.total_points).toBe(calculatedTotal);
+      })
+    );
+  });
+
+  /**
+   * **Feature: magic-grading-engine, Property 2: Rubric Total Points Invariant**
+   * **Validates: Requirements 1.4**
+   * 
+   * Adding a question should increase total points by the question's max_points.
+   */
+  test('Property 2: adding a question increases total by question max_points', () => {
+    fc.assert(
+      fc.property(
+        arbitraryConsistentRubric(),
+        arbitraryRubricQuestion(),
+        (rubric, newQuestion) => {
+          const originalTotal = calculateTotalPoints(rubric.questions);
+          const newQuestions = [...rubric.questions, newQuestion];
+          const newTotal = calculateTotalPoints(newQuestions);
+          
+          // New total should equal original + new question's max_points
+          expect(newTotal).toBe(originalTotal + newQuestion.max_points);
+        }
+      )
+    );
+  });
+
+  /**
+   * **Feature: magic-grading-engine, Property 2: Rubric Total Points Invariant**
+   * **Validates: Requirements 1.4**
+   * 
+   * Removing a question should decrease total points by the question's max_points.
+   */
+  test('Property 2: removing a question decreases total by question max_points', () => {
+    fc.assert(
+      fc.property(
+        fc.array(arbitraryRubricQuestion(), { minLength: 2, maxLength: 20 }),
+        fc.integer({ min: 0, max: 19 }),
+        (questions, removeIndex) => {
+          const safeIndex = removeIndex % questions.length;
+          const originalTotal = calculateTotalPoints(questions);
+          const removedQuestion = questions[safeIndex];
+          const remainingQuestions = questions.filter((_, i) => i !== safeIndex);
+          const newTotal = calculateTotalPoints(remainingQuestions);
+          
+          // New total should equal original - removed question's max_points
+          expect(newTotal).toBe(originalTotal - removedQuestion.max_points);
         }
       )
     );
