@@ -1,4 +1,4 @@
-import { PlanningHeroSection, FeaturePillars, SocialProofStrip, PricingSection, HowItWorksSection } from "@/components/landing";
+import { PlanningHeroSection, FeaturePillars, SocialProofStrip, PricingSection, HowItWorksSection, ExamGradingShowcase } from "@/components/landing";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
@@ -12,6 +12,7 @@ const Index = () => {
       <SocialProofStrip />
       <FeaturePillars />
       <HowItWorksSection />
+      <ExamGradingShowcase />
       <PricingSection />
       <TestimonialsSection />
       <CTASection />

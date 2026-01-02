@@ -4,3 +4,4 @@ export { FeaturePillars } from './FeaturePillars';
 export { SocialProofStrip } from './SocialProofStrip';
 export { PricingSection } from './PricingSection';
 export { HowItWorksSection } from './HowItWorksSection';
+export { ExamGradingShowcase } from './ExamGradingShowcase';

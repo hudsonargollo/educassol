@@ -17,6 +17,12 @@ import Settings from "./pages/Settings";
 import Verify from "./pages/Verify";
 import Assessments from "./pages/Assessments";
 import Usage from "./pages/Usage";
+import Documentation from "./pages/Documentation";
+import Help from "./pages/Help";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +48,12 @@ const App = () => (
             <Route path="/verify" element={<Verify />} />
             <Route path="/assessments" element={<Assessments />} />
             <Route path="/usage" element={<Usage />} />
+            <Route path="/docs" element={<Documentation />} />
+            <Route path="/help" element={<Help />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:id" element={<BlogPost />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

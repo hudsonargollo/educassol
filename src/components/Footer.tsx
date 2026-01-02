@@ -1,4 +1,4 @@
-import { Sun, Mail, MapPin, Phone } from "lucide-react";
+import { Sun, Mail, Facebook, Instagram, Twitter, Youtube } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -20,13 +20,52 @@ const Footer = () => {
               Plataforma de IA para educadores brasileiros. Crie planos de aula, 
               atividades e avaliações alinhados à BNCC em segundos.
             </p>
-            <div className="space-y-2 text-sm text-muted-foreground">
+            <div className="space-y-2 text-sm text-muted-foreground mb-6">
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-primary" />
                 <a href="mailto:contato@educasol.com.br" className="hover:text-primary transition-colors">
                   contato@educasol.com.br
                 </a>
               </div>
+            </div>
+            {/* Social Media Links */}
+            <div className="flex items-center gap-4">
+              <a 
+                href="https://facebook.com/educasol" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition-colors"
+                aria-label="Facebook"
+              >
+                <Facebook className="h-5 w-5" />
+              </a>
+              <a 
+                href="https://instagram.com/educasol" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition-colors"
+                aria-label="Instagram"
+              >
+                <Instagram className="h-5 w-5" />
+              </a>
+              <a 
+                href="https://twitter.com/educasol" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition-colors"
+                aria-label="Twitter"
+              >
+                <Twitter className="h-5 w-5" />
+              </a>
+              <a 
+                href="https://youtube.com/@educasol" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition-colors"
+                aria-label="YouTube"
+              >
+                <Youtube className="h-5 w-5" />
+              </a>
             </div>
           </div>
 
@@ -62,23 +101,23 @@ const Footer = () => {
             <h4 className="font-semibold mb-4 text-foreground">Recursos</h4>
             <ul className="space-y-3 text-muted-foreground">
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <Link to="/docs" className="hover:text-primary transition-colors">
+                  Documentação
+                </Link>
+              </li>
+              <li>
+                <Link to="/help" className="hover:text-primary transition-colors">
                   Central de Ajuda
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
-                  Tutoriais
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <Link to="/blog" className="hover:text-primary transition-colors">
                   Blog
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
-                  Comunidade
+                <a href="mailto:contato@educasol.com.br" className="hover:text-primary transition-colors">
+                  Contato
                 </a>
               </li>
             </ul>
@@ -89,23 +128,18 @@ const Footer = () => {
             <h4 className="font-semibold mb-4 text-foreground">Legal</h4>
             <ul className="space-y-3 text-muted-foreground">
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <Link to="/terms" className="hover:text-primary transition-colors">
                   Termos de Uso
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <Link to="/privacy" className="hover:text-primary transition-colors">
                   Política de Privacidade
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-primary transition-colors">
-                  Cookies
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="mailto:suporte@educasol.com.br" className="hover:text-primary transition-colors">
-                  Contato
+                  Suporte
                 </a>
               </li>
             </ul>
