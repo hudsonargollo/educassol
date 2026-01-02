@@ -9,179 +9,179 @@
 
 @layer base {
   /* ========================================
-     LIGHT MODE - ExamAI Design System
-     Enhanced contrast for better readability
+     LIGHT MODE - Educa Sol Design System
+     Warm, inviting colors for educators
      ======================================== */
   :root {
-    /* Backgrounds - Subtle warm tint for depth */
-    --background: 240 10% 98%;
-    --background-secondary: 240 10% 95%;
-    --foreground: 222 47% 8%;
+    /* Backgrounds - Warm cream/ivory tones */
+    --background: 45 30% 98%;
+    --background-secondary: 45 25% 95%;
+    --foreground: 222 47% 11%;
 
-    /* Card - White with stronger depth */
-    --card: 0 0% 100%;
-    --card-hover: 270 30% 97%;
-    --card-foreground: 222 47% 8%;
+    /* Card - Warm white with depth */
+    --card: 45 20% 99%;
+    --card-hover: 35 40% 97%;
+    --card-foreground: 222 47% 11%;
 
     /* Popover */
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 8%;
+    --popover: 45 20% 99%;
+    --popover-foreground: 222 47% 11%;
 
-    /* Primary - Purple/Violet accent - Darker for contrast */
-    --primary: 270 85% 50%;
+    /* Primary - Warm orange/amber for education */
+    --primary: 25 95% 53%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary - Amber/Orange for CTAs - Darker */
-    --secondary: 38 92% 45%;
+    /* Secondary - Teal/green for growth */
+    --secondary: 162 63% 41%;
     --secondary-foreground: 0 0% 100%;
 
-    /* Muted - Better contrast */
-    --muted: 240 10% 92%;
-    --muted-foreground: 215 20% 40%;
+    /* Muted - Warm gray */
+    --muted: 45 15% 90%;
+    --muted-foreground: 220 15% 40%;
 
-    /* Accent - Purple variations */
-    --accent: 270 85% 50%;
-    --accent-foreground: 0 0% 100%;
-
-    /* Semantic colors - Enhanced contrast */
-    --success: 142 76% 36%;
-    --success-foreground: 0 0% 100%;
-    --warning: 38 92% 45%;
-    --warning-foreground: 0 0% 0%;
-    --info: 217 91% 50%;
-    --info-foreground: 0 0% 100%;
-
-    --destructive: 0 84% 50%;
-    --destructive-foreground: 0 0% 100%;
-
-    /* Borders - Light mode with more definition */
-    --border: 214 32% 85%;
-    --border-subtle: 214 32% 90%;
-    --input: 214 32% 85%;
-    --ring: 270 85% 50%;
-
-    /* ExamAI accent variations - Darker for light mode */
-    --accent-purple: 270 85% 50%;
-    --accent-violet: 258 85% 55%;
-    --accent-blue: 217 91% 50%;
-    --accent-cyan: 192 91% 32%;
-    --accent-green: 142 76% 36%;
-    --accent-amber: 38 92% 45%;
-    --accent-orange: 25 95% 48%;
-    --accent-red: 0 84% 50%;
-
-    /* Gradients - Light mode with visible contrast */
-    --gradient-sun: linear-gradient(135deg, hsl(270 85% 50%), hsl(258 85% 55%));
-    --gradient-hero: linear-gradient(135deg, hsl(270 50% 97%), hsl(217 50% 97%));
-    --gradient-warm: linear-gradient(45deg, hsl(270 40% 95%), hsl(258 40% 93%));
-    
-    /* Shadows - More visible in light mode */
-    --shadow-warm: 0 10px 30px -10px hsl(270 85% 50% / 0.15);
-    --shadow-glow: 0 0 40px hsl(270 85% 50% / 0.15);
-    --shadow-card: 0 4px 20px -4px hsl(222 47% 11% / 0.08);
-    --shadow-card-hover: 0 8px 30px -4px hsl(270 85% 50% / 0.15);
-
-    /* Glassmorphism - Light mode */
-    --glass-bg: rgba(255, 255, 255, 0.9);
-    --glass-border: rgba(168, 85, 247, 0.2);
-
-    --radius: 0.5rem;
-
-    /* Sidebar */
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 222 47% 8%;
-    --sidebar-primary: 270 85% 50%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 270 50% 96%;
-    --sidebar-accent-foreground: 270 85% 35%;
-    --sidebar-border: 214 32% 85%;
-    --sidebar-ring: 270 85% 50%;
-  }
-
-  /* ========================================
-     DARK MODE - ExamAI Design System
-     Deep navy/slate with purple accents
-     ======================================== */
-  .dark {
-    /* Backgrounds - Deep navy/slate */
-    --background: 222 47% 6%;
-    --background-secondary: 222 47% 9%;
-    --foreground: 210 40% 98%;
-
-    /* Card - Slightly lighter navy */
-    --card: 222 47% 11%;
-    --card-hover: 222 47% 14%;
-    --card-foreground: 210 40% 98%;
-
-    /* Popover */
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
-
-    /* Primary - Purple/Violet accent */
-    --primary: 270 95% 65%;
-    --primary-foreground: 0 0% 100%;
-
-    /* Secondary - Amber/Orange for CTAs */
-    --secondary: 38 92% 50%;
-    --secondary-foreground: 0 0% 0%;
-
-    /* Muted */
-    --muted: 222 47% 14%;
-    --muted-foreground: 215 20% 65%;
-
-    /* Accent - Purple variations */
-    --accent: 270 95% 65%;
+    /* Accent - Warm purple */
+    --accent: 270 70% 55%;
     --accent-foreground: 0 0% 100%;
 
     /* Semantic colors */
-    --success: 142 71% 45%;
+    --success: 152 69% 40%;
     --success-foreground: 0 0% 100%;
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 0%;
-    --info: 217 91% 60%;
+    --info: 199 89% 48%;
     --info-foreground: 0 0% 100%;
 
-    --destructive: 0 62% 30%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
 
-    /* Borders - Dark mode with purple tint */
-    --border: 215 20% 20%;
-    --border-subtle: 215 20% 15%;
-    --input: 222 47% 14%;
-    --ring: 270 95% 65%;
+    /* Borders - Warm tones */
+    --border: 35 20% 82%;
+    --border-subtle: 35 15% 88%;
+    --input: 35 20% 82%;
+    --ring: 25 95% 53%;
 
-    /* ExamAI accent variations */
-    --accent-purple: 270 95% 65%;
-    --accent-violet: 258 90% 66%;
-    --accent-blue: 217 91% 60%;
-    --accent-cyan: 192 91% 36%;
-    --accent-green: 142 71% 45%;
+    /* Accent variations */
+    --accent-purple: 270 70% 55%;
+    --accent-violet: 258 70% 58%;
+    --accent-blue: 199 89% 48%;
+    --accent-cyan: 175 77% 40%;
+    --accent-green: 152 69% 40%;
     --accent-amber: 38 92% 50%;
     --accent-orange: 25 95% 53%;
-    --accent-red: 0 84% 60%;
+    --accent-red: 0 72% 51%;
 
-    /* Gradients - Dark mode */
-    --gradient-sun: linear-gradient(135deg, hsl(270 95% 65%), hsl(258 90% 60%));
-    --gradient-hero: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 119, 198, 0.3), transparent);
-    --gradient-warm: linear-gradient(45deg, hsl(270 95% 30%), hsl(258 90% 25%));
+    /* Gradients - Warm, inviting */
+    --gradient-sun: linear-gradient(135deg, hsl(25 95% 53%), hsl(38 92% 50%));
+    --gradient-hero: linear-gradient(135deg, hsl(45 40% 97%), hsl(35 30% 95%));
+    --gradient-warm: linear-gradient(45deg, hsl(25 60% 95%), hsl(38 50% 93%));
     
-    /* Shadows - Dark mode with purple glow */
-    --shadow-warm: 0 10px 30px -10px hsl(270 95% 65% / 0.2);
-    --shadow-glow: 0 0 40px hsl(270 95% 65% / 0.3);
+    /* Shadows - Warm tones */
+    --shadow-warm: 0 10px 30px -10px hsl(25 95% 53% / 0.2);
+    --shadow-glow: 0 0 40px hsl(25 95% 53% / 0.15);
+    --shadow-card: 0 4px 20px -4px hsl(35 30% 30% / 0.1);
+    --shadow-card-hover: 0 8px 30px -4px hsl(25 95% 53% / 0.2);
+
+    /* Glassmorphism - Light mode */
+    --glass-bg: rgba(255, 252, 247, 0.92);
+    --glass-border: rgba(251, 146, 60, 0.2);
+
+    --radius: 0.625rem;
+
+    /* Sidebar */
+    --sidebar-background: 45 25% 97%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 25 95% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 35 40% 95%;
+    --sidebar-accent-foreground: 25 80% 35%;
+    --sidebar-border: 35 20% 85%;
+    --sidebar-ring: 25 95% 53%;
+  }
+
+  /* ========================================
+     DARK MODE - Educa Sol Design System
+     Deep warm navy with orange/amber accents
+     ======================================== */
+  .dark {
+    /* Backgrounds - Deep warm navy */
+    --background: 220 30% 7%;
+    --background-secondary: 220 28% 10%;
+    --foreground: 45 20% 96%;
+
+    /* Card - Warm dark surface */
+    --card: 220 25% 12%;
+    --card-hover: 220 25% 15%;
+    --card-foreground: 45 20% 96%;
+
+    /* Popover */
+    --popover: 220 25% 12%;
+    --popover-foreground: 45 20% 96%;
+
+    /* Primary - Warm orange/amber */
+    --primary: 25 95% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary - Teal for growth */
+    --secondary: 162 63% 48%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Muted */
+    --muted: 220 20% 18%;
+    --muted-foreground: 220 15% 60%;
+
+    /* Accent - Warm purple */
+    --accent: 270 80% 65%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Semantic colors */
+    --success: 152 69% 48%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 55%;
+    --warning-foreground: 0 0% 0%;
+    --info: 199 89% 55%;
+    --info-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 45 20% 96%;
+
+    /* Borders - Warm dark tones */
+    --border: 220 20% 22%;
+    --border-subtle: 220 20% 16%;
+    --input: 220 25% 15%;
+    --ring: 25 95% 58%;
+
+    /* Accent variations */
+    --accent-purple: 270 80% 65%;
+    --accent-violet: 258 75% 65%;
+    --accent-blue: 199 89% 55%;
+    --accent-cyan: 175 77% 48%;
+    --accent-green: 152 69% 48%;
+    --accent-amber: 38 92% 55%;
+    --accent-orange: 25 95% 58%;
+    --accent-red: 0 72% 55%;
+
+    /* Gradients - Dark mode warm */
+    --gradient-sun: linear-gradient(135deg, hsl(25 95% 58%), hsl(38 92% 55%));
+    --gradient-hero: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(251, 146, 60, 0.15), transparent);
+    --gradient-warm: linear-gradient(45deg, hsl(25 70% 25%), hsl(38 60% 20%));
+    
+    /* Shadows - Dark mode with warm glow */
+    --shadow-warm: 0 10px 30px -10px hsl(25 95% 58% / 0.25);
+    --shadow-glow: 0 0 40px hsl(25 95% 58% / 0.2);
 
     /* Glassmorphism - Dark mode */
-    --glass-bg: rgba(20, 26, 38, 0.8);
-    --glass-border: rgba(168, 85, 247, 0.2);
+    --glass-bg: rgba(18, 22, 30, 0.85);
+    --glass-border: rgba(251, 146, 60, 0.15);
 
     /* Sidebar - Dark mode */
-    --sidebar-background: 222 47% 9%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 270 95% 65%;
+    --sidebar-background: 220 28% 9%;
+    --sidebar-foreground: 45 20% 96%;
+    --sidebar-primary: 25 95% 58%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 222 47% 14%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 215 20% 20%;
-    --sidebar-ring: 270 95% 65%;
+    --sidebar-accent: 220 25% 15%;
+    --sidebar-accent-foreground: 45 20% 96%;
+    --sidebar-border: 220 20% 22%;
+    --sidebar-ring: 25 95% 58%;
   }
 }
 

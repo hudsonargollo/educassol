@@ -8,10 +8,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
-import { User, Bell, Shield, Palette, Save, Camera } from "lucide-react";
+import { User, Bell, Shield, Palette, Save, Camera, CreditCard, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useSubscription } from "@/hooks/useSubscription";
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -19,6 +21,7 @@ const Settings = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const { tier, createCheckoutSession, isLoading: subscriptionLoading } = useSubscription();
   
   // Profile form state
   const [profileData, setProfileData] = useState({
@@ -97,6 +100,18 @@ const Settings = () => {
     }
   };
 
+  const handleUpgrade = async () => {
+    try {
+      await createCheckoutSession();
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível iniciar o checkout. Tente novamente.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const getInitials = (name: string) => {
     return name
       .split(" ")
@@ -109,13 +124,15 @@ const Settings = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-examai-purple-500"></div>
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
       </div>
     );
   }
 
+  const isPremium = tier === 'premium' || tier === 'enterprise';
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
       <Header user={user} onSignOut={handleSignOut} showNav={true} />
 
       <main className="container mx-auto px-4 py-8 pt-24">
@@ -127,31 +144,38 @@ const Settings = () => {
         </div>
 
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="bg-card border border-border mb-6">
+          <TabsList className="bg-card border border-border mb-6 flex-wrap h-auto p-1">
             <TabsTrigger
               value="profile"
-              className="data-[state=active]:bg-examai-purple-500 data-[state=active]:text-white"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
               <User className="h-4 w-4 mr-2" />
               Perfil
             </TabsTrigger>
             <TabsTrigger
+              value="billing"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+            >
+              <CreditCard className="h-4 w-4 mr-2" />
+              Assinatura
+            </TabsTrigger>
+            <TabsTrigger
               value="notifications"
-              className="data-[state=active]:bg-examai-purple-500 data-[state=active]:text-white"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
               <Bell className="h-4 w-4 mr-2" />
               Notificações
             </TabsTrigger>
             <TabsTrigger
               value="appearance"
-              className="data-[state=active]:bg-examai-purple-500 data-[state=active]:text-white"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
               <Palette className="h-4 w-4 mr-2" />
               Aparência
             </TabsTrigger>
             <TabsTrigger
               value="security"
-              className="data-[state=active]:bg-examai-purple-500 data-[state=active]:text-white"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
               <Shield className="h-4 w-4 mr-2" />
               Segurança
@@ -171,19 +195,19 @@ const Settings = () => {
                 </CardHeader>
                 <CardContent className="flex flex-col items-center">
                   <div className="relative">
-                    <Avatar className="h-24 w-24 border-2 border-examai-purple-500/20">
+                    <Avatar className="h-24 w-24 border-2 border-primary/20">
                       <AvatarImage src={user?.user_metadata?.avatar_url} />
-                      <AvatarFallback className="bg-examai-purple-500/10 text-examai-purple-500 text-xl">
+                      <AvatarFallback className="bg-gradient-to-br from-primary to-amber-500 text-white text-xl">
                         {getInitials(profileData.name || profileData.email)}
                       </AvatarFallback>
                     </Avatar>
                     {/* Online status indicator */}
-                    <span className="absolute bottom-1 right-1 h-4 w-4 rounded-full bg-green-500 border-2 border-card" />
+                    <span className="absolute bottom-1 right-1 h-4 w-4 rounded-full bg-secondary border-2 border-card" />
                   </div>
                   <Button
                     variant="outline"
                     size="sm"
-                    className="mt-4 border-examai-purple-500/20 hover:border-examai-purple-500/40"
+                    className="mt-4 border-primary/20 hover:border-primary/40"
                   >
                     <Camera className="h-4 w-4 mr-2" />
                     Alterar foto
@@ -210,7 +234,7 @@ const Settings = () => {
                           setProfileData({ ...profileData, name: e.target.value })
                         }
                         placeholder="Seu nome"
-                        className="bg-background border-border focus:border-examai-purple-500 focus:ring-examai-purple-500/20"
+                        className="bg-background border-border focus:border-primary focus:ring-primary/20"
                       />
                     </div>
                     <div className="space-y-2">
@@ -231,7 +255,7 @@ const Settings = () => {
                           setProfileData({ ...profileData, school: e.target.value })
                         }
                         placeholder="Nome da escola"
-                        className="bg-background border-border focus:border-examai-purple-500 focus:ring-examai-purple-500/20"
+                        className="bg-background border-border focus:border-primary focus:ring-primary/20"
                       />
                     </div>
                     <div className="space-y-2">
@@ -243,18 +267,83 @@ const Settings = () => {
                           setProfileData({ ...profileData, subject: e.target.value })
                         }
                         placeholder="Sua disciplina"
-                        className="bg-background border-border focus:border-examai-purple-500 focus:ring-examai-purple-500/20"
+                        className="bg-background border-border focus:border-primary focus:ring-primary/20"
                       />
                     </div>
                   </div>
                   <Button
                     onClick={handleSaveProfile}
                     disabled={saving}
-                    className="bg-examai-purple-500 hover:bg-examai-purple-600 text-white"
+                    className="bg-gradient-to-r from-primary to-amber-500 hover:from-primary/90 hover:to-amber-500/90 text-white"
                   >
                     <Save className="h-4 w-4 mr-2" />
                     {saving ? "Salvando..." : "Salvar alterações"}
                   </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Billing Tab */}
+          <TabsContent value="billing">
+            <div className="grid gap-6 md:grid-cols-2">
+              {/* Current Plan */}
+              <Card className="border-border bg-card">
+                <CardHeader>
+                  <CardTitle className="text-foreground flex items-center gap-2">
+                    Plano Atual
+                    <Badge variant={isPremium ? "default" : "secondary"}>
+                      {isPremium ? "Premium" : "Grátis"}
+                    </Badge>
+                  </CardTitle>
+                  <CardDescription>
+                    {isPremium 
+                      ? "Você tem acesso a todos os recursos premium" 
+                      : "Atualize para desbloquear recursos ilimitados"}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {isPremium ? (
+                      <div className="space-y-3">
+                        {["Gerações ilimitadas", "Uploads ilimitados", "Suporte prioritário", "Exportação avançada"].map((feature) => (
+                          <div key={feature} className="flex items-center gap-2 text-sm">
+                            <CheckCircle2 className="h-4 w-4 text-secondary" />
+                            <span className="text-muted-foreground">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <Button
+                        onClick={handleUpgrade}
+                        disabled={subscriptionLoading}
+                        className="w-full bg-gradient-to-r from-primary to-amber-500 hover:from-primary/90 hover:to-amber-500/90 text-white"
+                      >
+                        {subscriptionLoading ? "Carregando..." : "Assinar Premium - R$49,90/mês"}
+                      </Button>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Usage Summary */}
+              <Card className="border-border bg-card">
+                <CardHeader>
+                  <CardTitle className="text-foreground">Resumo de Uso</CardTitle>
+                  <CardDescription>
+                    Seu consumo no período atual
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => navigate('/usage')}
+                    >
+                      Ver Detalhes de Uso
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -282,7 +371,7 @@ const Settings = () => {
                     onCheckedChange={(checked) =>
                       setNotifications({ ...notifications, emailNotifications: checked })
                     }
-                    className="data-[state=checked]:bg-examai-purple-500"
+                    className="data-[state=checked]:bg-primary"
                   />
                 </div>
                 <div className="flex items-center justify-between">
@@ -297,7 +386,7 @@ const Settings = () => {
                     onCheckedChange={(checked) =>
                       setNotifications({ ...notifications, contentUpdates: checked })
                     }
-                    className="data-[state=checked]:bg-examai-purple-500"
+                    className="data-[state=checked]:bg-primary"
                   />
                 </div>
                 <div className="flex items-center justify-between">
@@ -312,7 +401,7 @@ const Settings = () => {
                     onCheckedChange={(checked) =>
                       setNotifications({ ...notifications, weeklyDigest: checked })
                     }
-                    className="data-[state=checked]:bg-examai-purple-500"
+                    className="data-[state=checked]:bg-primary"
                   />
                 </div>
               </CardContent>
@@ -331,6 +420,7 @@ const Settings = () => {
               <CardContent>
                 <p className="text-muted-foreground">
                   Use o botão de tema no cabeçalho para alternar entre modo claro e escuro.
+                  O tema será salvo automaticamente.
                 </p>
               </CardContent>
             </Card>
@@ -353,7 +443,7 @@ const Settings = () => {
                   </p>
                   <Button
                     variant="outline"
-                    className="border-examai-purple-500/20 hover:border-examai-purple-500/40"
+                    className="border-primary/20 hover:border-primary/40"
                     onClick={async () => {
                       if (user?.email) {
                         await supabase.auth.resetPasswordForEmail(user.email);

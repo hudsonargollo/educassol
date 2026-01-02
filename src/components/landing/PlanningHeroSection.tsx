@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle2, CalendarDays } from "lucide-react";
+import { ArrowRight, CheckCircle2, Sparkles, BookOpen, Clock, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { TransformationAnimation } from "./TransformationAnimation";
@@ -7,15 +7,28 @@ import { TransformationAnimation } from "./TransformationAnimation";
 interface FloatingElementProps {
   className?: string;
   delay?: number;
+  size?: "sm" | "md" | "lg";
 }
 
-const FloatingElement = ({ className = "", delay = 0 }: FloatingElementProps) => (
-  <motion.div
-    animate={{ y: [0, -15, 0], opacity: [0.3, 0.6, 0.3] }}
-    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay }}
-    className={`absolute w-3 h-3 rounded-full bg-examai-purple-500/40 blur-sm ${className}`}
-  />
-);
+const FloatingElement = ({ className = "", delay = 0, size = "sm" }: FloatingElementProps) => {
+  const sizeClasses = {
+    sm: "w-2 h-2",
+    md: "w-3 h-3",
+    lg: "w-4 h-4"
+  };
+  
+  return (
+    <motion.div
+      animate={{ 
+        y: [0, -20, 0], 
+        opacity: [0.2, 0.6, 0.2],
+        scale: [1, 1.2, 1]
+      }}
+      transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay }}
+      className={`absolute rounded-full bg-gradient-to-br from-orange-400 to-amber-500 blur-sm ${sizeClasses[size]} ${className}`}
+    />
+  );
+};
 
 interface PlanningHeroSectionProps {
   onStartPlanning?: () => void;
@@ -41,129 +54,193 @@ export function PlanningHeroSection({ onStartPlanning, onViewFeatures }: Plannin
     }
   };
 
+  const stats = [
+    { icon: BookOpen, value: "50.000+", label: "Planos criados" },
+    { icon: Clock, value: "15h", label: "Economizadas/semana" },
+    { icon: Users, value: "5.000+", label: "Educadores" },
+  ];
+
   return (
-    <section className="relative min-h-[90vh] flex items-center overflow-hidden pt-16 bg-[#0a0d14]">
-      {/* Gradient background */}
+    <section className="relative min-h-[95vh] flex items-center overflow-hidden pt-20 bg-gradient-to-b from-background to-background/95 dark:from-[#0c1018] dark:to-[#0a0d14]">
+      {/* Animated gradient background */}
       <div className="absolute inset-0">
         {/* Grid pattern */}
         <div 
-          className="absolute inset-0 opacity-[0.03]"
+          className="absolute inset-0 opacity-[0.03] dark:opacity-[0.04]"
           style={{
-            backgroundImage: `linear-gradient(rgba(168, 85, 247, 0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(168, 85, 247, 0.5) 1px, transparent 1px)`,
-            backgroundSize: '60px 60px'
+            backgroundImage: `linear-gradient(hsl(var(--primary) / 0.4) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.4) 1px, transparent 1px)`,
+            backgroundSize: '50px 50px'
           }}
         />
         
         {/* Gradient orbs */}
         <motion.div 
-          animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.25, 0.15] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/4 -left-20 w-[500px] h-[500px] rounded-full blur-[120px] bg-examai-purple-500/30"
+          animate={{ 
+            scale: [1, 1.3, 1], 
+            opacity: [0.12, 0.22, 0.12],
+            x: [0, 30, 0]
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-1/4 -left-32 w-[600px] h-[600px] rounded-full blur-[150px] bg-gradient-to-br from-orange-500/40 to-amber-400/30"
         />
         <motion.div 
-          animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.2, 0.1] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-1/4 -right-20 w-[600px] h-[600px] rounded-full blur-[120px] bg-violet-500/20"
+          animate={{ 
+            scale: [1.2, 1, 1.2], 
+            opacity: [0.08, 0.18, 0.08],
+            x: [0, -20, 0]
+          }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-1/4 -right-32 w-[700px] h-[700px] rounded-full blur-[150px] bg-gradient-to-br from-teal-500/30 to-emerald-400/20"
+        />
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.15, 1], 
+            opacity: [0.06, 0.12, 0.06]
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-[120px] bg-gradient-to-br from-purple-500/20 to-violet-400/15"
         />
       </div>
       
       {/* Floating decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <FloatingElement className="top-20 left-[10%]" delay={0} />
-        <FloatingElement className="top-40 right-[15%]" delay={0.5} />
-        <FloatingElement className="bottom-32 left-1/4" delay={1} />
-        <FloatingElement className="top-1/3 right-1/3" delay={1.5} />
-        <FloatingElement className="bottom-1/4 right-[20%]" delay={2} />
+        <FloatingElement className="top-24 left-[8%]" delay={0} size="md" />
+        <FloatingElement className="top-36 right-[12%]" delay={0.8} size="lg" />
+        <FloatingElement className="bottom-40 left-1/4" delay={1.5} size="sm" />
+        <FloatingElement className="top-1/3 right-1/3" delay={2.2} size="md" />
+        <FloatingElement className="bottom-1/3 right-[18%]" delay={3} size="lg" />
+        <FloatingElement className="top-1/2 left-[15%]" delay={1} size="sm" />
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Copy */}
           <motion.div 
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="space-y-6 text-center lg:text-left"
+            transition={{ duration: 0.7 }}
+            className="space-y-8 text-center lg:text-left"
           >
             {/* Badge */}
             <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-examai-purple-500/10 border border-examai-purple-500/20"
+              initial={{ opacity: 0, y: 20, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 shadow-lg shadow-primary/5"
             >
-              <CalendarDays className="h-4 w-4 text-examai-purple-400" />
-              <span className="text-sm font-medium text-examai-purple-400">Planejamento Inteligente</span>
+              <Sparkles className="h-4 w-4 text-primary animate-pulse" />
+              <span className="text-sm font-semibold text-primary">IA para Educadores Brasileiros</span>
             </motion.div>
 
             <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight"
+              transition={{ delay: 0.2, duration: 0.6 }}
+              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground leading-[1.1]"
             >
-              Plan Your Entire Curriculum in{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-examai-purple-400 via-violet-400 to-examai-purple-500">
-                Seconds
+              Planeje seu{' '}
+              <span className="relative">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-orange-500 to-amber-500">
+                  currículo inteiro
+                </span>
+                <motion.span 
+                  className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-primary to-amber-500 rounded-full"
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ delay: 0.8, duration: 0.6 }}
+                />
               </span>
-              , Not Weekends.
+              {' '}em segundos.
             </motion.h1>
 
             <motion.p 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="text-lg sm:text-xl text-gray-400 max-w-xl mx-auto lg:mx-0"
+              transition={{ delay: 0.35, duration: 0.6 }}
+              className="text-lg sm:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 leading-relaxed"
             >
-              Transform your teaching with the AI-powered instructional design platform. 
-              Generate standards-aligned lesson plans, activities, and assessments in one click.
+              Transforme sua rotina com a plataforma de design instrucional com IA. 
+              Gere planos de aula, atividades e avaliações{' '}
+              <span className="text-foreground font-medium">alinhados à BNCC</span> em um clique.
             </motion.p>
 
             <motion.div 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
               className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
             >
               <Button 
                 size="lg" 
                 onClick={handleStartPlanning} 
-                className="h-14 px-8 text-lg font-semibold bg-gradient-to-r from-examai-purple-500 to-violet-500 hover:from-examai-purple-400 hover:to-violet-400 shadow-lg shadow-examai-purple-500/25 hover:-translate-y-0.5 transition-all"
+                className="h-14 px-8 text-lg font-semibold bg-gradient-to-r from-primary to-amber-500 hover:from-primary/90 hover:to-amber-500/90 shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:-translate-y-1 transition-all duration-300 group"
               >
-                Start Planning Free
-                <ArrowRight className="h-5 w-5 ml-2" />
+                Começar Grátis
+                <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
               <Button 
                 size="lg" 
                 variant="outline" 
                 onClick={handleViewFeatures}
-                className="h-14 px-8 text-lg font-semibold border-2 border-examai-purple-500/50 text-white hover:bg-examai-purple-500/10 hover:border-examai-purple-500"
+                className="h-14 px-8 text-lg font-semibold border-2 border-primary/40 text-foreground hover:bg-primary/10 hover:border-primary/60 transition-all duration-300"
               >
-                View Features
+                Ver Funcionalidades
               </Button>
             </motion.div>
 
             {/* Trust indicators */}
             <motion.div 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2 text-sm text-gray-400"
+              transition={{ delay: 0.65, duration: 0.6 }}
+              className="flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-3 text-sm text-muted-foreground"
             >
-              {["No credit card required", "BNCC Aligned", "Portuguese support"].map((item, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-green-400" />
+              {["Sem cartão de crédito", "Alinhado à BNCC", "100% em português"].map((item, i) => (
+                <motion.div 
+                  key={i} 
+                  className="flex items-center gap-2"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.8 + i * 0.1 }}
+                >
+                  <CheckCircle2 className="h-4 w-4 text-secondary" />
                   <span>{item}</span>
-                </div>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Stats row */}
+            <motion.div 
+              initial={{ opacity: 0, y: 25 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9, duration: 0.6 }}
+              className="flex flex-wrap items-center justify-center lg:justify-start gap-8 pt-4"
+            >
+              {stats.map((stat, i) => (
+                <motion.div 
+                  key={i}
+                  className="flex items-center gap-3"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 1 + i * 0.15, type: "spring" }}
+                >
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <stat.icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <div className="text-xl font-bold text-foreground">{stat.value}</div>
+                    <div className="text-xs text-muted-foreground">{stat.label}</div>
+                  </div>
+                </motion.div>
               ))}
             </motion.div>
           </motion.div>
 
           {/* Animation: PDF → Calendar transformation */}
           <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
+            initial={{ opacity: 0, scale: 0.85, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.8, type: "spring", stiffness: 100 }}
             className="relative flex items-center justify-center"
           >
             <TransformationAnimation />

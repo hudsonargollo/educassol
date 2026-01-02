@@ -1,6 +1,6 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
-import { CheckCircle, BookOpen, Clock } from "lucide-react";
+import { CheckCircle, BookOpen, Clock, Users, Star } from "lucide-react";
 
 interface Metric {
   value: number;
@@ -10,8 +10,10 @@ interface Metric {
 }
 
 const METRICS: Metric[] = [
-  { value: 50000, suffix: '+', label: 'Lessons Planned', icon: BookOpen },
-  { value: 500, suffix: '+', label: 'Hours Saved per Teacher/Year', icon: Clock },
+  { value: 50000, suffix: '+', label: 'Planos Criados', icon: BookOpen },
+  { value: 15, suffix: 'h', label: 'Economizadas/Semana', icon: Clock },
+  { value: 5000, suffix: '+', label: 'Educadores Ativos', icon: Users },
+  { value: 98, suffix: '%', label: 'Satisfação', icon: Star },
 ];
 
 interface AnimatedCounterProps {
@@ -19,34 +21,39 @@ interface AnimatedCounterProps {
   suffix: string;
   label: string;
   icon: typeof BookOpen;
+  delay?: number;
 }
 
-function AnimatedCounter({ value, suffix, label, icon: Icon }: AnimatedCounterProps) {
+function AnimatedCounter({ value, suffix, label, icon: Icon, delay = 0 }: AnimatedCounterProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
   const [displayValue, setDisplayValue] = useState(0);
 
   useEffect(() => {
     if (!isInView) return;
 
-    const duration = 2000; // 2 seconds
-    const steps = 60;
-    const stepDuration = duration / steps;
-    const increment = value / steps;
-    let current = 0;
+    const timeout = setTimeout(() => {
+      const duration = 2000;
+      const steps = 60;
+      const stepDuration = duration / steps;
+      const increment = value / steps;
+      let current = 0;
 
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= value) {
-        setDisplayValue(value);
-        clearInterval(timer);
-      } else {
-        setDisplayValue(Math.floor(current));
-      }
-    }, stepDuration);
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= value) {
+          setDisplayValue(value);
+          clearInterval(timer);
+        } else {
+          setDisplayValue(Math.floor(current));
+        }
+      }, stepDuration);
 
-    return () => clearInterval(timer);
-  }, [isInView, value]);
+      return () => clearInterval(timer);
+    }, delay);
+
+    return () => clearTimeout(timeout);
+  }, [isInView, value, delay]);
 
   const formatNumber = (num: number) => {
     if (num >= 1000) {
@@ -58,19 +65,23 @@ function AnimatedCounter({ value, suffix, label, icon: Icon }: AnimatedCounterPr
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5 }}
-      className="flex items-center gap-3"
+      initial={{ opacity: 0, y: 20, scale: 0.9 }}
+      animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+      transition={{ duration: 0.5, delay: delay / 1000 }}
+      className="flex items-center gap-4"
     >
-      <div className="p-2 rounded-lg bg-examai-purple-500/10">
-        <Icon className="h-5 w-5 text-examai-purple-400" />
-      </div>
+      <motion.div 
+        className="p-3 rounded-xl bg-primary/10 dark:bg-primary/15"
+        whileHover={{ scale: 1.1, rotate: 5 }}
+        transition={{ type: "spring", stiffness: 400 }}
+      >
+        <Icon className="h-5 w-5 text-primary" />
+      </motion.div>
       <div>
-        <div className="text-2xl font-bold text-white">
+        <div className="text-2xl sm:text-3xl font-bold text-foreground">
           {formatNumber(displayValue)}{suffix}
         </div>
-        <div className="text-sm text-gray-400">{label}</div>
+        <div className="text-sm text-muted-foreground">{label}</div>
       </div>
     </motion.div>
   );
@@ -83,32 +94,31 @@ export function SocialProofStrip() {
   return (
     <section 
       ref={ref}
-      className="py-12 bg-white/[0.02] border-y border-white/5"
+      className="py-16 bg-gradient-to-r from-muted/50 via-background to-muted/50 dark:from-white/[0.02] dark:via-white/[0.04] dark:to-white/[0.02] border-y border-border/50"
     >
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.5 }}
-          className="flex flex-wrap justify-center items-center gap-8 md:gap-16"
+          className="flex flex-col lg:flex-row items-center justify-between gap-8"
         >
           {/* Animated metrics */}
-          {METRICS.map((metric) => (
-            <AnimatedCounter key={metric.label} {...metric} />
-          ))}
-
-          {/* Divider */}
-          <div className="hidden md:block w-px h-12 bg-white/10" />
+          <div className="flex flex-wrap justify-center lg:justify-start gap-8 lg:gap-12">
+            {METRICS.map((metric, index) => (
+              <AnimatedCounter key={metric.label} {...metric} delay={index * 150} />
+            ))}
+          </div>
 
           {/* Trust signal */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex items-center gap-2 text-gray-400"
+            initial={{ opacity: 0, x: 20 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className="flex items-center gap-3 px-5 py-3 rounded-full bg-secondary/10 border border-secondary/20"
           >
-            <CheckCircle className="h-5 w-5 text-green-400" />
-            <span className="text-sm">Aligned with Common Core & NGSS Standards</span>
+            <CheckCircle className="h-5 w-5 text-secondary" />
+            <span className="text-sm font-medium text-foreground">Alinhado à BNCC e NGSS</span>
           </motion.div>
         </motion.div>
       </div>

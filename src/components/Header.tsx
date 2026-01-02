@@ -1,9 +1,10 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme";
-import { Sun, LogOut, Users, GraduationCap, Search, Menu, X, Calendar, BarChart2 } from "lucide-react";
+import { Sun, LogOut, Users, GraduationCap, Search, Menu, X, Calendar, BarChart2, Settings, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 interface HeaderProps {
   /** User object with email property, if logged in */
@@ -32,7 +33,7 @@ function NavLink({ to, children, icon, isActive, onClick }: NavLinkProps) {
       to={to}
       onClick={onClick}
       className={cn(
-        "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+        "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
         "hover:bg-primary/10 hover:text-primary",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         isActive 
@@ -60,12 +61,12 @@ export function Header({
   const isActive = (path: string) => location.pathname === path;
 
   const navItems = [
+    { to: "/dashboard", label: "Início", icon: <Home className="h-4 w-4" /> },
     { to: "/planner", label: "Planejador", icon: <Calendar className="h-4 w-4" /> },
-    { to: "/search", label: "Buscar", icon: <Search className="h-4 w-4" /> },
-    { to: "/classes", label: "Minhas Turmas", icon: <Users className="h-4 w-4" /> },
+    { to: "/classes", label: "Turmas", icon: <Users className="h-4 w-4" /> },
     { to: "/assessments", label: "Avaliações", icon: <GraduationCap className="h-4 w-4" /> },
     { to: "/usage", label: "Uso", icon: <BarChart2 className="h-4 w-4" /> },
-    { to: "/admin", label: "Admin", icon: <Users className="h-4 w-4" /> },
+    { to: "/settings", label: "Config", icon: <Settings className="h-4 w-4" /> },
   ];
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
