@@ -30,7 +30,14 @@ export const StepObjectives = () => {
     setLoadingBncc(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error("Não autenticado");
+      if (!session) {
+        toast({
+          title: "Sessão expirada",
+          description: "Por favor, faça login novamente.",
+          variant: "destructive",
+        });
+        return;
+      }
 
       const { data: result, error } = await supabase.functions.invoke("suggest-bncc-skills", {
         body: {
@@ -43,14 +50,44 @@ export const StepObjectives = () => {
         },
       });
 
-      if (error) throw error;
+      // Handle edge function errors
+      if (error) {
+        console.error("Edge function error:", error);
+        toast({
+          title: "Erro ao buscar sugestões BNCC",
+          description: error.message || "Tente novamente mais tarde",
+          variant: "destructive",
+        });
+        return;
+      }
 
-      setBnccSuggestions(result.skills || []);
+      // Handle response with error field (non-2xx responses)
+      if (result?.error) {
+        console.error("BNCC suggestion error:", result.error);
+        toast({
+          title: "Erro ao buscar sugestões BNCC",
+          description: result.error,
+          variant: "destructive",
+        });
+        // Still set empty skills array if provided
+        setBnccSuggestions(result.skills || []);
+        return;
+      }
+
+      // Success - set suggestions
+      setBnccSuggestions(result?.skills || []);
+      
+      if (result?.skills?.length === 0) {
+        toast({
+          title: "Nenhuma sugestão encontrada",
+          description: "Tente ajustar o tema ou disciplina",
+        });
+      }
     } catch (error: any) {
       console.error("Error suggesting BNCC:", error);
       toast({
         title: "Erro ao buscar sugestões BNCC",
-        description: error.message,
+        description: error.message || "Erro de conexão. Tente novamente.",
         variant: "destructive",
       });
     } finally {

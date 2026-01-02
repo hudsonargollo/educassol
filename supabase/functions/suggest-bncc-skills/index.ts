@@ -16,7 +16,14 @@ serve(async (req) => {
   try {
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-      throw new Error('Missing authorization header');
+      console.error('Missing authorization header');
+      return new Response(
+        JSON.stringify({ error: 'Missing authorization header', skills: [] }), 
+        {
+          status: 401,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     const supabaseClient = createClient(
@@ -27,17 +34,37 @@ serve(async (req) => {
 
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
     if (userError || !user) {
-      throw new Error('Unauthorized');
+      console.error('User auth error:', userError);
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized', skills: [] }), 
+        {
+          status: 401,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
-    // Validation schema
+    // Validation schema - topic is now required
     const requestSchema = z.object({
       grade: z.string().min(1).max(100),
       subject: z.string().min(1).max(200),
-      topic: z.string().min(1).max(500).optional(),
+      topic: z.string().min(1).max(500),
     });
 
-    const requestBody = await req.json();
+    let requestBody;
+    try {
+      requestBody = await req.json();
+    } catch (e) {
+      console.error('Failed to parse request body:', e);
+      return new Response(
+        JSON.stringify({ error: 'Invalid JSON body', skills: [] }), 
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
     const validationResult = requestSchema.safeParse(requestBody);
     
     if (!validationResult.success) {
@@ -45,7 +72,8 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({ 
           error: 'Invalid input data',
-          details: validationResult.error.errors.map(e => `${e.path.join('.')}: ${e.message}`)
+          details: validationResult.error.errors.map(e => `${e.path.join('.')}: ${e.message}`),
+          skills: []
         }), 
         {
           status: 400,
@@ -56,7 +84,20 @@ serve(async (req) => {
 
     const { grade, subject, topic } = validationResult.data;
 
-    console.log('Suggesting BNCC skills for:', { grade, subject, topic });
+    console.log('Suggesting BNCC skills for:', { grade, subject, topic, userId: user.id });
+
+    // Call Google Gemini API
+    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
+    if (!GEMINI_API_KEY) {
+      console.error('GEMINI_API_KEY not configured');
+      return new Response(
+        JSON.stringify({ error: 'AI service not configured', skills: [] }), 
+        {
+          status: 503,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
 
     // Build prompt for AI to suggest BNCC skills
     const systemPrompt = `Você é um especialista em BNCC (Base Nacional Comum Curricular) brasileira. Sua função é sugerir habilidades e competências da BNCC apropriadas para o contexto educacional fornecido.`;
@@ -65,7 +106,7 @@ serve(async (req) => {
 
 Ano: ${grade}
 Disciplina: ${subject}
-${topic ? `Tema: ${topic}` : ''}
+Tema: ${topic}
 
 Para cada habilidade, forneça:
 1. Código BNCC (ex: EF05MA01)
@@ -82,12 +123,6 @@ Formato de resposta (JSON):
     }
   ]
 }`;
-
-    // Call Google Gemini API
-    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
-    if (!GEMINI_API_KEY) {
-      throw new Error('GEMINI_API_KEY not configured');
-    }
 
     console.log('Calling Google Gemini API for BNCC suggestions...');
     const aiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
@@ -113,7 +148,13 @@ Formato de resposta (JSON):
     if (!aiResponse.ok) {
       const errorText = await aiResponse.text();
       console.error('Gemini API error:', aiResponse.status, errorText);
-      throw new Error(`Gemini API error: ${aiResponse.status}`);
+      return new Response(
+        JSON.stringify({ error: `AI service error: ${aiResponse.status}`, skills: [] }), 
+        {
+          status: 502,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     const aiData = await aiResponse.json();
@@ -123,7 +164,14 @@ Formato de resposta (JSON):
     const aiContent = aiData.candidates?.[0]?.content?.parts?.[0]?.text;
     
     if (!aiContent) {
-      throw new Error('No content generated from Gemini API');
+      console.error('No content in AI response:', aiData);
+      return new Response(
+        JSON.stringify({ error: 'No content generated', skills: [] }), 
+        {
+          status: 502,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
     
     // Extract JSON from markdown code blocks if present
@@ -135,10 +183,16 @@ Formato de resposta (JSON):
       suggestions = JSON.parse(jsonText.trim());
     } catch (parseError) {
       console.error('Failed to parse AI response:', aiContent);
-      throw new Error('Failed to parse AI response as JSON');
+      return new Response(
+        JSON.stringify({ error: 'Failed to parse AI response', skills: [] }), 
+        {
+          status: 502,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
-    console.log('BNCC suggestions generated successfully');
+    console.log('BNCC suggestions generated successfully:', suggestions.skills?.length || 0, 'skills');
 
     return new Response(JSON.stringify(suggestions), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -147,9 +201,12 @@ Formato de resposta (JSON):
   } catch (error) {
     console.error('Error in suggest-bncc-skills:', error);
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }), 
+      JSON.stringify({ 
+        error: error instanceof Error ? error.message : 'Unknown error',
+        skills: []
+      }), 
       {
-        status: error instanceof Error && error.message === 'Unauthorized' ? 401 : 500,
+        status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );

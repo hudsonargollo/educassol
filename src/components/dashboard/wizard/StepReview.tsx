@@ -38,7 +38,12 @@ export const StepReview = ({ onClose }: StepReviewProps) => {
         error: sessionError,
       } = await supabase.auth.getSession();
       if (sessionError || !session) {
-        throw new Error("Sessão inválida. Por favor, faça login novamente.");
+        toast({
+          title: "Sessão expirada",
+          description: "Por favor, faça login novamente.",
+          variant: "destructive",
+        });
+        return;
       }
 
       const functionName =
@@ -86,6 +91,8 @@ export const StepReview = ({ onClose }: StepReviewProps) => {
         payload.templateId = state.templateId;
       }
 
+      console.log("Generating content with payload:", payload);
+
       const { data: result, error } = await supabase.functions.invoke(
         functionName,
         {
@@ -96,13 +103,45 @@ export const StepReview = ({ onClose }: StepReviewProps) => {
         }
       );
 
+      // Handle edge function errors
       if (error) {
         console.error("Edge function error:", error);
-        throw new Error(error.message || "Erro ao chamar função");
+        toast({
+          title: "Erro ao gerar conteúdo",
+          description: error.message || "Tente novamente mais tarde",
+          variant: "destructive",
+        });
+        return;
       }
 
-      if (!result) {
-        throw new Error("Nenhum dado retornado");
+      // Handle response with error field (non-2xx responses like 402 limit exceeded)
+      if (result?.error) {
+        console.error("Generation error:", result);
+        
+        // Check if it's a usage limit error
+        if (result.limit_type) {
+          toast({
+            title: "Limite de uso atingido",
+            description: `Você atingiu o limite de ${result.limit} ${result.limit_type} para o plano ${result.tier}. Faça upgrade para continuar.`,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Erro ao gerar conteúdo",
+            description: result.error,
+            variant: "destructive",
+          });
+        }
+        return;
+      }
+
+      if (!result?.content) {
+        toast({
+          title: "Erro ao gerar conteúdo",
+          description: "Nenhum conteúdo foi retornado. Tente novamente.",
+          variant: "destructive",
+        });
+        return;
       }
 
       setGeneratedContent(result.content);
@@ -115,7 +154,7 @@ export const StepReview = ({ onClose }: StepReviewProps) => {
       console.error("Error generating content:", error);
       toast({
         title: "Erro ao gerar conteúdo",
-        description: error.message || "Tente novamente mais tarde",
+        description: error.message || "Erro de conexão. Tente novamente.",
         variant: "destructive",
       });
     } finally {
