@@ -1,6 +1,4 @@
-import HeroSection from "@/components/HeroSection";
-import FeaturesSection from "@/components/FeaturesSection";
-import GradingSection from "@/components/GradingSection";
+import { PlanningHeroSection, FeaturePillars, SocialProofStrip, PricingSection } from "@/components/landing";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
@@ -10,9 +8,10 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       <Header showAuthButtons={true} />
-      <HeroSection />
-      <FeaturesSection />
-      <GradingSection />
+      <PlanningHeroSection />
+      <SocialProofStrip />
+      <FeaturePillars />
+      <PricingSection />
       <TestimonialsSection />
       <CTASection />
       <Footer />

@@ -2,6 +2,12 @@ import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
+import {
+  checkUsageLimit,
+  recordUsage,
+  createLimitExceededResponse,
+  createRateLimitHeaders,
+} from '../_shared/usage-limits.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -28,6 +34,13 @@ serve(async (req) => {
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
     if (userError || !user) {
       throw new Error('Unauthorized');
+    }
+
+    // Check usage limit before proceeding (Requirements: 12.1, 12.2)
+    const limitCheck = await checkUsageLimit(supabaseClient, user.id, 'lesson-plan');
+    
+    if (!limitCheck.allowed) {
+      return createLimitExceededResponse(limitCheck, 'lesson-plan', corsHeaders);
     }
 
     // Validation schema
@@ -216,8 +229,19 @@ Formate a resposta em Markdown com títulos e listas organizadas.`;
 
     console.log('Content saved to database');
 
+    // Record usage after successful generation (Requirements: 12.3)
+    await recordUsage(supabaseClient, user.id, 'lesson-plan', limitCheck.tier, {
+      content_id: savedContent.id,
+      topic,
+      grade,
+      subject,
+    });
+
+    // Add rate limit headers to response (Requirements: 12.5)
+    const rateLimitHeaders = createRateLimitHeaders(limitCheck);
+
     return new Response(JSON.stringify(savedContent), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
     });
 
   } catch (error) {

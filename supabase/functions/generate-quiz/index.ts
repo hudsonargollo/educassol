@@ -2,6 +2,12 @@ import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
+import {
+  checkUsageLimit,
+  recordUsage,
+  createLimitExceededResponse,
+  createRateLimitHeaders,
+} from '../_shared/usage-limits.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -79,6 +85,13 @@ serve(async (req) => {
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
     if (userError || !user) {
       throw new Error('Unauthorized');
+    }
+
+    // Check usage limit before proceeding (Requirements: 12.1, 12.2)
+    const limitCheck = await checkUsageLimit(supabaseClient, user.id, 'quiz');
+    
+    if (!limitCheck.allowed) {
+      return createLimitExceededResponse(limitCheck, 'quiz', corsHeaders);
     }
 
     // Parse and validate request
@@ -248,8 +261,17 @@ Ensure all questions target higher-order thinking (Apply, Analyze, Evaluate, Cre
 
     console.log('Quiz saved to database');
 
+    // Record usage after successful generation (Requirements: 12.3)
+    await recordUsage(supabaseClient, user.id, 'quiz', limitCheck.tier, {
+      activity_id: savedActivity.id,
+      lesson_plan_id: lessonPlanId,
+    });
+
+    // Add rate limit headers to response (Requirements: 12.5)
+    const rateLimitHeaders = createRateLimitHeaders(limitCheck);
+
     return new Response(JSON.stringify(savedActivity), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
     });
 
   } catch (error) {

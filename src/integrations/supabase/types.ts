@@ -6,6 +6,37 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
+// Custom types for usage tracking
+export type GenerationType =
+  | 'lesson-plan'
+  | 'activity'
+  | 'worksheet'
+  | 'quiz'
+  | 'reading'
+  | 'slides'
+  | 'assessment'
+  | 'file-upload';
+
+export type Tier = 'free' | 'premium' | 'enterprise';
+
+export type SubscriptionStatus = 'active' | 'pending' | 'paused' | 'cancelled';
+
+export interface UsageLog {
+  id: string;
+  user_id: string;
+  generation_type: GenerationType;
+  tier: Tier;
+  created_at: string;
+  metadata: Record<string, unknown>;
+}
+
+export interface MonthlyUsage {
+  lessonPlans: number;
+  activities: number;
+  assessments: number;
+  fileUploads: number;
+}
+
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
@@ -324,6 +355,10 @@ export type Database = {
           name: string
           school_id: string | null
           updated_at: string
+          tier: Database["public"]["Enums"]["user_tier"]
+          mp_customer_id: string | null
+          mp_subscription_id: string | null
+          subscription_status: Database["public"]["Enums"]["subscription_status"] | null
         }
         Insert: {
           created_at?: string
@@ -333,6 +368,10 @@ export type Database = {
           name: string
           school_id?: string | null
           updated_at?: string
+          tier?: Database["public"]["Enums"]["user_tier"]
+          mp_customer_id?: string | null
+          mp_subscription_id?: string | null
+          subscription_status?: Database["public"]["Enums"]["subscription_status"] | null
         }
         Update: {
           created_at?: string
@@ -342,6 +381,10 @@ export type Database = {
           name?: string
           school_id?: string | null
           updated_at?: string
+          tier?: Database["public"]["Enums"]["user_tier"]
+          mp_customer_id?: string | null
+          mp_subscription_id?: string | null
+          subscription_status?: Database["public"]["Enums"]["subscription_status"] | null
         }
         Relationships: [
           {
@@ -356,6 +399,41 @@ export type Database = {
             columns: ["school_id"]
             isOneToOne: false
             referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      usage_logs: {
+        Row: {
+          id: string
+          user_id: string
+          generation_type: Database["public"]["Enums"]["generation_type"]
+          tier: Database["public"]["Enums"]["user_tier"]
+          created_at: string
+          metadata: Json
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          generation_type: Database["public"]["Enums"]["generation_type"]
+          tier: Database["public"]["Enums"]["user_tier"]
+          created_at?: string
+          metadata?: Json
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          generation_type?: Database["public"]["Enums"]["generation_type"]
+          tier?: Database["public"]["Enums"]["user_tier"]
+          created_at?: string
+          metadata?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "usage_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
@@ -528,6 +606,17 @@ export type Database = {
       exam_status: "draft" | "published" | "archived"
       submission_status: "uploaded" | "processing" | "graded" | "failed"
       submission_file_type: "pdf" | "jpeg" | "png"
+      generation_type:
+        | "lesson-plan"
+        | "activity"
+        | "worksheet"
+        | "quiz"
+        | "reading"
+        | "slides"
+        | "assessment"
+        | "file-upload"
+      user_tier: "free" | "premium" | "enterprise"
+      subscription_status: "active" | "pending" | "paused" | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -669,6 +758,18 @@ export const Constants = {
       exam_status: ["draft", "published", "archived"],
       submission_status: ["uploaded", "processing", "graded", "failed"],
       submission_file_type: ["pdf", "jpeg", "png"],
+      generation_type: [
+        "lesson-plan",
+        "activity",
+        "worksheet",
+        "quiz",
+        "reading",
+        "slides",
+        "assessment",
+        "file-upload",
+      ],
+      user_tier: ["free", "premium", "enterprise"],
+      subscription_status: ["active", "pending", "paused", "cancelled"],
     },
   },
 } as const

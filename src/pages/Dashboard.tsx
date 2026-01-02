@@ -10,7 +10,7 @@ import ContentList from "@/components/dashboard/ContentList";
 import CalendarWidget from "@/components/calendar/CalendarWidget";
 import UpcomingEventsNotification from "@/components/calendar/UpcomingEventsNotification";
 import Header from "@/components/Header";
-import { FeatureCard, WelcomeBanner } from "@/components/dashboard";
+import { FeatureCard, WelcomeBanner, UsageMeter } from "@/components/dashboard";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -135,6 +135,7 @@ const Dashboard = () => {
               <span className="w-1 h-6 bg-gradient-to-b from-examai-purple-500 to-violet-500 rounded-full"></span>
               Acesso Rápido
             </h3>
+            <UsageMeter />
             <FeatureCard
               icon={<BookOpen className="h-5 w-5" />}
               title="Minhas Turmas"
