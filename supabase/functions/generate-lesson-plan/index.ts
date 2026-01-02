@@ -22,7 +22,14 @@ serve(async (req) => {
   try {
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-      throw new Error('Missing authorization header');
+      console.error('Missing authorization header');
+      return new Response(
+        JSON.stringify({ error: 'Missing authorization header' }), 
+        {
+          status: 401,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     const supabaseClient = createClient(
@@ -33,7 +40,14 @@ serve(async (req) => {
 
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
     if (userError || !user) {
-      throw new Error('Unauthorized');
+      console.error('User auth error:', userError);
+      return new Response(
+        JSON.stringify({ error: 'Sessão expirada. Por favor, faça login novamente.' }), 
+        {
+          status: 401,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     // Check usage limit before proceeding (Requirements: 12.1, 12.2)
@@ -94,8 +108,25 @@ serve(async (req) => {
       .eq('id', user.id)
       .single();
 
-    if (profileError || !profile?.school_id) {
-      throw new Error('Seu perfil não está associado a uma escola. Entre em contato com o administrador do sistema.');
+    if (profileError) {
+      console.error('Profile error:', profileError);
+      return new Response(
+        JSON.stringify({ error: 'Erro ao buscar perfil do usuário.' }), 
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+    
+    if (!profile?.school_id) {
+      return new Response(
+        JSON.stringify({ error: 'Seu perfil não está associado a uma escola. Entre em contato com o administrador do sistema.' }), 
+        {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     // Check if user has teacher role
@@ -107,7 +138,13 @@ serve(async (req) => {
       .maybeSingle();
 
     if (!roles) {
-      throw new Error('Only teachers can generate lesson plans');
+      return new Response(
+        JSON.stringify({ error: 'Apenas professores podem gerar planos de aula. Entre em contato com o administrador para obter a permissão.' }), 
+        {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     // Build prompt
@@ -162,7 +199,14 @@ Formate a resposta em Markdown com títulos e listas organizadas.`;
     // Call Google Gemini API
     const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
     if (!GEMINI_API_KEY) {
-      throw new Error('GEMINI_API_KEY not configured');
+      console.error('GEMINI_API_KEY not configured');
+      return new Response(
+        JSON.stringify({ error: 'Serviço de IA não configurado. Entre em contato com o suporte.' }), 
+        {
+          status: 503,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     console.log('Calling Google Gemini API...');
@@ -189,14 +233,27 @@ Formate a resposta em Markdown com títulos e listas organizadas.`;
     if (!aiResponse.ok) {
       const errorText = await aiResponse.text();
       console.error('Gemini API error:', aiResponse.status, errorText);
-      throw new Error(`Gemini API error: ${aiResponse.status}`);
+      return new Response(
+        JSON.stringify({ error: `Erro no serviço de IA: ${aiResponse.status}` }), 
+        {
+          status: 502,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     const aiData = await aiResponse.json();
     const generatedContent = aiData.candidates?.[0]?.content?.parts?.[0]?.text;
     
     if (!generatedContent) {
-      throw new Error('No content generated from Gemini API');
+      console.error('No content in AI response:', aiData);
+      return new Response(
+        JSON.stringify({ error: 'Nenhum conteúdo foi gerado. Tente novamente.' }), 
+        {
+          status: 502,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     console.log('Content generated successfully');
