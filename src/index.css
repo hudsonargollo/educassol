@@ -10,92 +10,92 @@
 @layer base {
   /* ========================================
      LIGHT MODE - Educa Sol Design System
-     Warm, inviting colors for educators
+     High contrast, warm colors for educators
      ======================================== */
   :root {
-    /* Backgrounds - Warm cream/ivory tones */
-    --background: 45 30% 98%;
-    --background-secondary: 45 25% 95%;
-    --foreground: 222 47% 11%;
+    /* Backgrounds - Clean white with warm undertone */
+    --background: 40 20% 99%;
+    --background-secondary: 40 15% 96%;
+    --foreground: 220 25% 10%;
 
-    /* Card - Warm white with depth */
-    --card: 45 20% 99%;
-    --card-hover: 35 40% 97%;
-    --card-foreground: 222 47% 11%;
+    /* Card - Clean white with depth */
+    --card: 0 0% 100%;
+    --card-hover: 35 30% 98%;
+    --card-foreground: 220 25% 10%;
 
     /* Popover */
-    --popover: 45 20% 99%;
-    --popover-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 10%;
 
-    /* Primary - Warm orange/amber for education */
-    --primary: 25 95% 53%;
+    /* Primary - Vibrant orange for education */
+    --primary: 25 95% 50%;
     --primary-foreground: 0 0% 100%;
 
     /* Secondary - Teal/green for growth */
-    --secondary: 162 63% 41%;
+    --secondary: 162 63% 35%;
     --secondary-foreground: 0 0% 100%;
 
-    /* Muted - Warm gray */
-    --muted: 45 15% 90%;
-    --muted-foreground: 220 15% 40%;
+    /* Muted - Warm gray with better contrast */
+    --muted: 40 10% 92%;
+    --muted-foreground: 220 15% 35%;
 
     /* Accent - Warm purple */
-    --accent: 270 70% 55%;
+    --accent: 270 70% 50%;
     --accent-foreground: 0 0% 100%;
 
     /* Semantic colors */
-    --success: 152 69% 40%;
+    --success: 152 69% 32%;
     --success-foreground: 0 0% 100%;
-    --warning: 38 92% 50%;
+    --warning: 38 92% 45%;
     --warning-foreground: 0 0% 0%;
-    --info: 199 89% 48%;
+    --info: 199 89% 42%;
     --info-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 0 72% 48%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Borders - Warm tones */
-    --border: 35 20% 82%;
-    --border-subtle: 35 15% 88%;
-    --input: 35 20% 82%;
-    --ring: 25 95% 53%;
+    /* Borders - Stronger contrast */
+    --border: 220 15% 78%;
+    --border-subtle: 220 10% 85%;
+    --input: 220 15% 78%;
+    --ring: 25 95% 50%;
 
     /* Accent variations */
-    --accent-purple: 270 70% 55%;
-    --accent-violet: 258 70% 58%;
-    --accent-blue: 199 89% 48%;
-    --accent-cyan: 175 77% 40%;
-    --accent-green: 152 69% 40%;
-    --accent-amber: 38 92% 50%;
-    --accent-orange: 25 95% 53%;
-    --accent-red: 0 72% 51%;
+    --accent-purple: 270 70% 50%;
+    --accent-violet: 258 70% 55%;
+    --accent-blue: 199 89% 42%;
+    --accent-cyan: 175 77% 35%;
+    --accent-green: 152 69% 32%;
+    --accent-amber: 38 92% 45%;
+    --accent-orange: 25 95% 50%;
+    --accent-red: 0 72% 48%;
 
     /* Gradients - Warm, inviting */
-    --gradient-sun: linear-gradient(135deg, hsl(25 95% 53%), hsl(38 92% 50%));
-    --gradient-hero: linear-gradient(135deg, hsl(45 40% 97%), hsl(35 30% 95%));
-    --gradient-warm: linear-gradient(45deg, hsl(25 60% 95%), hsl(38 50% 93%));
+    --gradient-sun: linear-gradient(135deg, hsl(25 95% 50%), hsl(38 92% 45%));
+    --gradient-hero: linear-gradient(135deg, hsl(40 30% 98%), hsl(35 25% 95%));
+    --gradient-warm: linear-gradient(45deg, hsl(25 50% 96%), hsl(38 40% 94%));
     
-    /* Shadows - Warm tones */
-    --shadow-warm: 0 10px 30px -10px hsl(25 95% 53% / 0.2);
-    --shadow-glow: 0 0 40px hsl(25 95% 53% / 0.15);
-    --shadow-card: 0 4px 20px -4px hsl(35 30% 30% / 0.1);
-    --shadow-card-hover: 0 8px 30px -4px hsl(25 95% 53% / 0.2);
+    /* Shadows - Stronger for light mode */
+    --shadow-warm: 0 10px 30px -10px hsl(25 95% 50% / 0.25);
+    --shadow-glow: 0 0 40px hsl(25 95% 50% / 0.2);
+    --shadow-card: 0 4px 20px -4px hsl(220 30% 20% / 0.12);
+    --shadow-card-hover: 0 8px 30px -4px hsl(25 95% 50% / 0.25);
 
     /* Glassmorphism - Light mode */
-    --glass-bg: rgba(255, 252, 247, 0.92);
-    --glass-border: rgba(251, 146, 60, 0.2);
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --glass-border: rgba(220, 120, 60, 0.25);
 
     --radius: 0.625rem;
 
     /* Sidebar */
-    --sidebar-background: 45 25% 97%;
-    --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 25 95% 53%;
+    --sidebar-background: 40 15% 98%;
+    --sidebar-foreground: 220 25% 10%;
+    --sidebar-primary: 25 95% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 35 40% 95%;
-    --sidebar-accent-foreground: 25 80% 35%;
-    --sidebar-border: 35 20% 85%;
-    --sidebar-ring: 25 95% 53%;
+    --sidebar-accent: 35 30% 96%;
+    --sidebar-accent-foreground: 25 80% 30%;
+    --sidebar-border: 220 15% 82%;
+    --sidebar-ring: 25 95% 50%;
   }
 
   /* ========================================

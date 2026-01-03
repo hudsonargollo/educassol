@@ -38,7 +38,7 @@ function NavLink({ to, children, icon, isActive, onClick }: NavLinkProps) {
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         isActive 
           ? "bg-primary/10 text-primary" 
-          : "text-muted-foreground"
+          : "text-foreground/70 dark:text-muted-foreground"
       )}
     >
       {icon}
@@ -81,8 +81,10 @@ export function Header({
         // Border bottom with theme-aware color
         "border-b",
         // Theme-aware styling - glassmorphism effect
-        "bg-background/80 dark:bg-[#0a0d14]/80 backdrop-blur-xl",
-        "border-border/50 dark:border-examai-purple-500/10",
+        "bg-white/95 dark:bg-[#0a0d14]/90 backdrop-blur-xl",
+        "border-gray-200 dark:border-primary/10",
+        // Shadow for depth
+        "shadow-sm dark:shadow-none",
         className
       )}
     >
@@ -90,9 +92,11 @@ export function Header({
         {/* Logo */}
         <Link 
           to={user ? "/dashboard" : "/"} 
-          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+          className="flex items-center gap-2.5 hover:opacity-80 transition-opacity group"
         >
-          <Sun className="h-8 w-8 text-examai-purple-500 dark:text-examai-purple-400" />
+          <div className="p-1.5 rounded-lg bg-gradient-to-br from-primary to-amber-500 dark:from-primary dark:to-orange-500 shadow-md shadow-primary/20 group-hover:shadow-primary/30 transition-shadow">
+            <Sun className="h-6 w-6 text-white" />
+          </div>
           <span className="text-xl font-bold text-foreground">EDUCA SOL</span>
         </Link>
 
@@ -124,14 +128,14 @@ export function Header({
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate('/auth')}
-                className="text-muted-foreground hover:text-foreground hover:bg-primary/10"
+                className="text-foreground/70 dark:text-muted-foreground hover:text-foreground hover:bg-primary/10 font-medium"
               >
                 Entrar
               </Button>
               <Button
                 size="sm"
                 onClick={() => navigate('/auth')}
-                className="bg-gradient-to-r from-examai-purple-500 to-violet-500 hover:from-examai-purple-400 hover:to-violet-400 text-white shadow-lg shadow-examai-purple-500/25"
+                className="bg-gradient-to-r from-primary to-amber-500 hover:from-primary/90 hover:to-amber-500/90 text-white shadow-lg shadow-primary/25 hover:shadow-primary/35 font-semibold"
               >
                 Começar Grátis
               </Button>
@@ -141,12 +145,12 @@ export function Header({
           {/* User info and sign out for authenticated pages */}
           {showNav && user && (
             <div className="hidden md:flex items-center gap-3">
-              <span className="text-sm text-muted-foreground">{user.email}</span>
+              <span className="text-sm text-foreground/70 dark:text-muted-foreground">{user.email}</span>
               <Button 
                 variant="ghost" 
                 size="sm" 
                 onClick={onSignOut}
-                className="text-muted-foreground hover:text-primary hover:bg-primary/10"
+                className="text-foreground/70 dark:text-muted-foreground hover:text-primary hover:bg-primary/10"
               >
                 <LogOut className="h-4 w-4 mr-2" />
                 Sair
@@ -179,8 +183,9 @@ export function Header({
         <div 
           className={cn(
             "md:hidden absolute top-16 left-0 right-0",
-            "bg-background/95 dark:bg-[#0a0d14]/95 backdrop-blur-xl",
-            "border-b border-border/50 dark:border-examai-purple-500/10",
+            "bg-white/98 dark:bg-[#0a0d14]/98 backdrop-blur-xl",
+            "border-b border-gray-200 dark:border-primary/10",
+            "shadow-lg dark:shadow-none",
             "py-4 px-4"
           )}
         >
@@ -208,7 +213,7 @@ export function Header({
                   navigate('/auth');
                   closeMobileMenu();
                 }}
-                className="justify-start text-muted-foreground hover:text-foreground hover:bg-primary/10"
+                className="justify-start text-foreground/70 dark:text-muted-foreground hover:text-foreground hover:bg-primary/10"
               >
                 Entrar
               </Button>
@@ -217,7 +222,7 @@ export function Header({
                   navigate('/auth');
                   closeMobileMenu();
                 }}
-                className="bg-gradient-to-r from-examai-purple-500 to-violet-500 hover:from-examai-purple-400 hover:to-violet-400"
+                className="bg-gradient-to-r from-primary to-amber-500 hover:from-primary/90 hover:to-amber-500/90"
               >
                 Começar Grátis
               </Button>
@@ -225,15 +230,15 @@ export function Header({
           )}
 
           {showNav && user && (
-            <div className="flex flex-col gap-2 pt-4 border-t border-border/50">
-              <span className="text-sm text-muted-foreground px-3">{user.email}</span>
+            <div className="flex flex-col gap-2 pt-4 border-t border-gray-200 dark:border-border/50">
+              <span className="text-sm text-foreground/70 dark:text-muted-foreground px-3">{user.email}</span>
               <Button 
                 variant="ghost" 
                 onClick={() => {
                   onSignOut?.();
                   closeMobileMenu();
                 }}
-                className="justify-start text-muted-foreground hover:text-primary hover:bg-primary/10"
+                className="justify-start text-foreground/70 dark:text-muted-foreground hover:text-primary hover:bg-primary/10"
               >
                 <LogOut className="h-4 w-4 mr-2" />
                 Sair
