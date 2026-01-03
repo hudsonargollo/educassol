@@ -172,7 +172,7 @@ const Auth = () => {
               <AuthIllustration />
             </motion.div>
 
-            {/* Feature items */}
+            {/* Feature items with shine effect */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -185,10 +185,56 @@ const Auth = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.7 + i * 0.1 }}
-                  className="flex flex-col items-center gap-2 text-center group"
+                  className="flex flex-col items-center gap-2 text-center group relative"
                 >
-                  <div className="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 group-hover:bg-purple-500/20 group-hover:border-purple-500/30 transition-all">
-                    <feature.icon className="h-5 w-5" />
+                  {/* Shine/glow effect container */}
+                  <div className="relative">
+                    {/* Animated glow behind icon */}
+                    <motion.div
+                      animate={{
+                        scale: [1, 1.4, 1],
+                        opacity: [0.2, 0.5, 0.2],
+                      }}
+                      transition={{
+                        duration: 2.5,
+                        repeat: Infinity,
+                        delay: i * 0.4,
+                        ease: "easeInOut",
+                      }}
+                      className="absolute inset-0 rounded-xl bg-purple-500/30 blur-xl"
+                    />
+                    {/* Icon container with shine sweep */}
+                    <motion.div 
+                      className="relative p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 group-hover:bg-purple-500/20 group-hover:border-purple-500/30 transition-all overflow-hidden"
+                      animate={{
+                        boxShadow: [
+                          '0 0 0px rgba(168, 85, 247, 0)',
+                          '0 0 20px rgba(168, 85, 247, 0.4)',
+                          '0 0 0px rgba(168, 85, 247, 0)',
+                        ],
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        delay: i * 0.5,
+                      }}
+                    >
+                      {/* Shine sweep effect */}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
+                        animate={{
+                          x: ['-100%', '200%'],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          repeatDelay: 3,
+                          delay: i * 0.8,
+                          ease: "easeInOut",
+                        }}
+                      />
+                      <feature.icon className="h-5 w-5 relative z-10" />
+                    </motion.div>
                   </div>
                   <span className="text-xs font-medium text-gray-400">{feature.label}</span>
                 </motion.div>
@@ -378,95 +424,136 @@ const Auth = () => {
 };
 
 /**
- * Clean animated illustration for the auth page
+ * Enhanced animated illustration for the auth page
+ * With 5 orbiting icons and advanced animations
  */
 function AuthIllustration() {
+  const orbitingIcons = [
+    { icon: Brain, color: 'from-purple-500 to-violet-500', angle: 0 },
+    { icon: Target, color: 'from-teal-500 to-emerald-500', angle: 72 },
+    { icon: Lightbulb, color: 'from-amber-500 to-orange-500', angle: 144 },
+    { icon: FileCheck, color: 'from-blue-500 to-cyan-500', angle: 216 },
+    { icon: Sparkles, color: 'from-pink-500 to-rose-500', angle: 288 },
+  ];
+
   return (
     <div className="relative w-full max-w-[280px] aspect-square">
-      {/* Outer ring */}
+      {/* Glow background */}
+      <motion.div
+        animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.3, 0.15] }}
+        transition={{ duration: 4, repeat: Infinity }}
+        className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-500/30 to-violet-500/20 blur-3xl"
+      />
+
+      {/* Outer orbit ring - rotating */}
       <motion.div
         animate={{ rotate: 360 }}
-        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-        className="absolute inset-0 rounded-full border border-dashed border-purple-500/20"
-      />
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        className="absolute inset-0"
+      >
+        <div className="absolute inset-0 rounded-full border border-dashed border-purple-500/25" />
+        
+        {/* Orbiting icons on outer ring */}
+        {orbitingIcons.map((item, i) => {
+          const angleRad = (item.angle * Math.PI) / 180;
+          const radius = 50; // percentage from center
+          const x = 50 + radius * Math.cos(angleRad);
+          const y = 50 + radius * Math.sin(angleRad);
+          
+          return (
+            <motion.div
+              key={i}
+              className="absolute"
+              style={{
+                top: `${y}%`,
+                left: `${x}%`,
+                transform: 'translate(-50%, -50%)',
+              }}
+              animate={{ 
+                rotate: -360, // counter-rotate to stay upright
+                scale: [1, 1.15, 1],
+              }}
+              transition={{ 
+                rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+                scale: { duration: 2, repeat: Infinity, delay: i * 0.3 },
+              }}
+            >
+              <motion.div 
+                className={`p-2.5 rounded-xl bg-gradient-to-br ${item.color} shadow-lg`}
+                animate={{
+                  boxShadow: [
+                    '0 0 10px rgba(168, 85, 247, 0.3)',
+                    '0 0 25px rgba(168, 85, 247, 0.5)',
+                    '0 0 10px rgba(168, 85, 247, 0.3)',
+                  ],
+                }}
+                transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
+              >
+                <item.icon className="h-4 w-4 text-white" />
+              </motion.div>
+            </motion.div>
+          );
+        })}
+      </motion.div>
       
-      {/* Middle ring */}
+      {/* Middle ring - counter-rotating */}
       <motion.div
         animate={{ rotate: -360 }}
         transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-        className="absolute inset-8 rounded-full border border-dashed border-violet-500/15"
+        className="absolute inset-8 rounded-full border border-dashed border-violet-500/20"
       />
       
       {/* Inner ring */}
       <motion.div
         animate={{ rotate: 360 }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        className="absolute inset-16 rounded-full border border-dashed border-purple-500/10"
+        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+        className="absolute inset-16 rounded-full border border-dashed border-purple-500/15"
       />
 
-      {/* Center icon */}
+      {/* Center icon with pulsing glow */}
       <div className="absolute inset-0 flex items-center justify-center">
         <motion.div
-          animate={{ scale: [1, 1.05, 1] }}
+          animate={{ scale: [1, 1.08, 1] }}
           transition={{ duration: 3, repeat: Infinity }}
-          className="p-5 rounded-2xl bg-gradient-to-br from-purple-500 to-violet-600 shadow-xl shadow-purple-500/30"
+          className="relative"
         >
-          <BookOpen className="h-10 w-10 text-white" />
+          {/* Glow layers */}
+          <motion.div
+            animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="absolute -inset-3 rounded-2xl bg-gradient-to-br from-purple-500/40 to-violet-500/30 blur-xl"
+          />
+          <div className="relative p-5 rounded-2xl bg-gradient-to-br from-purple-500 to-violet-600 shadow-xl shadow-purple-500/40">
+            <BookOpen className="h-10 w-10 text-white" />
+          </div>
         </motion.div>
       </div>
 
-      {/* Orbiting icons */}
-      {[
-        { icon: Brain, color: 'from-purple-500 to-violet-500', delay: 0, position: 'top' },
-        { icon: Target, color: 'from-teal-500 to-emerald-500', delay: 0.33, position: 'bottom-left' },
-        { icon: Lightbulb, color: 'from-amber-500 to-orange-500', delay: 0.66, position: 'bottom-right' },
-      ].map((item, i) => (
-        <motion.div
-          key={i}
-          className="absolute"
-          style={{
-            top: item.position === 'top' ? '0%' : '75%',
-            left: item.position === 'top' ? '50%' : item.position === 'bottom-left' ? '10%' : '90%',
-            transform: 'translate(-50%, -50%)',
-          }}
-          animate={{ 
-            y: [0, -8, 0],
-            scale: [1, 1.1, 1],
-          }}
-          transition={{ 
-            duration: 3, 
-            repeat: Infinity, 
-            delay: item.delay * 3,
-            ease: "easeInOut"
-          }}
-        >
-          <div className={`p-2.5 rounded-xl bg-gradient-to-br ${item.color} shadow-lg`}>
-            <item.icon className="h-4 w-4 text-white" />
-          </div>
-        </motion.div>
-      ))}
-
-      {/* Floating particles */}
-      {[...Array(6)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1.5 h-1.5 rounded-full bg-purple-400/60"
-          style={{
-            top: `${20 + Math.random() * 60}%`,
-            left: `${20 + Math.random() * 60}%`,
-          }}
-          animate={{
-            y: [0, -15, 0],
-            opacity: [0.3, 0.8, 0.3],
-            scale: [1, 1.3, 1],
-          }}
-          transition={{
-            duration: 3 + Math.random() * 2,
-            repeat: Infinity,
-            delay: i * 0.5,
-          }}
-        />
-      ))}
+      {/* Floating particles with trails */}
+      {[...Array(8)].map((_, i) => {
+        const angle = (i * 45) * (Math.PI / 180);
+        const radius = 60 + (i % 3) * 15;
+        return (
+          <motion.div
+            key={i}
+            className="absolute left-1/2 top-1/2"
+            animate={{
+              x: [Math.cos(angle) * radius, Math.cos(angle + Math.PI) * radius],
+              y: [Math.sin(angle) * radius, Math.sin(angle + Math.PI) * radius],
+              opacity: [0.3, 0.8, 0.3],
+              scale: [0.8, 1.2, 0.8],
+            }}
+            transition={{
+              duration: 4 + i * 0.3,
+              repeat: Infinity,
+              delay: i * 0.4,
+              ease: "easeInOut",
+            }}
+          >
+            <div className="w-2 h-2 rounded-full bg-gradient-to-r from-purple-400 to-violet-400 blur-[1px]" />
+          </motion.div>
+        );
+      })}
     </div>
   );
 }
