@@ -453,12 +453,12 @@ function ProcessingPhase() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="absolute -bottom-20 left-1/2 -translate-x-1/2 whitespace-nowrap text-center"
+        className="absolute -bottom-24 left-0 right-0 text-center"
       >
         <motion.div 
           animate={{ opacity: [0.7, 1, 0.7] }}
           transition={{ duration: 1.2, repeat: Infinity }}
-          className="flex items-center gap-2 text-primary font-semibold mb-1"
+          className="flex items-center justify-center gap-2 text-primary font-semibold mb-1"
         >
           <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}>
             <Wand2 className="h-4 w-4" />
