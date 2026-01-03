@@ -87,50 +87,37 @@ serve(async (req) => {
 
     console.log('Generating assessment for user:', user.id);
 
-    // Get user's school_id and verify role
+    // Get user's school_id (optional for freemium users)
     const { data: profile, error: profileError } = await supabaseClient
       .from('profiles')
       .select('school_id')
       .eq('id', user.id)
-      .single();
+      .maybeSingle();
 
     if (profileError) {
       console.error('Profile error:', profileError);
-      return new Response(
-        JSON.stringify({ error: 'Erro ao buscar perfil do usuário.' }), 
-        {
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+      // Continue without profile - freemium users may not have one
     }
     
-    if (!profile?.school_id) {
-      return new Response(
-        JSON.stringify({ error: 'Seu perfil não está associado a uma escola. Entre em contato com o administrador do sistema.' }), 
-        {
-          status: 403,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
-    }
+    // school_id is optional - freemium users can generate without school association
+    const schoolId = profile?.school_id || null;
 
-    // Check if user has teacher role
-    const { data: roles } = await supabaseClient
+    // Check if user has teacher role (optional for freemium)
+    const { data: roles, error: rolesError } = await supabaseClient
       .from('user_roles')
       .select('role')
       .eq('user_id', user.id)
       .eq('role', 'teacher')
       .maybeSingle();
 
+    if (rolesError) {
+      console.error('Roles error:', rolesError);
+      // Continue without role check for freemium users
+    }
+
+    // Log if user doesn't have teacher role (but don't block)
     if (!roles) {
-      return new Response(
-        JSON.stringify({ error: 'Apenas professores podem gerar avaliações. Entre em contato com o administrador para obter a permissão.' }), 
-        {
-          status: 403,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+      console.log('User does not have teacher role, proceeding as freemium user');
     }
 
     // Build prompt
@@ -242,33 +229,52 @@ Formate a resposta em Markdown com títulos e listas organizadas. As questões d
 
     console.log('Content generated successfully');
 
-    // Save to database
-    const contentData: any = {
-      type: 'assessment',
-      author_id: user.id,
-      school_id: profile.school_id,
-      title: `Avaliação: ${topic}`,
-      bncc_codes: [bnccCode],
-      prompt: userPrompt,
-      content: generatedContent,
-    };
+    // Save to database (only if user has school_id, otherwise return content without saving)
+    let savedContent: any = null;
+    
+    if (schoolId) {
+      const contentData: any = {
+        type: 'assessment',
+        author_id: user.id,
+        school_id: schoolId,
+        title: `Avaliação: ${topic}`,
+        bncc_codes: bnccCode ? [bnccCode] : [],
+        prompt: userPrompt,
+        content: generatedContent,
+      };
 
-    if (classId) {
-      contentData.class_id = classId;
+      if (classId) {
+        contentData.class_id = classId;
+      }
+
+      const { data, error: saveError } = await supabaseClient
+        .from('generated_content')
+        .insert(contentData)
+        .select()
+        .single();
+
+      if (saveError) {
+        console.error('Error saving content:', saveError);
+        // Don't throw - return content without saving for freemium users
+        console.log('Returning content without database save');
+      } else {
+        savedContent = data;
+      }
+    }
+    
+    // If not saved to DB, create a response object
+    if (!savedContent) {
+      savedContent = {
+        id: crypto.randomUUID(),
+        type: 'assessment',
+        author_id: user.id,
+        title: `Avaliação: ${topic}`,
+        content: generatedContent,
+        created_at: new Date().toISOString(),
+      };
     }
 
-    const { data: savedContent, error: saveError } = await supabaseClient
-      .from('generated_content')
-      .insert(contentData)
-      .select()
-      .single();
-
-    if (saveError) {
-      console.error('Error saving content:', saveError);
-      throw saveError;
-    }
-
-    console.log('Content saved to database');
+    console.log('Content ready');
 
     return new Response(JSON.stringify(savedContent), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

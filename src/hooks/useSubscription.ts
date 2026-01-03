@@ -11,6 +11,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import type { Tier } from '@/integrations/supabase/types';
 
 /**
  * Subscription status types
@@ -23,6 +24,7 @@ export type SubscriptionStatus = 'active' | 'pending' | 'paused' | 'cancelled' |
 export interface SubscriptionState {
   isLoading: boolean;
   error: string | null;
+  tier: Tier;
   subscriptionStatus: SubscriptionStatus;
   mpSubscriptionId: string | null;
 }
@@ -49,6 +51,7 @@ export function useSubscription(): UseSubscriptionReturn {
   const [state, setState] = useState<SubscriptionState>({
     isLoading: false,
     error: null,
+    tier: 'free',
     subscriptionStatus: null,
     mpSubscriptionId: null,
   });
@@ -67,17 +70,24 @@ export function useSubscription(): UseSubscriptionReturn {
 
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
-        .select('subscription_status, mp_subscription_id')
+        .select('tier, subscription_status, mp_subscription_id')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
 
       if (profileError) {
         console.error('Error fetching subscription status:', profileError);
         return;
       }
 
+      // Profile might not exist yet for new users
+      if (!profile) {
+        console.log('No profile found for user, using defaults');
+        return;
+      }
+
       setState(prev => ({
         ...prev,
+        tier: (profile?.tier as Tier) || 'free',
         subscriptionStatus: profile?.subscription_status as SubscriptionStatus,
         mpSubscriptionId: profile?.mp_subscription_id || null,
       }));
@@ -186,6 +196,7 @@ export function useSubscription(): UseSubscriptionReturn {
     // State
     isLoading: state.isLoading,
     error: state.error,
+    tier: state.tier,
     subscriptionStatus: state.subscriptionStatus,
     mpSubscriptionId: state.mpSubscriptionId,
 

@@ -236,12 +236,13 @@ export function useUsage(): UseUsageReturn {
         .from('profiles')
         .select('tier')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
 
       if (profileError) {
         console.error('Error fetching profile:', profileError);
       }
 
+      // Profile might not exist yet for new users - use defaults
       const tier: Tier = (profile?.tier as Tier) || 'free';
       const limits = TIER_LIMITS[tier];
 

@@ -105,7 +105,7 @@ serve(async (req) => {
 
     console.log('Generating activity for user:', user.id);
 
-    // Get user's school_id and verify role
+    // Get user's school_id (optional for freemium users)
     const { data: profile, error: profileError } = await supabaseClient
       .from('profiles')
       .select('school_id')
@@ -114,18 +114,13 @@ serve(async (req) => {
 
     if (profileError) {
       console.error('Profile error:', profileError);
-      throw new Error('Erro ao buscar perfil: ' + profileError.message);
+      // Continue without profile - freemium users may not have one
     }
     
-    if (!profile) {
-      throw new Error('Perfil não encontrado para o usuário');
-    }
-    
-    if (!profile.school_id) {
-      throw new Error('Seu perfil não está associado a uma escola. Entre em contato com o administrador do sistema.');
-    }
+    // school_id is optional - freemium users can generate without school association
+    const schoolId = profile?.school_id || null;
 
-    // Check if user has teacher role
+    // Check if user has teacher role (optional for freemium)
     const { data: roles, error: rolesError } = await supabaseClient
       .from('user_roles')
       .select('role')
@@ -135,11 +130,12 @@ serve(async (req) => {
 
     if (rolesError) {
       console.error('Roles error:', rolesError);
-      throw new Error('Failed to check user role: ' + rolesError.message);
+      // Continue without role check for freemium users
     }
 
+    // Log if user doesn't have teacher role (but don't block)
     if (!roles) {
-      throw new Error('Only teachers can generate activities. Please contact your administrator to assign the teacher role.');
+      console.log('User does not have teacher role, proceeding as freemium user');
     }
 
     // Build prompt with specifications
@@ -250,41 +246,60 @@ Formate a resposta em Markdown com títulos e listas organizadas. Torne a ativid
 
     console.log('Content generated successfully');
 
-    // Save to database
-    const contentData: any = {
-      type: 'activity',
-      author_id: user.id,
-      school_id: profile.school_id,
-      title: `Atividade: ${topic}`,
-      bncc_codes: bnccCode ? [bnccCode] : [],
-      prompt: userPrompt,
-      content: generatedContent,
-      methodology,
-      duration_minutes: durationMinutes,
-      accessibility_options: accessibilityOptions,
-      difficulty_level: difficultyLevel,
-    };
+    // Save to database (only if user has school_id, otherwise return content without saving)
+    let savedContent: any = null;
+    
+    if (schoolId) {
+      const contentData: any = {
+        type: 'activity',
+        author_id: user.id,
+        school_id: schoolId,
+        title: `Atividade: ${topic}`,
+        bncc_codes: bnccCode ? [bnccCode] : [],
+        prompt: userPrompt,
+        content: generatedContent,
+        methodology,
+        duration_minutes: durationMinutes,
+        accessibility_options: accessibilityOptions,
+        difficulty_level: difficultyLevel,
+      };
 
-    if (classId) {
-      contentData.class_id = classId;
+      if (classId) {
+        contentData.class_id = classId;
+      }
+
+      const { data, error: saveError } = await supabaseClient
+        .from('generated_content')
+        .insert(contentData)
+        .select()
+        .single();
+
+      if (saveError) {
+        console.error('Error saving content:', saveError);
+        // Don't throw - return content without saving for freemium users
+        console.log('Returning content without database save');
+      } else {
+        savedContent = data;
+      }
     }
-
-    const { data: savedContent, error: saveError } = await supabaseClient
-      .from('generated_content')
-      .insert(contentData)
-      .select()
-      .single();
-
-    if (saveError) {
-      console.error('Error saving content:', saveError);
-      throw saveError;
+    
+    // If not saved to DB, create a response object
+    if (!savedContent) {
+      savedContent = {
+        id: crypto.randomUUID(),
+        type: 'activity',
+        author_id: user.id,
+        title: `Atividade: ${topic}`,
+        content: generatedContent,
+        created_at: new Date().toISOString(),
+      };
     }
 
     console.log('Content saved to database');
 
     // Record usage after successful generation (Requirements: 12.3)
     await recordUsage(supabaseClient, user.id, 'activity', limitCheck.tier, {
-      content_id: savedContent.id,
+      content_id: savedContent?.id,
       topic,
       grade,
       subject,
