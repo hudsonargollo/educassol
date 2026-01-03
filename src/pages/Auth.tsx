@@ -1,7 +1,24 @@
 ﻿import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
-import { GraduationCap, Sparkles, Mail, Lock, Eye, EyeOff, ArrowRight, Brain, BarChart3, FileCheck, BookOpen, Lightbulb, Target } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  GraduationCap, 
+  Sparkles, 
+  Mail, 
+  Lock, 
+  Eye, 
+  EyeOff, 
+  ArrowRight, 
+  Brain, 
+  BarChart3, 
+  FileCheck, 
+  BookOpen, 
+  Lightbulb, 
+  Target,
+  CheckCircle2,
+  User
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
@@ -12,6 +29,7 @@ const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -34,12 +52,27 @@ const Auth = () => {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
       } else {
-        const { error } = await supabase.auth.signUp({ email, password });
+        const { error } = await supabase.auth.signUp({ 
+          email, 
+          password,
+          options: {
+            data: { name }
+          }
+        });
         if (error) throw error;
-        toast({ title: "Conta criada!", description: "Verifique seu email." });
+        toast({ 
+          title: "Conta criada com sucesso!", 
+          description: "Verifique seu email para confirmar o cadastro." 
+        });
       }
     } catch (error: any) {
-      toast({ title: "Erro", description: error.message, variant: "destructive" });
+      toast({ 
+        title: "Erro", 
+        description: error.message === "Invalid login credentials" 
+          ? "Email ou senha incorretos" 
+          : error.message, 
+        variant: "destructive" 
+      });
     } finally {
       setLoading(false);
     }
@@ -53,205 +86,389 @@ const Auth = () => {
     if (error) toast({ title: "Erro", description: error.message, variant: "destructive" });
   };
 
-  return (
-    <div className="min-h-screen bg-[#0a0d14] relative overflow-hidden flex items-center justify-center p-4">
-      {/* Orbit animation styles */}
-      <style>{`
-        @keyframes orbit-cw {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        @keyframes orbit-ccw {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(-360deg); }
-        }
-        @keyframes counter-rotate-cw {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(-360deg); }
-        }
-        @keyframes counter-rotate-ccw {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        @keyframes pulse-glow {
-          0%, 100% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.3); }
-          50% { box-shadow: 0 0 40px rgba(168, 85, 247, 0.5); }
-        }
-        .orbit-inner { animation: orbit-cw 20s linear infinite; }
-        .orbit-outer { animation: orbit-ccw 35s linear infinite; }
-        .counter-inner { animation: counter-rotate-cw 20s linear infinite; }
-        .counter-outer { animation: counter-rotate-ccw 35s linear infinite; }
-        .center-glow { animation: pulse-glow 3s ease-in-out infinite; }
-      `}</style>
+  const features = [
+    { icon: Brain, label: "Correção com IA", description: "Avaliações automáticas" },
+    { icon: FileCheck, label: "Planos de Aula", description: "Alinhados à BNCC" },
+    { icon: BarChart3, label: "Análise de Dados", description: "Acompanhe o progresso" },
+  ];
 
-      {/* Background dots */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(30)].map((_, i) => (
-          <div key={i} className="absolute w-1 h-1 bg-examai-purple-500/20 rounded-full"
-            style={{ top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%` }} />
-        ))}
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#0a0d14] via-[#0f1219] to-[#0a0d14] relative overflow-hidden flex items-center justify-center p-4">
+      {/* Animated background */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Gradient orbs */}
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.2, 1], 
+            opacity: [0.1, 0.2, 0.1],
+            x: [0, 30, 0]
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-1/4 -left-32 w-[500px] h-[500px] rounded-full blur-[120px] bg-gradient-to-br from-purple-600/30 to-violet-500/20"
+        />
+        <motion.div 
+          animate={{ 
+            scale: [1.2, 1, 1.2], 
+            opacity: [0.08, 0.15, 0.08],
+            x: [0, -20, 0]
+          }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-1/4 -right-32 w-[600px] h-[600px] rounded-full blur-[120px] bg-gradient-to-br from-teal-500/20 to-emerald-400/10"
+        />
+        
+        {/* Subtle grid */}
+        <div 
+          className="absolute inset-0 opacity-[0.02]"
+          style={{
+            backgroundImage: `linear-gradient(rgba(168, 85, 247, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(168, 85, 247, 0.3) 1px, transparent 1px)`,
+            backgroundSize: '60px 60px'
+          }}
+        />
       </div>
 
       {/* Main container */}
-      <div className="relative w-full max-w-5xl">
-        <div className="absolute -inset-1 bg-gradient-to-r from-examai-purple-500/10 via-violet-500/5 to-examai-purple-500/10 rounded-3xl blur-xl" />
-        <div className="relative bg-[#0f1219]/95 backdrop-blur-xl rounded-2xl border border-gray-800/50 overflow-hidden flex flex-col lg:flex-row">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="relative w-full max-w-5xl"
+      >
+        {/* Glow effect */}
+        <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/10 via-violet-500/5 to-purple-500/10 rounded-3xl blur-xl" />
+        
+        <div className="relative bg-[#0f1219]/90 backdrop-blur-xl rounded-2xl border border-gray-800/50 overflow-hidden flex flex-col lg:flex-row shadow-2xl">
           
           {/* Left side - Branding */}
           <div className="lg:w-1/2 p-8 lg:p-10 flex flex-col">
             {/* Logo */}
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 rounded-lg bg-examai-purple-500/20 border border-examai-purple-500/30">
-                <GraduationCap className="h-7 w-7 text-examai-purple-400" />
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+              className="flex items-center gap-3 mb-6"
+            >
+              <div className="p-2.5 rounded-xl bg-gradient-to-br from-purple-500 to-violet-600 shadow-lg shadow-purple-500/20">
+                <GraduationCap className="h-7 w-7 text-white" />
               </div>
               <h1 className="text-2xl font-bold text-white">Educa Sol</h1>
-            </div>
-            <p className="text-gray-400 text-sm mb-4 max-w-xs">
-              Transforme a educacao com ferramentas inteligentes de IA construidas para o futuro do aprendizado
-            </p>
+            </motion.div>
+            
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="text-gray-400 text-base mb-8 max-w-sm leading-relaxed"
+            >
+              Transforme a educação com ferramentas inteligentes de IA construídas para o futuro do aprendizado.
+            </motion.p>
 
-            {/* Orbiting icons */}
-            <div className="relative flex-1 min-h-[300px] flex items-center justify-center">
-              {/* Center icon with glow */}
-              <div className="relative z-20 center-glow rounded-full">
-                <div className="relative p-4 rounded-full bg-gradient-to-br from-examai-purple-500 to-violet-600 shadow-lg">
-                  <BookOpen className="h-7 w-7 text-white" />
-                </div>
-              </div>
-              
-              {/* Inner orbit ring - 180px */}
-              <div className="absolute w-[180px] h-[180px] rounded-full border border-dashed border-examai-purple-500/20" />
-              
-              {/* Outer orbit ring - 280px */}
-              <div className="absolute w-[280px] h-[280px] rounded-full border border-dashed border-violet-500/15" />
-
-              {/* Inner orbit container - 180px, rotates clockwise */}
-              <div className="absolute w-[180px] h-[180px] orbit-inner">
-                {/* Icon at top (0deg) */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 counter-inner">
-                  <div className="p-2.5 rounded-full bg-examai-purple-500/20 border border-examai-purple-500/30 backdrop-blur-sm">
-                    <Brain className="h-4 w-4 text-examai-purple-400" />
-                  </div>
-                </div>
-                {/* Icon at bottom-left (120deg) */}
-                <div className="absolute bottom-[13%] left-[3%] -translate-x-1/2 counter-inner">
-                  <div className="p-2.5 rounded-full bg-violet-500/20 border border-violet-500/30 backdrop-blur-sm">
-                    <Sparkles className="h-4 w-4 text-violet-400" />
-                  </div>
-                </div>
-                {/* Icon at bottom-right (240deg) */}
-                <div className="absolute bottom-[13%] right-[3%] translate-x-1/2 counter-inner">
-                  <div className="p-2 rounded-full bg-cyan-500/20 border border-cyan-500/30 backdrop-blur-sm">
-                    <Lightbulb className="h-3.5 w-3.5 text-cyan-400" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Outer orbit container - 280px, rotates counter-clockwise */}
-              <div className="absolute w-[280px] h-[280px] orbit-outer">
-                {/* Icon at top (0deg) */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 counter-outer">
-                  <div className="p-2.5 rounded-full bg-amber-500/20 border border-amber-500/30 backdrop-blur-sm">
-                    <FileCheck className="h-4 w-4 text-amber-400" />
-                  </div>
-                </div>
-                {/* Icon at bottom-left (120deg) */}
-                <div className="absolute bottom-[13%] left-[3%] -translate-x-1/2 counter-outer">
-                  <div className="p-2.5 rounded-full bg-blue-500/20 border border-blue-500/30 backdrop-blur-sm">
-                    <BarChart3 className="h-4 w-4 text-blue-400" />
-                  </div>
-                </div>
-                {/* Icon at bottom-right (240deg) */}
-                <div className="absolute bottom-[13%] right-[3%] translate-x-1/2 counter-outer">
-                  <div className="p-2.5 rounded-full bg-green-500/20 border border-green-500/30 backdrop-blur-sm">
-                    <Target className="h-4 w-4 text-green-400" />
-                  </div>
-                </div>
-              </div>
-            </div>
+            {/* Animated illustration */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+              className="relative flex-1 min-h-[280px] flex items-center justify-center"
+            >
+              <AuthIllustration />
+            </motion.div>
 
             {/* Feature items */}
-            <div className="grid grid-cols-3 gap-4 mt-2">
-              <FeatureItem icon={<Brain className="h-4 w-4" />} label="Correcao com IA" />
-              <FeatureItem icon={<FileCheck className="h-4 w-4" />} label="Avaliacoes Inteligentes" />
-              <FeatureItem icon={<BarChart3 className="h-4 w-4" />} label="Analise de Aprendizado" />
-            </div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="grid grid-cols-3 gap-4 mt-6"
+            >
+              {features.map((feature, i) => (
+                <motion.div
+                  key={feature.label}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7 + i * 0.1 }}
+                  className="flex flex-col items-center gap-2 text-center group"
+                >
+                  <div className="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 group-hover:bg-purple-500/20 group-hover:border-purple-500/30 transition-all">
+                    <feature.icon className="h-5 w-5" />
+                  </div>
+                  <span className="text-xs font-medium text-gray-400">{feature.label}</span>
+                </motion.div>
+              ))}
+            </motion.div>
           </div>
 
           {/* Right side - Form */}
-          <div className="lg:w-1/2 p-8 lg:p-10 bg-[#12161f]/50 border-t lg:border-t-0 lg:border-l border-gray-800/50">
-            <div className="mb-6">
-              <h2 className="text-xl font-bold text-white mb-1">{isLogin ? "Bem-vindo de volta" : "Criar conta"}</h2>
-              <p className="text-gray-400 text-sm">{isLogin ? "Entre para liberar o poder da IA na educacao" : "Comece sua jornada com a IA educacional"}</p>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-gray-400">Email</label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="seu@email.com"
-                    className="w-full h-10 pl-10 pr-3 rounded-lg bg-[#1a1f2e] border border-gray-700/50 text-white text-sm placeholder:text-gray-500 focus:outline-none focus:border-examai-purple-500 focus:ring-1 focus:ring-examai-purple-500/20 transition-all" required />
+          <div className="lg:w-1/2 p-8 lg:p-10 bg-[#12161f]/60 border-t lg:border-t-0 lg:border-l border-gray-800/50">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={isLogin ? 'login' : 'signup'}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-white mb-2">
+                    {isLogin ? "Bem-vindo de volta" : "Criar sua conta"}
+                  </h2>
+                  <p className="text-gray-400">
+                    {isLogin 
+                      ? "Entre para acessar suas ferramentas de IA" 
+                      : "Comece sua jornada com a IA educacional"}
+                  </p>
                 </div>
-              </div>
 
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-gray-400">Senha</label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                  <input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Sua senha"
-                    className="w-full h-10 pl-10 pr-10 rounded-lg bg-[#1a1f2e] border border-gray-700/50 text-white text-sm placeholder:text-gray-500 focus:outline-none focus:border-examai-purple-500 focus:ring-1 focus:ring-examai-purple-500/20 transition-all" required />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300">
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  {/* Name field (signup only) */}
+                  <AnimatePresence>
+                    {!isLogin && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="space-y-2"
+                      >
+                        <label className="text-sm font-medium text-gray-300">Nome completo</label>
+                        <div className="relative">
+                          <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                          <input 
+                            type="text" 
+                            value={name} 
+                            onChange={(e) => setName(e.target.value)} 
+                            placeholder="Seu nome"
+                            className="w-full h-12 pl-11 pr-4 rounded-xl bg-[#1a1f2e] border border-gray-700/50 text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all" 
+                            required={!isLogin}
+                          />
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Email field */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-300">Email</label>
+                    <div className="relative">
+                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                      <input 
+                        type="email" 
+                        value={email} 
+                        onChange={(e) => setEmail(e.target.value)} 
+                        placeholder="seu@email.com"
+                        className="w-full h-12 pl-11 pr-4 rounded-xl bg-[#1a1f2e] border border-gray-700/50 text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all" 
+                        required 
+                      />
+                    </div>
+                  </div>
+
+                  {/* Password field */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-300">Senha</label>
+                    <div className="relative">
+                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                      <input 
+                        type={showPassword ? "text" : "password"} 
+                        value={password} 
+                        onChange={(e) => setPassword(e.target.value)} 
+                        placeholder="Sua senha"
+                        className="w-full h-12 pl-11 pr-12 rounded-xl bg-[#1a1f2e] border border-gray-700/50 text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all" 
+                        required 
+                      />
+                      <button 
+                        type="button" 
+                        onClick={() => setShowPassword(!showPassword)} 
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Remember me / Forgot password */}
+                  {isLogin && (
+                    <div className="flex items-center justify-between">
+                      <label className="flex items-center gap-2.5 cursor-pointer">
+                        <Checkbox 
+                          checked={rememberMe} 
+                          onCheckedChange={(c) => setRememberMe(c as boolean)} 
+                          className="h-4 w-4 border-gray-600 data-[state=checked]:bg-purple-500 data-[state=checked]:border-purple-500" 
+                        />
+                        <span className="text-sm text-gray-400">Lembrar de mim</span>
+                      </label>
+                      <button type="button" className="text-sm text-purple-400 hover:text-purple-300 transition-colors">
+                        Esqueceu a senha?
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Submit button */}
+                  <Button 
+                    type="submit" 
+                    disabled={loading} 
+                    className="w-full h-12 rounded-xl font-semibold text-base bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-400 hover:to-violet-400 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:hover:translate-y-0"
+                  >
+                    {loading ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>{isLogin ? "Entrando..." : "Criando conta..."}</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <span>{isLogin ? "Entrar" : "Criar conta"}</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </div>
+                    )}
+                  </Button>
+
+                  {/* Divider */}
+                  <div className="relative my-6">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-gray-700/50" />
+                    </div>
+                    <div className="relative flex justify-center">
+                      <span className="px-4 bg-[#12161f] text-sm text-gray-500">ou continue com</span>
+                    </div>
+                  </div>
+
+                  {/* Google button */}
+                  <button 
+                    type="button" 
+                    onClick={handleGoogleSignIn} 
+                    className="w-full h-12 rounded-xl font-medium bg-[#1a1f2e] border border-gray-700/50 text-white hover:bg-[#252b3d] hover:border-gray-600/50 transition-all flex items-center justify-center gap-3"
+                  >
+                    <svg className="h-5 w-5" viewBox="0 0 24 24">
+                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    <span>Entrar com Google</span>
                   </button>
-                </div>
-              </div>
 
-              {isLogin && (
-                <div className="flex items-center justify-between text-xs">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <Checkbox checked={rememberMe} onCheckedChange={(c) => setRememberMe(c as boolean)} className="h-3.5 w-3.5 border-gray-600 data-[state=checked]:bg-examai-purple-500" />
-                    <span className="text-gray-400">Lembrar de mim</span>
-                  </label>
-                  <button type="button" className="text-examai-purple-400 hover:text-examai-purple-300">Esqueceu a senha?</button>
-                </div>
-              )}
-
-              <Button type="submit" disabled={loading} className="w-full h-10 rounded-lg font-medium text-sm bg-gradient-to-r from-examai-purple-500 to-violet-500 hover:from-examai-purple-400 hover:to-violet-400 shadow-lg shadow-examai-purple-500/20 hover:-translate-y-0.5 transition-all disabled:opacity-50">
-                {loading ? <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />{isLogin ? "Entrando..." : "Criando..."}</> : <>{isLogin ? "Entrar" : "Criar conta"}<ArrowRight className="h-4 w-4 ml-2" /></>}
-              </Button>
-
-              <div className="relative my-4">
-                <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-700/50" /></div>
-                <div className="relative flex justify-center text-xs"><span className="px-3 bg-[#12161f] text-gray-500">ou continue com</span></div>
-              </div>
-
-              <button type="button" onClick={handleGoogleSignIn} className="w-full h-10 rounded-lg font-medium text-sm bg-[#1a1f2e] border border-gray-700/50 text-white hover:bg-[#252b3d] transition-all flex items-center justify-center gap-2">
-                <svg className="h-4 w-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-                Entrar com Google
-              </button>
-
-              <p className="text-center text-gray-400 text-xs mt-4">
-                {isLogin ? "Nao tem uma conta?" : "Ja tem uma conta?"}{" "}
-                <button type="button" onClick={() => setIsLogin(!isLogin)} className="text-examai-purple-400 hover:text-examai-purple-300 font-medium">{isLogin ? "Cadastre-se" : "Entre"}</button>
-              </p>
-            </form>
+                  {/* Toggle login/signup */}
+                  <p className="text-center text-gray-400 mt-6">
+                    {isLogin ? "Não tem uma conta?" : "Já tem uma conta?"}{" "}
+                    <button 
+                      type="button" 
+                      onClick={() => setIsLogin(!isLogin)} 
+                      className="text-purple-400 hover:text-purple-300 font-semibold transition-colors"
+                    >
+                      {isLogin ? "Cadastre-se" : "Entre"}
+                    </button>
+                  </p>
+                </form>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
 
-        <p className="text-center text-xs text-gray-600 mt-4">
-          Ao continuar, voce concorda com nossos <a href="#" className="text-examai-purple-400/70 hover:underline">Termos</a> e <a href="#" className="text-examai-purple-400/70 hover:underline">Privacidade</a>
-        </p>
-      </div>
+        {/* Footer */}
+        <motion.p 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          className="text-center text-sm text-gray-600 mt-6"
+        >
+          Ao continuar, você concorda com nossos{" "}
+          <a href="/terms" className="text-purple-400/70 hover:text-purple-400 hover:underline transition-colors">Termos</a>
+          {" "}e{" "}
+          <a href="/privacy" className="text-purple-400/70 hover:text-purple-400 hover:underline transition-colors">Privacidade</a>
+        </motion.p>
+      </motion.div>
     </div>
   );
 };
 
-const FeatureItem = ({ icon, label }: { icon: React.ReactNode; label: string }) => (
-  <div className="flex flex-col items-center gap-2 text-center">
-    <div className="p-2 rounded-lg bg-examai-purple-500/10 border border-examai-purple-500/20 text-examai-purple-400">{icon}</div>
-    <span className="text-xs text-gray-500">{label}</span>
-  </div>
-);
+/**
+ * Clean animated illustration for the auth page
+ */
+function AuthIllustration() {
+  return (
+    <div className="relative w-full max-w-[280px] aspect-square">
+      {/* Outer ring */}
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+        className="absolute inset-0 rounded-full border border-dashed border-purple-500/20"
+      />
+      
+      {/* Middle ring */}
+      <motion.div
+        animate={{ rotate: -360 }}
+        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+        className="absolute inset-8 rounded-full border border-dashed border-violet-500/15"
+      />
+      
+      {/* Inner ring */}
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        className="absolute inset-16 rounded-full border border-dashed border-purple-500/10"
+      />
+
+      {/* Center icon */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <motion.div
+          animate={{ scale: [1, 1.05, 1] }}
+          transition={{ duration: 3, repeat: Infinity }}
+          className="p-5 rounded-2xl bg-gradient-to-br from-purple-500 to-violet-600 shadow-xl shadow-purple-500/30"
+        >
+          <BookOpen className="h-10 w-10 text-white" />
+        </motion.div>
+      </div>
+
+      {/* Orbiting icons */}
+      {[
+        { icon: Brain, color: 'from-purple-500 to-violet-500', delay: 0, position: 'top' },
+        { icon: Target, color: 'from-teal-500 to-emerald-500', delay: 0.33, position: 'bottom-left' },
+        { icon: Lightbulb, color: 'from-amber-500 to-orange-500', delay: 0.66, position: 'bottom-right' },
+      ].map((item, i) => (
+        <motion.div
+          key={i}
+          className="absolute"
+          style={{
+            top: item.position === 'top' ? '0%' : '75%',
+            left: item.position === 'top' ? '50%' : item.position === 'bottom-left' ? '10%' : '90%',
+            transform: 'translate(-50%, -50%)',
+          }}
+          animate={{ 
+            y: [0, -8, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{ 
+            duration: 3, 
+            repeat: Infinity, 
+            delay: item.delay * 3,
+            ease: "easeInOut"
+          }}
+        >
+          <div className={`p-2.5 rounded-xl bg-gradient-to-br ${item.color} shadow-lg`}>
+            <item.icon className="h-4 w-4 text-white" />
+          </div>
+        </motion.div>
+      ))}
+
+      {/* Floating particles */}
+      {[...Array(6)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-1.5 h-1.5 rounded-full bg-purple-400/60"
+          style={{
+            top: `${20 + Math.random() * 60}%`,
+            left: `${20 + Math.random() * 60}%`,
+          }}
+          animate={{
+            y: [0, -15, 0],
+            opacity: [0.3, 0.8, 0.3],
+            scale: [1, 1.3, 1],
+          }}
+          transition={{
+            duration: 3 + Math.random() * 2,
+            repeat: Infinity,
+            delay: i * 0.5,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 export default Auth;
