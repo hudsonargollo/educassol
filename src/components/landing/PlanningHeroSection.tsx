@@ -126,7 +126,7 @@ export function PlanningHeroSection({ onStartPlanning, onViewFeatures }: Plannin
               initial={{ opacity: 0, y: 20, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 shadow-lg shadow-primary/5"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 shadow-lg shadow-primary/5 mx-auto lg:mx-0"
             >
               <Sparkles className="h-4 w-4 text-primary animate-pulse" />
               <span className="text-sm font-semibold text-primary">IA para Educadores Brasileiros</span>
@@ -136,7 +136,7 @@ export function PlanningHeroSection({ onStartPlanning, onViewFeatures }: Plannin
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.6 }}
-              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground leading-[1.1]"
+              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground leading-[1.1] text-center lg:text-left"
             >
               Planeje seu{' '}
               <span className="relative">
@@ -157,11 +157,10 @@ export function PlanningHeroSection({ onStartPlanning, onViewFeatures }: Plannin
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35, duration: 0.6 }}
-              className="text-lg sm:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 leading-relaxed"
+              className="text-lg sm:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 leading-relaxed lg:text-left text-center"
             >
-              Transforme sua rotina com a plataforma de design instrucional com IA. 
-              Gere planos de aula, atividades e avaliações{' '}
-              <span className="text-foreground font-medium">alinhados à BNCC</span> em um clique.
+              Planos de aula, atividades e avaliações{' '}
+              <span className="text-foreground font-medium">alinhados à BNCC</span> — gerados por IA em segundos.
             </motion.p>
 
             <motion.div 
