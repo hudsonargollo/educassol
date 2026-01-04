@@ -161,13 +161,13 @@ export function FeaturePillars() {
             Funcionalidades
           </motion.span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-            Tudo que você precisa para{' '}
+            Ferramentas que{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-amber-500">
-              planejar melhor
+              economizam seu tempo
             </span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Seis recursos poderosos que transformam como você cria conteúdo educacional
+            Seis recursos que transformam horas de trabalho em minutos
           </p>
         </motion.div>
 
