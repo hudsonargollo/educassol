@@ -23,7 +23,13 @@ export const StepObjectives = () => {
 
   // Debounced BNCC suggestion trigger
   const triggerBnccSuggestion = useCallback(async () => {
-    if (!state.grade || !state.subject || !state.topic.trim()) {
+    // Ensure all required fields have actual values (not empty strings)
+    if (!state.grade?.trim() || !state.subject?.trim() || !state.topic?.trim()) {
+      console.log('Missing required fields for BNCC suggestion:', { 
+        grade: state.grade, 
+        subject: state.subject, 
+        topic: state.topic 
+      });
       return;
     }
 
@@ -41,9 +47,9 @@ export const StepObjectives = () => {
 
       const { data: result, error } = await supabase.functions.invoke("suggest-bncc-skills", {
         body: {
-          grade: state.grade,
-          subject: state.subject,
-          topic: state.topic,
+          grade: state.grade.trim(),
+          subject: state.subject.trim(),
+          topic: state.topic.trim(),
         },
         headers: {
           Authorization: `Bearer ${session.access_token}`,

@@ -31,6 +31,22 @@ export const StepReview = ({ onClose }: StepReviewProps) => {
   const [generatedContent, setGeneratedContent] = useState<string>("");
 
   const handleGenerate = async () => {
+    // Validate required fields before calling edge function
+    if (!state.grade?.trim() || !state.subject?.trim() || !state.topic?.trim()) {
+      const missingFields = [];
+      if (!state.grade?.trim()) missingFields.push("ano/série");
+      if (!state.subject?.trim()) missingFields.push("disciplina");
+      if (!state.topic?.trim()) missingFields.push("tema");
+      
+      console.error("Missing required fields:", missingFields);
+      toast({
+        title: "Campos obrigatórios",
+        description: `Por favor, preencha: ${missingFields.join(", ")}`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     try {
       const {
@@ -63,15 +79,15 @@ export const StepReview = ({ onClose }: StepReviewProps) => {
       const bnccCodes = state.selectedBnccCodes.map((s) => s.code);
       
       const payload: any = {
-        topic: state.topic,
-        grade: state.grade,
-        subject: state.subject,
+        topic: state.topic.trim(),
+        grade: state.grade.trim(),
+        subject: state.subject.trim(),
         methodology: methodologyNames || "traditional",
         difficultyLevel: "intermediate",
         duration: state.durationPerLesson * state.numberOfLessons,
         durationMinutes: state.durationPerLesson * state.numberOfLessons,
         accessibilityOptions: state.accessibilityOptions,
-        specificIdea: state.specificIdea,
+        specificIdea: state.specificIdea?.trim() || "",
         studentsPerClass: state.studentsPerClass,
         numberOfLessons: state.numberOfLessons,
         // Edge function expects bnccCode as string
