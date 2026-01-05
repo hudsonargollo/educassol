@@ -55,7 +55,7 @@ export function PlanningHeroSection({ onStartPlanning, onViewFeatures }: Plannin
   };
 
   return (
-    <section className="relative min-h-[95vh] flex items-center overflow-hidden pt-20 bg-gradient-to-b from-[#0c1018] to-[#0a0d14]">
+    <section className="relative min-h-[100svh] flex items-center overflow-hidden pt-20 pb-10 bg-gradient-to-b from-[#0c1018] to-[#0a0d14]">
       {/* Animated gradient background */}
       <div className="absolute inset-0">
         {/* Grid pattern */}
@@ -107,13 +107,13 @@ export function PlanningHeroSection({ onStartPlanning, onViewFeatures }: Plannin
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           {/* Copy */}
           <motion.div 
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
-            className="space-y-8 text-center lg:text-left"
+            className="space-y-6 sm:space-y-8 text-center lg:text-left order-2 lg:order-1"
           >
             {/* Badge */}
             <motion.div 
@@ -130,7 +130,7 @@ export function PlanningHeroSection({ onStartPlanning, onViewFeatures }: Plannin
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.6 }}
-              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-[1.1] text-center lg:text-left"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-[1.1] text-center lg:text-left"
             >
               Sua aula pronta{' '}
               <span className="relative">
@@ -150,7 +150,7 @@ export function PlanningHeroSection({ onStartPlanning, onViewFeatures }: Plannin
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35, duration: 0.6 }}
-              className="text-lg sm:text-xl text-gray-400 max-w-xl mx-auto lg:mx-0 leading-relaxed lg:text-left text-center"
+              className="text-base sm:text-lg md:text-xl text-gray-400 max-w-xl mx-auto lg:mx-0 leading-relaxed lg:text-left text-center"
             >
               Planos de aula, atividades e avaliações{' '}
               <span className="text-white font-medium">alinhados à BNCC</span> — gerados por IA em segundos.
@@ -165,7 +165,7 @@ export function PlanningHeroSection({ onStartPlanning, onViewFeatures }: Plannin
               <Button 
                 size="lg" 
                 onClick={handleStartPlanning} 
-                className="h-14 px-8 text-lg font-semibold bg-gradient-to-r from-primary to-amber-500 hover:from-primary/90 hover:to-amber-500/90 shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:-translate-y-1 transition-all duration-300 group"
+                className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-semibold bg-gradient-to-r from-primary to-amber-500 hover:from-primary/90 hover:to-amber-500/90 shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:-translate-y-1 transition-all duration-300 group w-full sm:w-auto"
               >
                 Começar Grátis
                 <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -174,7 +174,7 @@ export function PlanningHeroSection({ onStartPlanning, onViewFeatures }: Plannin
                 size="lg" 
                 variant="outline" 
                 onClick={handleViewFeatures}
-                className="h-14 px-8 text-lg font-semibold border-2 border-primary/40 text-foreground hover:bg-primary/10 hover:border-primary/60 transition-all duration-300"
+                className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-semibold border-2 border-primary/40 text-white hover:bg-primary/10 hover:border-primary/60 transition-all duration-300 w-full sm:w-auto"
               >
                 Ver Funcionalidades
               </Button>
@@ -185,17 +185,17 @@ export function PlanningHeroSection({ onStartPlanning, onViewFeatures }: Plannin
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.65, duration: 0.6 }}
-              className="flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-3 text-sm text-muted-foreground"
+              className="flex flex-wrap items-center justify-center lg:justify-start gap-x-4 sm:gap-x-6 gap-y-2 sm:gap-y-3 text-xs sm:text-sm text-gray-400"
             >
               {["Sem cartão de crédito", "Alinhado à BNCC", "100% em português"].map((item, i) => (
                 <motion.div 
                   key={i} 
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-1.5 sm:gap-2"
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.8 + i * 0.1 }}
                 >
-                  <CheckCircle2 className="h-4 w-4 text-secondary" />
+                  <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-teal-500" />
                   <span>{item}</span>
                 </motion.div>
               ))}
@@ -207,7 +207,7 @@ export function PlanningHeroSection({ onStartPlanning, onViewFeatures }: Plannin
             initial={{ opacity: 0, scale: 0.85, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8, type: "spring", stiffness: 100 }}
-            className="relative flex items-center justify-center"
+            className="relative flex items-center justify-center order-1 lg:order-2"
           >
             <TransformationAnimation />
           </motion.div>

@@ -107,25 +107,25 @@ function FeaturePillarCard({ pillar, index }: FeaturePillarCardProps) {
     <motion.div
       variants={FADE_UP_ITEM}
       whileHover={{ y: -8, transition: { duration: 0.3 } }}
-      className={`group relative p-6 rounded-2xl border backdrop-blur-sm transition-all duration-500 ${styles.bg} ${styles.border} ${styles.glow}`}
+      className={`group relative p-4 sm:p-6 rounded-2xl border backdrop-blur-sm transition-all duration-500 ${styles.bg} ${styles.border} ${styles.glow}`}
     >
       {/* Animated background gradient on hover */}
       <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-white/5 to-transparent" />
       
       {/* Icon with animation */}
       <motion.div 
-        className={`relative inline-flex p-3 rounded-xl ${styles.iconBg} shadow-lg mb-5`}
+        className={`relative inline-flex p-2.5 sm:p-3 rounded-xl ${styles.iconBg} shadow-lg mb-3 sm:mb-5`}
         whileHover={{ scale: 1.1, rotate: 5 }}
         transition={{ type: "spring", stiffness: 400 }}
       >
-        <Icon className="h-6 w-6 text-white" />
+        <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
       </motion.div>
 
       {/* Content */}
-      <h3 className="text-xl font-bold text-white mb-3 group-hover:text-primary transition-colors duration-300">
+      <h3 className="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-3 group-hover:text-primary transition-colors duration-300">
         {pillar.headline}
       </h3>
-      <p className="text-gray-400 leading-relaxed">
+      <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
         {pillar.copy}
       </p>
 
@@ -142,7 +142,7 @@ function FeaturePillarCard({ pillar, index }: FeaturePillarCardProps) {
 
 export function FeaturePillars() {
   return (
-    <section id="features" className="py-24 lg:py-32 bg-gradient-to-b from-[#0a0d14] to-[#0c1018]">
+    <section id="features" className="py-16 sm:py-24 lg:py-32 bg-gradient-to-b from-[#0a0d14] to-[#0c1018]">
       <div className="container mx-auto px-4">
         {/* Section header */}
         <motion.div
@@ -150,23 +150,23 @@ export function FeaturePillars() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-16"
         >
           <motion.span 
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="inline-block px-4 py-1.5 rounded-full text-sm font-medium mb-6 bg-primary/10 border border-primary/20 text-primary"
+            className="inline-block px-4 py-1.5 rounded-full text-sm font-medium mb-4 sm:mb-6 bg-primary/10 border border-primary/20 text-primary"
           >
             Funcionalidades
           </motion.span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6">
             Ferramentas que{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-amber-500">
               economizam seu tempo
             </span>
           </h2>
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto px-4">
             Seis recursos que transformam horas de trabalho em minutos
           </p>
         </motion.div>
@@ -177,7 +177,7 @@ export function FeaturePillars() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
         >
           {FEATURE_PILLARS.map((pillar, index) => (
             <FeaturePillarCard key={pillar.id} pillar={pillar} index={index} />

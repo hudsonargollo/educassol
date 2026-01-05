@@ -199,20 +199,20 @@ function StepCard({ step, index }: { step: GradingStep; index: number }) {
     >
       {/* Connector line */}
       {index < GRADING_STEPS.length - 1 && (
-        <div className="hidden lg:block absolute top-10 left-[60%] w-[80%] h-0.5 bg-gradient-to-r from-border to-transparent" />
+        <div className="hidden lg:block absolute top-10 left-[60%] w-[80%] h-0.5 bg-gradient-to-r from-white/10 to-transparent" />
       )}
       
       <motion.div
         whileHover={{ scale: 1.05, rotate: 5 }}
         transition={{ type: "spring", stiffness: 400 }}
-        className={`inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br ${step.color} shadow-lg mb-4`}
+        className={`inline-flex items-center justify-center w-14 h-14 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl bg-gradient-to-br ${step.color} shadow-lg mb-3 sm:mb-4`}
       >
-        <Icon className="h-9 w-9 text-white" />
+        <Icon className="h-6 w-6 sm:h-9 sm:w-9 text-white" />
       </motion.div>
       
-      <div className="text-xs font-bold text-primary mb-2">Passo {index + 1}</div>
-      <h4 className="font-bold text-white mb-1">{step.title}</h4>
-      <p className="text-sm text-gray-400">{step.description}</p>
+      <div className="text-[10px] sm:text-xs font-bold text-primary mb-1 sm:mb-2">Passo {index + 1}</div>
+      <h4 className="font-bold text-white text-sm sm:text-base mb-1">{step.title}</h4>
+      <p className="text-xs sm:text-sm text-gray-400">{step.description}</p>
     </motion.div>
   );
 }
@@ -225,7 +225,7 @@ export function ExamGradingShowcase() {
   return (
     <section 
       ref={sectionRef}
-      className="py-24 lg:py-32 bg-gradient-to-b from-[#0c1018] to-[#0a0d14] relative overflow-hidden"
+      className="py-16 sm:py-24 lg:py-32 bg-gradient-to-b from-[#0c1018] to-[#0a0d14] relative overflow-hidden"
     >
       {/* Background decoration */}
       <div className="absolute inset-0">
@@ -247,30 +247,30 @@ export function ExamGradingShowcase() {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-16"
         >
           <motion.span 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            className="inline-block px-4 py-1.5 rounded-full text-sm font-medium mb-6 bg-purple-500/10 border border-purple-500/20 text-purple-500 dark:text-purple-400"
+            className="inline-block px-4 py-1.5 rounded-full text-sm font-medium mb-4 sm:mb-6 bg-purple-500/10 border border-purple-500/20 text-purple-400"
           >
             Correção Automática
           </motion.span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6">
             Corrija provas em{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-violet-500">
               segundos
             </span>
             , não horas
           </h2>
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto px-4">
             Nossa IA reconhece escrita manual e corrige automaticamente. 
             Feedback instantâneo para você e seus alunos.
           </p>
         </motion.div>
 
         {/* Main content grid */}
-        <div className="grid lg:grid-cols-2 gap-16 items-center mb-16">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center mb-12 sm:mb-16">
           {/* Animated exam paper */}
           <AnimatedExamPaper />
 
@@ -313,7 +313,7 @@ export function ExamGradingShowcase() {
         </div>
 
         {/* Steps */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8 mb-8 sm:mb-12">
           {GRADING_STEPS.map((step, index) => (
             <StepCard key={step.id} step={step} index={index} />
           ))}
@@ -324,12 +324,12 @@ export function ExamGradingShowcase() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex flex-col items-center justify-center text-center"
+          className="flex flex-col items-center justify-center text-center px-4"
         >
           <Button
             size="lg"
             onClick={() => navigate('/auth')}
-            className="h-14 px-8 text-lg font-semibold bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-400 hover:to-violet-400 shadow-xl shadow-purple-500/25 group"
+            className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-semibold bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-400 hover:to-violet-400 shadow-xl shadow-purple-500/25 group w-full sm:w-auto"
           >
             Experimentar Correção Automática
             <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
