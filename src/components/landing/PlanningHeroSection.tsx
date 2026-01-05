@@ -138,10 +138,10 @@ export function PlanningHeroSection({ onStartPlanning, onViewFeatures }: Plannin
               transition={{ delay: 0.2, duration: 0.6 }}
               className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground leading-[1.1] text-center lg:text-left"
             >
-              Planeje seu{' '}
+              Menos burocracia,{' '}
               <span className="relative">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-orange-500 to-amber-500">
-                  currículo inteiro
+                  mais tempo
                 </span>
                 <motion.span 
                   className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-primary to-amber-500 rounded-full"
@@ -150,7 +150,7 @@ export function PlanningHeroSection({ onStartPlanning, onViewFeatures }: Plannin
                   transition={{ delay: 0.8, duration: 0.6 }}
                 />
               </span>
-              {' '}em segundos.
+              {' '}para ensinar.
             </motion.h1>
 
             <motion.p 
