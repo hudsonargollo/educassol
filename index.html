@@ -13,27 +13,6 @@
     <meta property="og:type" content="website" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    
-    <!-- Prevent flash of wrong theme -->
-    <script>
-      (function() {
-        // Check if we're on landing page (root path)
-        if (window.location.pathname === '/' || window.location.pathname === '') {
-          document.documentElement.classList.add('dark');
-          document.documentElement.classList.remove('light');
-        } else {
-          // For other pages, use stored preference
-          var theme = localStorage.getItem('examai-theme') || 'dark';
-          if (theme === 'light') {
-            document.documentElement.classList.add('light');
-            document.documentElement.classList.remove('dark');
-          } else {
-            document.documentElement.classList.add('dark');
-            document.documentElement.classList.remove('light');
-          }
-        }
-      })();
-    </script>
   </head>
 
   <body>

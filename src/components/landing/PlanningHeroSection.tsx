@@ -55,7 +55,7 @@ export function PlanningHeroSection({ onStartPlanning, onViewFeatures }: Plannin
   };
 
   return (
-    <section className="relative min-h-[95vh] flex items-center overflow-hidden pt-20 bg-gradient-to-b from-background to-background/95 dark:from-[#0c1018] dark:to-[#0a0d14]">
+    <section className="relative min-h-[95vh] flex items-center overflow-hidden pt-20 bg-gradient-to-b from-[#0c1018] to-[#0a0d14]">
       {/* Animated gradient background */}
       <div className="absolute inset-0">
         {/* Grid pattern */}
@@ -130,7 +130,7 @@ export function PlanningHeroSection({ onStartPlanning, onViewFeatures }: Plannin
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.6 }}
-              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground leading-[1.1] text-center lg:text-left"
+              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-[1.1] text-center lg:text-left"
             >
               Sua aula pronta{' '}
               <span className="relative">
@@ -150,10 +150,10 @@ export function PlanningHeroSection({ onStartPlanning, onViewFeatures }: Plannin
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35, duration: 0.6 }}
-              className="text-lg sm:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 leading-relaxed lg:text-left text-center"
+              className="text-lg sm:text-xl text-gray-400 max-w-xl mx-auto lg:mx-0 leading-relaxed lg:text-left text-center"
             >
               Planos de aula, atividades e avaliações{' '}
-              <span className="text-foreground font-medium">alinhados à BNCC</span> — gerados por IA em segundos.
+              <span className="text-white font-medium">alinhados à BNCC</span> — gerados por IA em segundos.
             </motion.p>
 
             <motion.div 

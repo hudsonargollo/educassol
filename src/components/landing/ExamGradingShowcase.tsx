@@ -84,12 +84,12 @@ function AnimatedExamPaper() {
       <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-amber-500/10 rounded-2xl blur-2xl transform translate-y-4" />
       
       {/* Exam paper */}
-      <div className="relative bg-card border border-border rounded-2xl p-6 shadow-xl">
+      <div className="relative bg-[#0c1018] border border-white/10 rounded-2xl p-6 shadow-xl">
         {/* Header */}
-        <div className="flex items-center justify-between mb-4 pb-3 border-b border-border">
+        <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
           <div>
-            <h4 className="font-semibold text-foreground text-sm">Prova de Matemática</h4>
-            <p className="text-xs text-muted-foreground">5º Ano • Frações</p>
+            <h4 className="font-semibold text-white text-sm">Prova de Matemática</h4>
+            <p className="text-xs text-gray-400">5º Ano • Frações</p>
           </div>
           <motion.div
             initial={{ scale: 0 }}
@@ -104,9 +104,9 @@ function AnimatedExamPaper() {
         {/* Student info */}
         <div className="mb-4 p-3 rounded-lg bg-muted/50">
           <div className="flex items-center gap-2 text-sm">
-            <PenTool className="h-4 w-4 text-muted-foreground" />
-            <span className="text-muted-foreground">Aluno:</span>
-            <span className="font-medium text-foreground">Maria Silva</span>
+            <PenTool className="h-4 w-4 text-gray-400" />
+            <span className="text-gray-400">Aluno:</span>
+            <span className="font-medium text-white">Maria Silva</span>
           </div>
         </div>
 
@@ -211,8 +211,8 @@ function StepCard({ step, index }: { step: GradingStep; index: number }) {
       </motion.div>
       
       <div className="text-xs font-bold text-primary mb-2">Passo {index + 1}</div>
-      <h4 className="font-bold text-foreground mb-1">{step.title}</h4>
-      <p className="text-sm text-muted-foreground">{step.description}</p>
+      <h4 className="font-bold text-white mb-1">{step.title}</h4>
+      <p className="text-sm text-gray-400">{step.description}</p>
     </motion.div>
   );
 }
@@ -225,7 +225,7 @@ export function ExamGradingShowcase() {
   return (
     <section 
       ref={sectionRef}
-      className="py-24 lg:py-32 bg-gradient-to-b from-muted/30 to-background dark:from-[#0c1018] dark:to-[#0a0d14] relative overflow-hidden"
+      className="py-24 lg:py-32 bg-gradient-to-b from-[#0c1018] to-[#0a0d14] relative overflow-hidden"
     >
       {/* Background decoration */}
       <div className="absolute inset-0">
@@ -256,14 +256,14 @@ export function ExamGradingShowcase() {
           >
             Correção Automática
           </motion.span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
             Corrija provas em{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-violet-500">
               segundos
             </span>
             , não horas
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
             Nossa IA reconhece escrita manual e corrige automaticamente. 
             Feedback instantâneo para você e seus alunos.
           </p>
@@ -282,7 +282,7 @@ export function ExamGradingShowcase() {
             transition={{ duration: 0.6 }}
             className="space-y-6"
           >
-            <h3 className="text-2xl font-bold text-foreground mb-6">
+            <h3 className="text-2xl font-bold text-white mb-6">
               Por que usar correção automática?
             </h3>
             
@@ -298,14 +298,14 @@ export function ExamGradingShowcase() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="flex items-start gap-4 p-4 rounded-xl bg-card border border-border hover:border-primary/30 transition-colors"
+                className="flex items-start gap-4 p-4 rounded-xl bg-[#0c1018] border border-white/10 hover:border-primary/30 transition-colors"
               >
                 <div className="p-2.5 rounded-lg bg-primary/10">
                   <item.icon className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-foreground mb-1">{item.title}</h4>
-                  <p className="text-sm text-muted-foreground">{item.desc}</p>
+                  <h4 className="font-semibold text-white mb-1">{item.title}</h4>
+                  <p className="text-sm text-gray-400">{item.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -334,7 +334,7 @@ export function ExamGradingShowcase() {
             Experimentar Correção Automática
             <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
-          <p className="mt-4 text-sm text-muted-foreground">
+          <p className="mt-4 text-sm text-gray-400">
             Disponível no plano Premium • Teste grátis por 7 dias
           </p>
         </motion.div>

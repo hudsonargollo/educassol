@@ -57,38 +57,38 @@ const FEATURE_PILLARS: FeaturePillar[] = [
 
 const gradientStyles = {
   orange: {
-    bg: 'bg-gradient-to-br from-orange-500/10 to-amber-500/5 dark:from-orange-500/15 dark:to-amber-500/10',
-    border: 'border-orange-500/20 hover:border-orange-500/40 dark:border-orange-500/25 dark:hover:border-orange-500/50',
+    bg: 'bg-gradient-to-br from-orange-500/15 to-amber-500/10',
+    border: 'border-orange-500/25 hover:border-orange-500/50',
     iconBg: 'bg-gradient-to-br from-orange-500 to-amber-500',
     glow: 'group-hover:shadow-[0_0_25px_rgba(249,115,22,0.25)]',
   },
   teal: {
-    bg: 'bg-gradient-to-br from-teal-500/10 to-emerald-500/5 dark:from-teal-500/15 dark:to-emerald-500/10',
-    border: 'border-teal-500/20 hover:border-teal-500/40 dark:border-teal-500/25 dark:hover:border-teal-500/50',
+    bg: 'bg-gradient-to-br from-teal-500/15 to-emerald-500/10',
+    border: 'border-teal-500/25 hover:border-teal-500/50',
     iconBg: 'bg-gradient-to-br from-teal-500 to-emerald-500',
     glow: 'group-hover:shadow-[0_0_25px_rgba(20,184,166,0.25)]',
   },
   purple: {
-    bg: 'bg-gradient-to-br from-purple-500/10 to-violet-500/5 dark:from-purple-500/15 dark:to-violet-500/10',
-    border: 'border-purple-500/20 hover:border-purple-500/40 dark:border-purple-500/25 dark:hover:border-purple-500/50',
+    bg: 'bg-gradient-to-br from-purple-500/15 to-violet-500/10',
+    border: 'border-purple-500/25 hover:border-purple-500/50',
     iconBg: 'bg-gradient-to-br from-purple-500 to-violet-500',
     glow: 'group-hover:shadow-[0_0_25px_rgba(168,85,247,0.25)]',
   },
   blue: {
-    bg: 'bg-gradient-to-br from-blue-500/10 to-cyan-500/5 dark:from-blue-500/15 dark:to-cyan-500/10',
-    border: 'border-blue-500/20 hover:border-blue-500/40 dark:border-blue-500/25 dark:hover:border-blue-500/50',
+    bg: 'bg-gradient-to-br from-blue-500/15 to-cyan-500/10',
+    border: 'border-blue-500/25 hover:border-blue-500/50',
     iconBg: 'bg-gradient-to-br from-blue-500 to-cyan-500',
     glow: 'group-hover:shadow-[0_0_25px_rgba(59,130,246,0.25)]',
   },
   green: {
-    bg: 'bg-gradient-to-br from-green-500/10 to-emerald-500/5 dark:from-green-500/15 dark:to-emerald-500/10',
-    border: 'border-green-500/20 hover:border-green-500/40 dark:border-green-500/25 dark:hover:border-green-500/50',
+    bg: 'bg-gradient-to-br from-green-500/15 to-emerald-500/10',
+    border: 'border-green-500/25 hover:border-green-500/50',
     iconBg: 'bg-gradient-to-br from-green-500 to-emerald-500',
     glow: 'group-hover:shadow-[0_0_25px_rgba(34,197,94,0.25)]',
   },
   amber: {
-    bg: 'bg-gradient-to-br from-amber-500/10 to-yellow-500/5 dark:from-amber-500/15 dark:to-yellow-500/10',
-    border: 'border-amber-500/20 hover:border-amber-500/40 dark:border-amber-500/25 dark:hover:border-amber-500/50',
+    bg: 'bg-gradient-to-br from-amber-500/15 to-yellow-500/10',
+    border: 'border-amber-500/25 hover:border-amber-500/50',
     iconBg: 'bg-gradient-to-br from-amber-500 to-yellow-500',
     glow: 'group-hover:shadow-[0_0_25px_rgba(245,158,11,0.25)]',
   },
@@ -122,10 +122,10 @@ function FeaturePillarCard({ pillar, index }: FeaturePillarCardProps) {
       </motion.div>
 
       {/* Content */}
-      <h3 className="text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors duration-300">
+      <h3 className="text-xl font-bold text-white mb-3 group-hover:text-primary transition-colors duration-300">
         {pillar.headline}
       </h3>
-      <p className="text-muted-foreground leading-relaxed">
+      <p className="text-gray-400 leading-relaxed">
         {pillar.copy}
       </p>
 
@@ -142,7 +142,7 @@ function FeaturePillarCard({ pillar, index }: FeaturePillarCardProps) {
 
 export function FeaturePillars() {
   return (
-    <section id="features" className="py-24 lg:py-32 bg-gradient-to-b from-background to-muted/30 dark:from-[#0a0d14] dark:to-[#0c1018]">
+    <section id="features" className="py-24 lg:py-32 bg-gradient-to-b from-[#0a0d14] to-[#0c1018]">
       <div className="container mx-auto px-4">
         {/* Section header */}
         <motion.div
@@ -160,13 +160,13 @@ export function FeaturePillars() {
           >
             Funcionalidades
           </motion.span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
             Ferramentas que{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-amber-500">
               economizam seu tempo
             </span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
             Seis recursos que transformam horas de trabalho em minutos
           </p>
         </motion.div>

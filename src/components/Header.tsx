@@ -1,10 +1,9 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme";
-import { Sun, LogOut, Users, GraduationCap, Search, Menu, X, Calendar, BarChart2, Settings, Home } from "lucide-react";
+import { Sun, LogOut, Users, GraduationCap, Menu, X, Calendar, BarChart2, Settings, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { motion } from "framer-motion";
 
 interface HeaderProps {
   /** User object with email property, if logged in */
@@ -17,6 +16,8 @@ interface HeaderProps {
   showAuthButtons?: boolean;
   /** Custom className for the header */
   className?: string;
+  /** Force dark mode styling (for landing page) */
+  forceDark?: boolean;
 }
 
 interface NavLinkProps {
@@ -52,7 +53,8 @@ export function Header({
   onSignOut, 
   showNav = false, 
   showAuthButtons = false,
-  className 
+  className,
+  forceDark = false
 }: HeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -81,10 +83,9 @@ export function Header({
         // Border bottom with theme-aware color
         "border-b",
         // Theme-aware styling - glassmorphism effect
-        "bg-white/95 dark:bg-[#0a0d14]/90 backdrop-blur-xl",
-        "border-gray-200 dark:border-primary/10",
-        // Shadow for depth
-        "shadow-sm dark:shadow-none",
+        forceDark 
+          ? "bg-[#0a0d14]/90 backdrop-blur-xl border-orange-500/10 shadow-none"
+          : "bg-white/95 dark:bg-[#0a0d14]/90 backdrop-blur-xl border-gray-200 dark:border-primary/10 shadow-sm dark:shadow-none",
         className
       )}
     >
@@ -97,7 +98,10 @@ export function Header({
           <div className="p-1.5 rounded-lg bg-gradient-to-br from-primary to-amber-500 dark:from-primary dark:to-orange-500 shadow-md shadow-primary/20 group-hover:shadow-primary/30 transition-shadow">
             <Sun className="h-6 w-6 text-white" />
           </div>
-          <span className="text-xl font-bold text-foreground">EDUCA SOL</span>
+          <span className={cn(
+            "text-xl font-bold",
+            forceDark ? "text-white" : "text-foreground"
+          )}>EDUCA SOL</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -128,7 +132,12 @@ export function Header({
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate('/auth')}
-                className="text-foreground/70 dark:text-muted-foreground hover:text-foreground hover:bg-primary/10 font-medium"
+                className={cn(
+                  "font-medium",
+                  forceDark 
+                    ? "text-gray-300 hover:text-white hover:bg-white/10" 
+                    : "text-foreground/70 dark:text-muted-foreground hover:text-foreground hover:bg-primary/10"
+                )}
               >
                 Entrar
               </Button>
