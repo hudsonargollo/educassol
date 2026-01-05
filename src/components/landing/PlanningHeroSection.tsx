@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle2, Sparkles, BookOpen, Clock, Users } from "lucide-react";
+import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { TransformationAnimation } from "./TransformationAnimation";
@@ -53,12 +53,6 @@ export function PlanningHeroSection({ onStartPlanning, onViewFeatures }: Plannin
       document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
     }
   };
-
-  const stats = [
-    { icon: BookOpen, value: "50.000+", label: "Planos criados" },
-    { icon: Clock, value: "15h", label: "Economizadas/semana" },
-    { icon: Users, value: "5.000+", label: "Educadores" },
-  ];
 
   return (
     <section className="relative min-h-[95vh] flex items-center overflow-hidden pt-20 bg-gradient-to-b from-background to-background/95 dark:from-[#0c1018] dark:to-[#0a0d14]">
@@ -138,10 +132,10 @@ export function PlanningHeroSection({ onStartPlanning, onViewFeatures }: Plannin
               transition={{ delay: 0.2, duration: 0.6 }}
               className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground leading-[1.1] text-center lg:text-left"
             >
-              Menos burocracia,{' '}
+              Sua aula pronta{' '}
               <span className="relative">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-orange-500 to-amber-500">
-                  mais tempo
+                  em segundos
                 </span>
                 <motion.span 
                   className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-primary to-amber-500 rounded-full"
@@ -150,7 +144,6 @@ export function PlanningHeroSection({ onStartPlanning, onViewFeatures }: Plannin
                   transition={{ delay: 0.8, duration: 0.6 }}
                 />
               </span>
-              {' '}para ensinar.
             </motion.h1>
 
             <motion.p 
@@ -204,32 +197,6 @@ export function PlanningHeroSection({ onStartPlanning, onViewFeatures }: Plannin
                 >
                   <CheckCircle2 className="h-4 w-4 text-secondary" />
                   <span>{item}</span>
-                </motion.div>
-              ))}
-            </motion.div>
-
-            {/* Stats row */}
-            <motion.div 
-              initial={{ opacity: 0, y: 25 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9, duration: 0.6 }}
-              className="flex flex-wrap items-center justify-center lg:justify-start gap-8 pt-4"
-            >
-              {stats.map((stat, i) => (
-                <motion.div 
-                  key={i}
-                  className="flex items-center gap-3"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 1 + i * 0.15, type: "spring" }}
-                >
-                  <div className="p-2 rounded-lg bg-primary/10">
-                    <stat.icon className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <div className="text-xl font-bold text-foreground">{stat.value}</div>
-                    <div className="text-xs text-muted-foreground">{stat.label}</div>
-                  </div>
                 </motion.div>
               ))}
             </motion.div>
