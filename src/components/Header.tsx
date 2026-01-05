@@ -118,8 +118,8 @@ export function Header({
 
         {/* Right side actions */}
         <div className="flex items-center gap-3">
-          {/* Theme Toggle - Always visible */}
-          <ThemeToggle size="sm" />
+          {/* Theme Toggle - Only visible in dashboard */}
+          {showNav && <ThemeToggle size="sm" />}
 
           {/* Auth buttons for landing page */}
           {showAuthButtons && !user && (

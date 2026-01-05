@@ -324,7 +324,7 @@ export function ExamGradingShowcase() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center"
+          className="flex flex-col items-center justify-center text-center"
         >
           <Button
             size="lg"
