@@ -3,27 +3,29 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 
 const Index = () => {
-  // Force dark mode on landing page
-  useEffect(() => {
+  // Force dark mode on landing page - use useLayoutEffect to prevent flash
+  useLayoutEffect(() => {
     const root = document.documentElement;
-    const previousTheme = root.classList.contains('light') ? 'light' : 'dark';
+    const storedTheme = localStorage.getItem('examai-theme');
     
-    // Force dark mode
+    // Force dark mode immediately
     root.classList.remove('light');
     root.classList.add('dark');
     
-    // Restore previous theme when leaving landing page
+    // Restore user's theme preference when leaving
     return () => {
-      root.classList.remove('dark');
-      root.classList.add(previousTheme);
+      if (storedTheme === 'light') {
+        root.classList.remove('dark');
+        root.classList.add('light');
+      }
     };
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background dark">
       <Header showAuthButtons={true} />
       <PlanningHeroSection />
       <SocialProofStrip />

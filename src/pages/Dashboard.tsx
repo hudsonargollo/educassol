@@ -123,40 +123,42 @@ const Dashboard = () => {
         </div>
 
         {/* Grid Layout: Calendar + Quick Stats */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-          {/* Calendar Widget - Takes 2 columns on large screens */}
-          <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-8 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+          {/* Calendar Widget - Takes 2 columns on xl screens */}
+          <div className="xl:col-span-2">
             <CalendarWidget onGenerateContent={handleGenerateFromEvent} />
           </div>
 
-          {/* Quick Stats - Takes 1 column */}
+          {/* Quick Stats - Takes 1 column, stacks on smaller screens */}
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
               <span className="w-1 h-6 bg-gradient-to-b from-examai-purple-500 to-violet-500 rounded-full"></span>
               Acesso Rápido
             </h3>
             <UsageMeter />
-            <FeatureCard
-              icon={<BookOpen className="h-5 w-5" />}
-              title="Minhas Turmas"
-              description="Gerencie suas turmas e alunos"
-              href="/classes"
-              gradient="green"
-            />
-            <FeatureCard
-              icon={<BarChart3 className="h-5 w-5" />}
-              title="Avaliações"
-              description="Acesse o sistema de correção automática"
-              href="/assessments"
-              gradient="purple"
-            />
-            <FeatureCard
-              icon={<Users className="h-5 w-5" />}
-              title="Administração"
-              description="Painel administrativo da escola"
-              href="/admin"
-              gradient="blue"
-            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-4">
+              <FeatureCard
+                icon={<BookOpen className="h-5 w-5" />}
+                title="Minhas Turmas"
+                description="Gerencie suas turmas e alunos"
+                href="/classes"
+                gradient="green"
+              />
+              <FeatureCard
+                icon={<BarChart3 className="h-5 w-5" />}
+                title="Avaliações"
+                description="Acesse o sistema de correção automática"
+                href="/assessments"
+                gradient="purple"
+              />
+              <FeatureCard
+                icon={<Users className="h-5 w-5" />}
+                title="Administração"
+                description="Painel administrativo da escola"
+                href="/admin"
+                gradient="blue"
+              />
+            </div>
           </div>
         </div>
 
