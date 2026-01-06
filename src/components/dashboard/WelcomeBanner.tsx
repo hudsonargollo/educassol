@@ -3,6 +3,15 @@ import { Sparkles, Wand2, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
+// Helper function to capitalize first letter of each word
+function capitalizeFirstLetter(name: string): string {
+  if (!name) return name;
+  return name
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+
 export interface WelcomeBannerProps {
   userName?: string;
   onGenerateExam?: () => void;
@@ -14,7 +23,7 @@ export function WelcomeBanner({
   onGenerateExam,
   className,
 }: WelcomeBannerProps) {
-  const displayName = userName || "Professor";
+  const displayName = capitalizeFirstLetter(userName || "Professor");
   const greeting = getGreeting();
 
   return (

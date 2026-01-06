@@ -92,10 +92,10 @@ function PricingCard({ tier, onAction, index }: PricingCardProps) {
       transition={{ duration: 0.3 }}
     >
       <Card 
-        className={`relative h-full transition-all duration-500 ${
+        className={`relative h-full transition-all duration-500 border ${
           tier.highlighted 
-            ? 'bg-gradient-to-b from-primary/10 to-amber-500/5 dark:from-primary/15 dark:to-amber-500/10 border-primary/40 shadow-xl shadow-primary/20 scale-105 z-10' 
-            : 'bg-card hover:bg-card-hover border-border hover:border-primary/30'
+            ? 'bg-gradient-to-b from-orange-500/15 to-amber-500/5 border-orange-500/40 shadow-xl shadow-orange-500/20 scale-105 z-10' 
+            : 'bg-[#12161f] hover:bg-[#161b26] border-gray-800 hover:border-orange-500/30'
         }`}
       >
         {tier.highlighted && (
@@ -105,7 +105,7 @@ function PricingCard({ tier, onAction, index }: PricingCardProps) {
             transition={{ delay: 0.5 }}
           >
             <Badge 
-              className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-amber-500 text-white border-0 shadow-lg"
+              className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-orange-500 to-amber-500 text-white border-0 shadow-lg"
             >
               Mais Popular
             </Badge>
@@ -116,21 +116,21 @@ function PricingCard({ tier, onAction, index }: PricingCardProps) {
           <motion.div 
             className={`inline-flex mx-auto p-3 rounded-xl mb-4 ${
               tier.highlighted 
-                ? 'bg-gradient-to-br from-primary to-amber-500' 
-                : 'bg-muted'
+                ? 'bg-gradient-to-br from-orange-500 to-amber-500' 
+                : 'bg-gray-800'
             }`}
             whileHover={{ scale: 1.1, rotate: 5 }}
             transition={{ type: "spring", stiffness: 400 }}
           >
-            <Icon className={`h-6 w-6 ${tier.highlighted ? 'text-white' : 'text-muted-foreground'}`} />
+            <Icon className={`h-6 w-6 ${tier.highlighted ? 'text-white' : 'text-gray-400'}`} />
           </motion.div>
           
-          <CardTitle className="text-xl text-foreground">{tier.name}</CardTitle>
-          <CardDescription className="text-muted-foreground">{tier.description}</CardDescription>
+          <CardTitle className="text-xl text-white">{tier.name}</CardTitle>
+          <CardDescription className="text-gray-400">{tier.description}</CardDescription>
           
           <div className="mt-4">
-            <span className="text-4xl font-bold text-foreground">{tier.price}</span>
-            <span className="text-muted-foreground">{tier.period}</span>
+            <span className="text-4xl font-bold text-white">{tier.price}</span>
+            <span className="text-gray-400">{tier.period}</span>
           </div>
         </CardHeader>
 
@@ -147,9 +147,9 @@ function PricingCard({ tier, onAction, index }: PricingCardProps) {
                 viewport={{ once: true }}
               >
                 <Check className={`h-5 w-5 mt-0.5 flex-shrink-0 ${
-                  tier.highlighted ? 'text-primary' : 'text-secondary'
+                  tier.highlighted ? 'text-orange-400' : 'text-green-400'
                 }`} />
-                <span className="text-sm text-muted-foreground">{feature}</span>
+                <span className="text-sm text-gray-300">{feature}</span>
               </motion.li>
             ))}
           </ul>
@@ -160,8 +160,8 @@ function PricingCard({ tier, onAction, index }: PricingCardProps) {
             variant={tier.ctaVariant}
             className={`w-full h-12 font-semibold group ${
               tier.highlighted 
-                ? 'bg-gradient-to-r from-primary to-amber-500 hover:from-primary/90 hover:to-amber-500/90 text-white border-0 shadow-lg shadow-primary/25' 
-                : 'border-border hover:border-primary/50 text-foreground hover:bg-primary/5'
+                ? 'bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white border-0 shadow-lg shadow-orange-500/25' 
+                : 'border-gray-700 hover:border-orange-500/50 text-white hover:bg-orange-500/10'
             }`}
           >
             {tier.cta}
@@ -196,7 +196,7 @@ export function PricingSection() {
   };
 
   return (
-    <section id="pricing" className="py-24 lg:py-32 bg-gradient-to-b from-muted/30 to-background dark:from-[#0c1018] dark:to-[#0a0d14]">
+    <section id="pricing" className="py-24 lg:py-32 bg-gradient-to-b from-[#0c1018] to-[#0a0d14]">
       <div className="container mx-auto px-4">
         {/* Section header */}
         <motion.div
@@ -210,18 +210,18 @@ export function PricingSection() {
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="inline-block px-4 py-1.5 rounded-full text-sm font-medium mb-6 bg-secondary/10 border border-secondary/20 text-secondary"
+            className="inline-block px-4 py-1.5 rounded-full text-sm font-medium mb-6 bg-orange-500/10 border border-orange-500/30 text-orange-400"
           >
-            Preços
+            Preços Simples
           </motion.span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-            Planos para{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-amber-500">
-              cada necessidade
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+            Comece grátis,{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-400">
+              evolua quando quiser
             </span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Comece grátis e escale conforme sua necessidade. Cancele quando quiser.
+          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+            Sem surpresas. Sem taxas escondidas. Cancele a qualquer momento.
           </p>
         </motion.div>
 
@@ -251,11 +251,11 @@ export function PricingSection() {
           transition={{ delay: 0.5 }}
           className="text-center mt-12"
         >
-          <p className="text-muted-foreground">
+          <p className="text-gray-400">
             Dúvidas sobre os planos?{' '}
             <a 
               href="mailto:suporte@educasol.com.br" 
-              className="text-primary hover:text-primary/80 font-medium underline-offset-4 hover:underline transition-colors"
+              className="text-orange-400 hover:text-orange-300 font-medium underline-offset-4 hover:underline transition-colors"
             >
               Fale conosco
             </a>
