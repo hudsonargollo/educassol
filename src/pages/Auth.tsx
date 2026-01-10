@@ -32,6 +32,7 @@ const Auth = () => {
   const [name, setName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [lgpdConsent, setLgpdConsent] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -52,7 +53,7 @@ const Auth = () => {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
       } else {
-        const { error } = await supabase.auth.signUp({ 
+        const { data: signUpData, error } = await supabase.auth.signUp({ 
           email, 
           password,
           options: {
@@ -60,6 +61,21 @@ const Auth = () => {
           }
         });
         if (error) throw error;
+        
+        // Save LGPD consent to marketing_preferences if user was created
+        if (signUpData?.user?.id && lgpdConsent) {
+          // Using type assertion since marketing_preferences may not be in generated types
+          await (supabase
+            .from("marketing_preferences" as any)
+            .update({
+              lgpd_consent: true,
+              newsletter: true,
+              product_updates: true,
+              updated_at: new Date().toISOString(),
+            })
+            .eq("user_id", signUpData.user.id) as any);
+        }
+        
         toast({ 
           title: "Conta criada com sucesso!", 
           description: "Verifique seu email para confirmar o cadastro." 
@@ -81,7 +97,9 @@ const Auth = () => {
   const handleGoogleSignIn = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/dashboard` },
+      options: { 
+        redirectTo: `${window.location.origin}/dashboard`
+      },
     });
     if (error) toast({ title: "Erro", description: error.message, variant: "destructive" });
   };
@@ -342,6 +360,21 @@ const Auth = () => {
                       <button type="button" className="text-sm text-purple-400 hover:text-purple-300 transition-colors">
                         Esqueceu a senha?
                       </button>
+                    </div>
+                  )}
+
+                  {/* LGPD Consent checkbox (signup only) */}
+                  {!isLogin && (
+                    <div className="flex items-start gap-2.5">
+                      <Checkbox 
+                        id="lgpd-consent"
+                        checked={lgpdConsent} 
+                        onCheckedChange={(c) => setLgpdConsent(c as boolean)} 
+                        className="h-4 w-4 mt-0.5 border-gray-600 data-[state=checked]:bg-purple-500 data-[state=checked]:border-purple-500" 
+                      />
+                      <label htmlFor="lgpd-consent" className="text-sm text-gray-400 cursor-pointer leading-relaxed">
+                        Aceito receber dicas pedagógicas e novidades do Educa Sol
+                      </label>
                     </div>
                   )}
 

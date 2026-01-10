@@ -219,7 +219,7 @@ ${includeAnswerKey ? 'Include an answer key section at the end of the markdownCo
     if (!aiResponse.ok) {
       const errorText = await aiResponse.text();
       console.error('Gemini API error:', aiResponse.status, errorText);
-      throw new Error(`Gemini API error: ${aiResponse.status}`);
+      throw new Error('Erro no serviço de IA. Tente novamente em alguns minutos.');
     }
 
     const aiData = await aiResponse.json();

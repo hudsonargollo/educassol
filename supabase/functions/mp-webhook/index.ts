@@ -6,6 +6,105 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+/**
+ * Sends an email via the send-email Edge Function
+ * Requirements: 4.2, 4.3
+ */
+async function sendEmail(
+  supabaseUrl: string,
+  serviceRoleKey: string,
+  to: string,
+  templateId: string,
+  userId: string,
+  data: Record<string, unknown>
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const response = await fetch(`${supabaseUrl}/functions/v1/send-email`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${serviceRoleKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        to,
+        templateId,
+        userId,
+        data,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error('Failed to send email:', errorData);
+      return { success: false, error: errorData.error || `HTTP ${response.status}` };
+    }
+
+    const result = await response.json();
+    return { success: result.success, error: result.error };
+  } catch (error) {
+    console.error('Error calling send-email function:', error);
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+/**
+ * Gets user email from profiles table
+ */
+async function getUserEmail(
+  supabase: ReturnType<typeof createClient>,
+  userId: string
+): Promise<string | null> {
+  try {
+    // First try to get from auth.users via admin API
+    const { data: userData, error: userError } = await supabase.auth.admin.getUserById(userId);
+    
+    if (!userError && userData?.user?.email) {
+      return userData.user.email;
+    }
+
+    // Fallback to profiles table if it has email
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('email')
+      .eq('id', userId)
+      .single();
+
+    if (!profileError && profile?.email) {
+      return profile.email;
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Error getting user email:', error);
+    return null;
+  }
+}
+
+/**
+ * Gets user name from profiles table
+ */
+async function getUserName(
+  supabase: ReturnType<typeof createClient>,
+  userId: string
+): Promise<string> {
+  try {
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('full_name, display_name')
+      .eq('id', userId)
+      .single();
+
+    if (!error && profile) {
+      return profile.display_name || profile.full_name || 'Professor';
+    }
+
+    return 'Professor';
+  } catch (error) {
+    console.error('Error getting user name:', error);
+    return 'Professor';
+  }
+}
+
 serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
@@ -82,6 +181,36 @@ serve(async (req) => {
           }
           
           console.log('User upgraded to premium successfully');
+
+          // Send premium-welcome email (Requirements: 4.2)
+          const userEmail = await getUserEmail(supabaseClient, userId);
+          const userName = await getUserName(supabaseClient, userId);
+          
+          if (userEmail) {
+            console.log('Sending premium-welcome email to:', userEmail);
+            const emailResult = await sendEmail(
+              Deno.env.get('SUPABASE_URL') ?? '',
+              Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+              userEmail,
+              'premium-welcome',
+              userId,
+              {
+                userName,
+                planName: 'Premium',
+                dashboardUrl: 'https://educasol.com.br/dashboard',
+              }
+            );
+            
+            if (!emailResult.success) {
+              console.error('Failed to send premium-welcome email:', emailResult.error);
+              // Don't throw - email failure shouldn't block the webhook
+            } else {
+              console.log('Premium-welcome email sent successfully');
+            }
+          } else {
+            console.warn('Could not find email for user:', userId);
+          }
+          
           break;
         }
 
@@ -110,6 +239,10 @@ serve(async (req) => {
           // Subscription paused - downgrade to free (Requirements: 10.4)
           console.log('Downgrading user to free (paused):', userId);
           
+          // Get user info before updating for email
+          const userEmailPaused = await getUserEmail(supabaseClient, userId);
+          const userNamePaused = await getUserName(supabaseClient, userId);
+          
           const { error: updateError } = await supabaseClient
             .from('profiles')
             .update({
@@ -124,6 +257,30 @@ serve(async (req) => {
           }
           
           console.log('User downgraded to free (paused) successfully');
+
+          // Send payment-failed email (Requirements: 4.3)
+          if (userEmailPaused) {
+            console.log('Sending payment-failed email to:', userEmailPaused);
+            const emailResult = await sendEmail(
+              Deno.env.get('SUPABASE_URL') ?? '',
+              Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+              userEmailPaused,
+              'payment-failed',
+              userId,
+              {
+                userName: userNamePaused,
+                planName: 'Premium',
+                settingsUrl: 'https://educasol.com.br/settings/billing',
+              }
+            );
+            
+            if (!emailResult.success) {
+              console.error('Failed to send payment-failed email:', emailResult.error);
+            } else {
+              console.log('Payment-failed email sent successfully');
+            }
+          }
+          
           break;
         }
 
@@ -149,6 +306,72 @@ serve(async (req) => {
 
         default:
           console.log('Unhandled preapproval status:', preapproval.status);
+      }
+    }
+
+    // Handle payment IPN events for failed payments (Requirements: 4.3)
+    if (type === 'payment') {
+      // Fetch payment details from MercadoPago
+      const paymentResponse = await fetch(
+        `https://api.mercadopago.com/v1/payments/${data.id}`,
+        {
+          headers: { 'Authorization': `Bearer ${MP_ACCESS_TOKEN}` },
+        }
+      );
+
+      if (!paymentResponse.ok) {
+        console.error('Failed to verify payment:', await paymentResponse.text());
+        return new Response(
+          JSON.stringify({ error: 'Failed to verify payment' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      const payment = await paymentResponse.json();
+      console.log('Processing payment status:', payment.status, 'for external_reference:', payment.external_reference);
+
+      // Handle rejected/cancelled payments
+      if (payment.status === 'rejected' || payment.status === 'cancelled') {
+        const paymentUserId = payment.external_reference;
+        
+        if (paymentUserId) {
+          const userEmail = await getUserEmail(supabaseClient, paymentUserId);
+          const userName = await getUserName(supabaseClient, paymentUserId);
+          
+          if (userEmail) {
+            console.log('Sending payment-failed email for rejected payment to:', userEmail);
+            
+            // Calculate grace period end date (7 days from now)
+            const gracePeriodEnd = new Date();
+            gracePeriodEnd.setDate(gracePeriodEnd.getDate() + 7);
+            const gracePeriodEndDate = gracePeriodEnd.toLocaleDateString('pt-BR', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+            });
+            
+            const emailResult = await sendEmail(
+              Deno.env.get('SUPABASE_URL') ?? '',
+              Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+              userEmail,
+              'payment-failed',
+              paymentUserId,
+              {
+                userName,
+                planName: 'Premium',
+                settingsUrl: 'https://educasol.com.br/settings/billing',
+                gracePeriodEndDate,
+                lastFourDigits: payment.card?.last_four_digits,
+              }
+            );
+            
+            if (!emailResult.success) {
+              console.error('Failed to send payment-failed email:', emailResult.error);
+            } else {
+              console.log('Payment-failed email sent successfully');
+            }
+          }
+        }
       }
     }
 

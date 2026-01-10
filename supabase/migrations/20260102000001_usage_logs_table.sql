@@ -35,11 +35,11 @@ CREATE TABLE public.usage_logs (
 -- Enable Row Level Security
 ALTER TABLE public.usage_logs ENABLE ROW LEVEL SECURITY;
 
--- Index for efficient monthly queries (user_id + month)
+-- Index for efficient queries by user and creation time
 -- This index supports the primary query pattern: count usage per user per month
-CREATE INDEX idx_usage_logs_user_month ON public.usage_logs (
+CREATE INDEX idx_usage_logs_user_created ON public.usage_logs (
   user_id,
-  DATE_TRUNC('month', created_at)
+  created_at DESC
 );
 
 -- Index for generation type filtering

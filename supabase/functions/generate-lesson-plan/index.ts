@@ -2,12 +2,71 @@ import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
-import {
-  checkUsageLimit,
-  recordUsage,
-  createLimitExceededResponse,
-  createRateLimitHeaders,
-} from '../_shared/usage-limits.ts';
+
+// Inline usage limits to avoid import issues
+type GenerationType = 'lesson-plan' | 'activity' | 'worksheet' | 'quiz' | 'reading' | 'slides' | 'assessment' | 'file-upload';
+type Tier = 'free' | 'premium' | 'enterprise';
+
+interface LimitCheckResult {
+  allowed: boolean;
+  currentUsage: number;
+  limit: number | null;
+  tier: Tier;
+}
+
+// Simple usage check without external dependencies
+async function checkUsageLimit(supabase: any, userId: string, generationType: GenerationType): Promise<LimitCheckResult> {
+  try {
+    // Get user's tier from profile
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('tier')
+      .eq('id', userId)
+      .single();
+
+    const tier: Tier = (profile?.tier as Tier) || 'free';
+    
+    // Simple limits for free tier
+    const limits = {
+      'lesson-plan': tier === 'free' ? 5 : null,
+      'activity': tier === 'free' ? 10 : null,
+      'assessment': tier === 'free' ? 3 : null,
+    };
+    
+    const limit = limits[generationType] || null;
+
+    // If unlimited (null), allow the request
+    if (limit === null) {
+      return { allowed: true, currentUsage: 0, limit: null, tier };
+    }
+
+    // Get start of current month for query
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+
+    // Count current month's usage
+    const { count } = await supabase
+      .from('usage_logs')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .eq('generation_type', generationType)
+      .gte('created_at', startOfMonth.toISOString());
+
+    const currentUsage = count || 0;
+
+    return {
+      allowed: currentUsage < limit,
+      currentUsage,
+      limit,
+      tier,
+    };
+  } catch (error) {
+    console.error('Error checking usage limit:', error);
+    // On error, default to allowing (fail open)
+    return { allowed: true, currentUsage: 0, limit: null, tier: 'free' };
+  }
+}
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -50,11 +109,23 @@ serve(async (req) => {
       );
     }
 
-    // Check usage limit before proceeding (Requirements: 12.1, 12.2)
+    // Check usage limit before proceeding
     const limitCheck = await checkUsageLimit(supabaseClient, user.id, 'lesson-plan');
     
     if (!limitCheck.allowed) {
-      return createLimitExceededResponse(limitCheck, 'lesson-plan', corsHeaders);
+      return new Response(
+        JSON.stringify({
+          error: 'Limite de uso excedido',
+          limit_type: 'lesson-plan',
+          current_usage: limitCheck.currentUsage,
+          limit: limitCheck.limit,
+          tier: limitCheck.tier,
+        }),
+        {
+          status: 402,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     // Validation schema
@@ -221,7 +292,7 @@ Formate a resposta em Markdown com títulos e listas organizadas.`;
       const errorText = await aiResponse.text();
       console.error('Gemini API error:', aiResponse.status, errorText);
       return new Response(
-        JSON.stringify({ error: `Erro no serviço de IA: ${aiResponse.status}` }), 
+        JSON.stringify({ error: 'Erro no serviço de IA. Tente novamente em alguns minutos.' }), 
         {
           status: 502,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -292,19 +363,26 @@ Formate a resposta em Markdown com títulos e listas organizadas.`;
 
     console.log('Content ready');
 
-    // Record usage after successful generation (Requirements: 12.3)
-    await recordUsage(supabaseClient, user.id, 'lesson-plan', limitCheck.tier, {
-      content_id: savedContent?.id,
-      topic,
-      grade,
-      subject,
-    });
-
-    // Add rate limit headers to response (Requirements: 12.5)
-    const rateLimitHeaders = createRateLimitHeaders(limitCheck);
+    // Record usage after successful generation (simplified)
+    try {
+      await supabaseClient.from('usage_logs').insert({
+        user_id: user.id,
+        generation_type: 'lesson-plan',
+        tier: limitCheck.tier,
+        metadata: {
+          content_id: savedContent?.id,
+          topic,
+          grade,
+          subject,
+        },
+      });
+    } catch (usageError) {
+      console.error('Error recording usage:', usageError);
+      // Don't fail the request if usage recording fails
+    }
 
     return new Response(JSON.stringify(savedContent), {
-      headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
 
   } catch (error) {
